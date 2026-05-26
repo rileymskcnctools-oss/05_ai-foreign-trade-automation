@@ -1,0 +1,31 @@
+{
+  "product_id": "GS-001",
+  "product_name": "Garden Spade",
+  "seo_titles": [
+    {
+      "variant": 1,
+      "focus": "核心大词",
+      "title": "Garden Spade Heavy Duty Carbon Steel Blade with Hardwood Handle for Digging and Transplanting"
+    },
+    {
+      "variant": 2,
+      "focus": "材质优势",
+      "title": "Carbon Steel Garden Spade with Forged Blade and D-Grip Hardwood Handle for Long-Lasting Garden Work"
+    },
+    {
+      "variant": 3,
+      "focus": "使用场景",
+      "title": "Transplanting Spade for Edging Trenching and Precision Soil Lifting with Comfort Grip Handle"
+    },
+    {
+      "variant": 4,
+      "focus": "规格参数",
+      "title": "Garden Spade 28cm 0.6kg Lightweight Steel Blade with Hardwood D-Handle for Efficient Digging"
+    },
+    {
+      "variant": 5,
+      "focus": "长尾精准词",
+      "title": "Professional Carbon Steel Transplanting Garden Spade with Hardwood Handle for Precise Edging and Trenching"
+    }
+  ]
+}

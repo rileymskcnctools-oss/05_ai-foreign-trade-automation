@@ -1,0 +1,37 @@
+{
+  "product_id": "GR-001",
+  "product_name": "Garden Rake",
+  "selling_points": [
+    {
+      "dimension": "Material & Durability",
+      "feature": "Forged carbon steel head hardened to HRC 40-45 with a solid wooden handle",
+      "benefit": "Withstands daily commercial use without bending or cracking, reducing warranty claims and protecting your brand reputation",
+      "full_text": "The rake head is forged from medium-carbon steel and heat-treated to HRC 40-45, giving it the right balance of hardness and flexibility. The solid wooden handle absorbs shock and resists splitting even under heavy loads. This means fewer returns and complaints from end users, which protects your margin and repeat-order rate."
+    },
+    {
+      "dimension": "Ergonomics & User Experience",
+      "feature": "Lightweight at only 0.52 kg with a naturally contoured wooden grip",
+      "benefit": "Reduces operator fatigue during extended use, making it attractive to homeowners and professional landscapers alike",
+      "full_text": "At just 0.52 kg, this rake is among the lightest in its class, so users can work longer without arm or shoulder strain. The wooden handle naturally conforms to the hand and stays comfortable even in hot weather. For retailers, this is a strong shelf-selling point: customers pick it up, feel the weight, and immediately see the value."
+    },
+    {
+      "dimension": "Craftsmanship & Quality",
+      "feature": "14 evenly spaced tines with a polished, rust-resistant surface finish",
+      "benefit": "Uniform tine spacing ensures consistent performance and the polished finish prevents corrosion during storage and transit",
+      "full_text": "Each of the 14 tines is precision-spaced and polished to a smooth finish that resists surface rust during warehousing and ocean shipping. The polished surface also means no rough edges that could damage gloves or injure users during handling. For importers, this translates to lower rejection rates at QC inspection and better shelf presentation."
+    },
+    {
+      "dimension": "Versatility & Application",
+      "feature": "35 cm working width with 14 tines optimized for leaf gathering, soil leveling, and debris clearing",
+      "benefit": "One tool covers multiple seasonal tasks, increasing its appeal across different buyer segments and extending the selling season",
+      "full_text": "The 14-tine, 35 cm head is wide enough to clear large areas quickly yet narrow enough to work between garden beds and around obstacles. It handles autumn leaf cleanup, spring soil leveling, and year-round debris clearing with equal efficiency. This versatility means the product sells across multiple seasons, not just during peak spring planting."
+    },
+    {
+      "dimension": "Commercial Value & Supply Reliability",
+      "feature": "Competitive MOQ, standard export packaging, and reliable lead time for consistent replenishment",
+      "benefit": "Enables importers to start with manageable order quantities and maintain steady stock levels without tying up warehouse space",
+      "full_text": "We support flexible MOQ starting at 300 pieces with standard color box or blister card packaging ready for retail display. Our proven production lead time and export packaging mean you can plan inventory confidently and avoid stock-outs during peak seasons. The 0.52 kg weight also keeps shipping costs per unit low, improving your landed-cost margin."
+    }
+  ],
+  "short_summary": "Lightweight 14-tine carbon steel rake built for durability and multi-season versatility."
+}
