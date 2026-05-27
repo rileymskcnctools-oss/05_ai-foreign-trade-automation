@@ -1,0 +1,38 @@
+{
+  "total_products": 215,
+  "existing_products": 4,
+  "new_from_pdf": 211,
+  "categories": {
+    "Weeding Tools": 81,
+    "Digging Tools": 74,
+    "Cutting Tools": 60
+  },
+  "sub_categories": {
+    "Hoes": 57,
+    "Machetes": 33,
+    "Rakes": 24,
+    "Forks": 20,
+    "Trowels": 19,
+    "Hand Rakes": 11,
+    "Axes": 11,
+    "Pickaxes": 10,
+    "Sickles": 9,
+    "Shovels": 8,
+    "Knives": 5,
+    "Weeders": 5,
+    "Billhooks": 2,
+    "Spades": 1
+  },
+  "missing_fields": {
+    "handle_material": 163,
+    "length_cm": 50,
+    "weight_kg": 53,
+    "head_width_cm": 87,
+    "tine_count": 160,
+    "hardness": 36,
+    "carton_size_cm": 40,
+    "gw_per_carton_kg": 39
+  },
+  "unrecognized_count": 0,
+  "output_file": "C:\\Users\\Administrator\\Desktop\\code\\05_AI-外贸自动化系统\\01-产品数据库模板\\产品参数表_已填充.xlsx"
+}

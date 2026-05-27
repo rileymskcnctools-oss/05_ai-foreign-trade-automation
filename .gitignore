@@ -1,16 +1,31 @@
-# Office temp files
-~$*
-*.tmp
-
-# OS files
-desktop.ini
-Thumbs.db
-
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
 .venv/
+venv/
 
-# IDE
-.vscode/
-.idea/
+# Cache and temp
+.cache/
+*.tmp
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Archive (not tracked)
+archive/
+
+# Excel temp/lock files
+~$*.xlsx
+~$*.xls
+
+# Large data
+*.parquet
+*.sqlite
+*.db
+
+# Old directory (locked files, safe to ignore)
+01-产品数据库模板/
