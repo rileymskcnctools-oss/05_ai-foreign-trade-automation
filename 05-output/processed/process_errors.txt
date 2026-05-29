@@ -1,0 +1,11 @@
+[SKIP] 第89行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第95行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第96行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第97行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第98行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第99行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第100行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第101行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第102行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第103行: 缺失关键字段: weight_kg, length_cm
+[SKIP] 第104行: 缺失关键字段: weight_kg, length_cm

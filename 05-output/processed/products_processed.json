@@ -1,0 +1,1634 @@
+[
+  {
+    "modelNo": "GR-001",
+    "productName": "Garden Rake",
+    "specification": "35cm | 14齿",
+    "weightKg": "0.52kg",
+    "material": "Carbon Steel + Wooden Handle",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HT-001",
+    "productName": "Garden Hoe",
+    "specification": "35cm",
+    "weightKg": "0.70kg",
+    "material": "Carbon Steel + Wooden Handle",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-001",
+    "productName": "Garden Fork",
+    "specification": "30cm | 4齿",
+    "weightKg": "0.80kg",
+    "material": "Carbon Steel + Ash Wood",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GS-001",
+    "productName": "Garden Spade",
+    "specification": "28cm",
+    "weightKg": "0.60kg",
+    "material": "Carbon Steel + Hardwood",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-002",
+    "productName": "Garden Fork Head",
+    "specification": "28cm | 2齿 | 14cm",
+    "weightKg": "0.40kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-003",
+    "productName": "Garden Fork Head",
+    "specification": "32.5cm | 3齿 | 21cm",
+    "weightKg": "0.65kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-004",
+    "productName": "Garden Fork Head",
+    "specification": "32cm | 4齿 | 22cm",
+    "weightKg": "0.73kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-005",
+    "productName": "Garden Fork Head",
+    "specification": "32.5cm | 5齿 | 23cm",
+    "weightKg": "0.90kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-006",
+    "productName": "Garden Fork Head",
+    "specification": "34.5cm | 6齿 | 25cm",
+    "weightKg": "1.15kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-007",
+    "productName": "Potato Fork Head",
+    "specification": "39.5cm | 6齿 | 32.5cm",
+    "weightKg": "1.80kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-008",
+    "productName": "Garden Fork Head Welded",
+    "specification": "35cm | 9齿 | 25cm",
+    "weightKg": "1.75kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-009",
+    "productName": "Potato Fork Head Forged",
+    "specification": "35.5cm | 9齿 | 26cm",
+    "weightKg": "1.90kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-010",
+    "productName": "Stone Fork Head",
+    "specification": "33.5cm | 9齿 | 25.5cm",
+    "weightKg": "1.75kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-011",
+    "productName": "Garden Fork Head F102",
+    "specification": "28cm | 2齿 | 14cm",
+    "weightKg": "0.40kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-012",
+    "productName": "Garden Fork Head F102",
+    "specification": "32.5cm | 3齿 | 21cm",
+    "weightKg": "0.65kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-013",
+    "productName": "Garden Fork Head F102",
+    "specification": "32.5cm | 4齿 | 22.5cm",
+    "weightKg": "0.73kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-014",
+    "productName": "Garden Fork Head F102",
+    "specification": "33cm | 5齿 | 25cm",
+    "weightKg": "0.90kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-015",
+    "productName": "Garden Fork Head F102",
+    "specification": "34.5cm | 6齿 | 25cm",
+    "weightKg": "1.15kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-016",
+    "productName": "Garden Fork Head F102",
+    "specification": "38cm | 9齿 | 32cm",
+    "weightKg": "1.09kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-017",
+    "productName": "Garden Fork Head F102",
+    "specification": "39cm | 12齿 | 40cm",
+    "weightKg": "2.55kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GF-018",
+    "productName": "Garden Fork Head F102",
+    "specification": "42cm | 14齿 | 48cm",
+    "weightKg": "3.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-001",
+    "productName": "Garden Fork Head F105",
+    "specification": "42cm | 15齿 | 33cm",
+    "weightKg": "1.40kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-001",
+    "productName": "Hand Rake 4-tine",
+    "specification": "19cm | 4齿 | 19cm",
+    "weightKg": "0.53kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-002",
+    "productName": "Hand Cultivator 4-tine",
+    "specification": "15cm | 4齿 | 13.5cm",
+    "weightKg": "0.38kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-003",
+    "productName": "Hand Cultivator 3-tine",
+    "specification": "15cm | 3齿 | 12cm",
+    "weightKg": "0.34kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-004",
+    "productName": "Hand Cultivator 3-tine Type B",
+    "specification": "15cm | 3齿 | 12cm",
+    "weightKg": "0.18kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-005",
+    "productName": "Hand Cultivator 4-tine",
+    "specification": "12cm | 4齿 | 12cm",
+    "weightKg": "0.18kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-006",
+    "productName": "Hand Cultivator 5-tine",
+    "specification": "19cm | 5齿 | 20cm",
+    "weightKg": "0.70kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-007",
+    "productName": "Hand Cultivator 6-tine",
+    "specification": "17cm | 6齿 | 18.5cm",
+    "weightKg": "0.85kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-008",
+    "productName": "Hand Rake HK005 3-tine",
+    "specification": "22cm | 3齿 | 19cm",
+    "weightKg": "0.60kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-009",
+    "productName": "Hand Rake HK005 4-tine",
+    "specification": "22cm | 4齿 | 20cm",
+    "weightKg": "0.70kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-010",
+    "productName": "Hand Rake HK005 4-tine",
+    "specification": "22cm | 4齿 | 20cm",
+    "weightKg": "0.70kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HR-011",
+    "productName": "Hand Rake HK005 6-tine",
+    "specification": "25cm | 6齿 | 25cm",
+    "weightKg": "1.10kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-002",
+    "productName": "Rake Head F106 4-tine",
+    "specification": "31cm | 4齿 | 21cm",
+    "weightKg": "0.62kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-003",
+    "productName": "Rake Head F106 4-tine",
+    "specification": "23cm | 4齿 | 14cm",
+    "weightKg": "1.20kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-004",
+    "productName": "Square Rake Head 4-tine",
+    "specification": "29.5cm | 4齿 | 19cm",
+    "weightKg": "0.73kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-005",
+    "productName": "Round Rake Head 3-tine",
+    "specification": "31cm | 3齿 | 20cm",
+    "weightKg": "0.88kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-006",
+    "productName": "Round Rake Head 4-tine",
+    "specification": "32cm | 4齿 | 22cm",
+    "weightKg": "1.05kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-007",
+    "productName": "Round Rake Head 5-tine",
+    "specification": "28cm | 5齿 | 18cm",
+    "weightKg": "1.10kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-008",
+    "productName": "Round Rake Head 6-tine",
+    "specification": "30cm | 6齿 | 22.5cm",
+    "weightKg": "2.20kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-009",
+    "productName": "Round Rake Head 8-tine",
+    "specification": "43cm | 8齿 | 41cm",
+    "weightKg": "2.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-010",
+    "productName": "Round Rake Head 10-tine",
+    "specification": "42cm | 10齿 | 33cm",
+    "weightKg": "2.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-011",
+    "productName": "Rake Head F108 4-tine",
+    "specification": "29cm | 4齿 | 19cm",
+    "weightKg": "1.50kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-012",
+    "productName": "Rake Head F108 4-tine",
+    "specification": "28.5cm | 4齿 | 17.5cm",
+    "weightKg": "1.20kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-013",
+    "productName": "Rake Head F108 4-tine",
+    "specification": "27cm | 4齿 | 17cm",
+    "weightKg": "1.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "RK-014",
+    "productName": "Rake Head F108 4-tine Welded",
+    "specification": "26cm | 4齿 | 18cm",
+    "weightKg": "0.80kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-001",
+    "productName": "Lawn Rake Head 2-tine",
+    "specification": "28cm | 2齿 | 14cm",
+    "weightKg": "0.30kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-002",
+    "productName": "Lawn Rake Head 3-tine",
+    "specification": "32cm | 3齿 | 21cm",
+    "weightKg": "0.50kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-003",
+    "productName": "Lawn Rake Head 4-tine",
+    "specification": "32.5cm | 4齿 | 22.5cm",
+    "weightKg": "0.68kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-004",
+    "productName": "Lawn Rake Head 5-tine",
+    "specification": "33cm | 5齿 | 22.5cm",
+    "weightKg": "0.75kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-005",
+    "productName": "Lawn Rake Head 6-tine",
+    "specification": "30cm | 6齿 | 25cm",
+    "weightKg": "1.10kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-006",
+    "productName": "Lawn Rake Head 10-tine",
+    "specification": "38cm | 10齿 | 35cm",
+    "weightKg": "1.85kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-007",
+    "productName": "Lawn Rake Head 12-tine",
+    "specification": "39cm | 12齿 | 40cm",
+    "weightKg": "2.25kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-008",
+    "productName": "Lawn Rake Head 10-tine Welded",
+    "specification": "35cm | 10齿 | 29cm",
+    "weightKg": "0.90kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-009",
+    "productName": "Rake Head F115 4-tine",
+    "specification": "27.5cm | 4齿 | 17.5cm",
+    "weightKg": "1.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-010",
+    "productName": "Rake Head F115 4-tine",
+    "specification": "29cm | 4齿 | 19cm",
+    "weightKg": "1.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "LR-011",
+    "productName": "Rake Head F115 4-tine",
+    "specification": "29cm | 4齿 | 18cm",
+    "weightKg": "1.70kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-001",
+    "productName": "Machete 12 inch",
+    "specification": "30.5cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-002",
+    "productName": "Machete 14 inch",
+    "specification": "35.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-003",
+    "productName": "Machete 16 inch",
+    "specification": "40.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-004",
+    "productName": "Machete 18 inch",
+    "specification": "45.7cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-005",
+    "productName": "Machete 20 inch",
+    "specification": "50.8cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-006",
+    "productName": "Machete 26 inch",
+    "specification": "66cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-007",
+    "productName": "Machete 28 inch",
+    "specification": "71.1cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-008",
+    "productName": "Machete M212 12 inch",
+    "specification": "30.5cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-009",
+    "productName": "Machete M212 14 inch",
+    "specification": "35.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-010",
+    "productName": "Machete M212 16 inch",
+    "specification": "40.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-011",
+    "productName": "Machete M214 14 inch",
+    "specification": "35.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-012",
+    "productName": "Machete M214 16 inch",
+    "specification": "40.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-013",
+    "productName": "Machete M214 18 inch",
+    "specification": "45.7cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-014",
+    "productName": "Machete M214 20 inch",
+    "specification": "50.8cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-015",
+    "productName": "Machete M214 22 inch",
+    "specification": "55.9cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-016",
+    "productName": "Machete M214 24 inch",
+    "specification": "61cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-017",
+    "productName": "Machete M214 26 inch",
+    "specification": "66cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-018",
+    "productName": "Machete M214 27 inch",
+    "specification": "68.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-019",
+    "productName": "Machete M205 12 inch",
+    "specification": "30.5cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-020",
+    "productName": "Machete M205 14 inch",
+    "specification": "35.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-021",
+    "productName": "Machete M205 16 inch",
+    "specification": "40.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-022",
+    "productName": "Machete M205 18 inch",
+    "specification": "45.7cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-023",
+    "productName": "Machete M205 20 inch",
+    "specification": "50.8cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-024",
+    "productName": "Machete M205 22 inch",
+    "specification": "55.9cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-025",
+    "productName": "Machete M205 24 inch",
+    "specification": "61cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-026",
+    "productName": "Machete M205 26 inch",
+    "specification": "66cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-027",
+    "productName": "Machete M205 28 inch",
+    "specification": "71.1cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-028",
+    "productName": "Machete M206 11 inch",
+    "specification": "27.9cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-029",
+    "productName": "Machete M206 14 inch",
+    "specification": "35.6cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-030",
+    "productName": "Machete M206 18 inch",
+    "specification": "45.7cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-032",
+    "productName": "Machete M208 19 inch",
+    "specification": "48.3cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "MC-033",
+    "productName": "Machete M208 21 inch",
+    "specification": "53.3cm",
+    "weightKg": "N/A",
+    "material": "50Mn/65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GK-001",
+    "productName": "Grafting Knife 14 inch",
+    "specification": "35.6cm",
+    "weightKg": "N/A",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "BK-001",
+    "productName": "Billhook 270mm",
+    "specification": "27cm | 0.3cm",
+    "weightKg": "N/A",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "BK-002",
+    "productName": "Billhook 350mm",
+    "specification": "35cm | 0.3cm",
+    "weightKg": "N/A",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GK-003",
+    "productName": "Grafting Knife 90x160mm",
+    "specification": "16cm | 9cm",
+    "weightKg": "N/A",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "GK-004",
+    "productName": "Grafting Knife 145x184mm",
+    "specification": "18.4cm | 14.5cm",
+    "weightKg": "N/A",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "CC-001",
+    "productName": "Coco Cutter 88x205mm",
+    "specification": "20.5cm | 8.8cm",
+    "weightKg": "N/A",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-001",
+    "productName": "Hoe H301 2.5 lbs",
+    "specification": "14cm | 23cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-002",
+    "productName": "Hoe H301 3 lbs",
+    "specification": "15.3cm | 23.8cm",
+    "weightKg": "1.36kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-003",
+    "productName": "Hoe H301 3.5 lbs",
+    "specification": "16cm | 26.3cm",
+    "weightKg": "1.59kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-004",
+    "productName": "Hoe H302 #3",
+    "specification": "17.3cm | 23cm",
+    "weightKg": "N/A",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-005",
+    "productName": "Hoe H302 #4",
+    "specification": "18.5cm | 24cm",
+    "weightKg": "N/A",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-006",
+    "productName": "Hoe H302 #5",
+    "specification": "19.4cm | 25.8cm",
+    "weightKg": "N/A",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-007",
+    "productName": "Hoe H302 #6",
+    "specification": "20.8cm | 27.7cm",
+    "weightKg": "N/A",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-008",
+    "productName": "Hoe H304 2 lbs",
+    "specification": "14.7cm | 20.8cm",
+    "weightKg": "0.91kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-009",
+    "productName": "Hoe H304 2.5 lbs",
+    "specification": "17.7cm | 22.9cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-010",
+    "productName": "Hoe H304 3 lbs",
+    "specification": "19.3cm | 24.5cm",
+    "weightKg": "1.36kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-011",
+    "productName": "Hoe H305 1.5 lbs",
+    "specification": "12cm | 18.1cm",
+    "weightKg": "0.68kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-012",
+    "productName": "Hoe H305 2 lbs",
+    "specification": "15.2cm | 18.1cm",
+    "weightKg": "0.91kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-013",
+    "productName": "Hoe H305 2.5 lbs",
+    "specification": "15.6cm | 20.5cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-014",
+    "productName": "Hoe H305 3 lbs",
+    "specification": "17.3cm | 24cm",
+    "weightKg": "1.36kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-015",
+    "productName": "Hoe H305 3 lbs Type B",
+    "specification": "17.3cm | 24cm",
+    "weightKg": "1.36kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-016",
+    "productName": "Hoe H305 1.2 kg",
+    "specification": "13.9cm | 25.4cm",
+    "weightKg": "1.20kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-017",
+    "productName": "Hoe H305 1.5 kg",
+    "specification": "14.4cm | 27.4cm",
+    "weightKg": "1.50kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-018",
+    "productName": "Hoe H313 2 lbs",
+    "specification": "18.1cm | 18.2cm",
+    "weightKg": "0.91kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-019",
+    "productName": "Hoe H315 2.5 lbs",
+    "specification": "15.4cm | 24.2cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-020",
+    "productName": "Hoe H315 3 lbs",
+    "specification": "19cm | 27.5cm",
+    "weightKg": "1.36kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-021",
+    "productName": "Hoe H315 3.5 lbs",
+    "specification": "20.8cm | 30.4cm",
+    "weightKg": "1.59kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-022",
+    "productName": "Hoe H315 4 lbs",
+    "specification": "24.4cm | 31.8cm",
+    "weightKg": "1.81kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-023",
+    "productName": "Hoe H316 2.25 lbs",
+    "specification": "15cm | 23.5cm",
+    "weightKg": "1.02kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-024",
+    "productName": "Hoe H316 2.75 lbs",
+    "specification": "17.2cm | 26.3cm",
+    "weightKg": "1.25kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-025",
+    "productName": "Hoe H317 2 lbs",
+    "specification": "16cm | 20.7cm",
+    "weightKg": "0.91kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-026",
+    "productName": "Hoe H317 2.5 lbs",
+    "specification": "16.4cm | 22.6cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-027",
+    "productName": "Hoe H318 2 lbs",
+    "specification": "16cm | 20.7cm",
+    "weightKg": "0.91kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-028",
+    "productName": "Hoe H320 3.25 lbs",
+    "specification": "21cm | 17.7cm",
+    "weightKg": "1.47kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-029",
+    "productName": "Hoe H320 3.75 lbs",
+    "specification": "22.1cm | 22.3cm",
+    "weightKg": "1.70kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-030",
+    "productName": "Hoe H320 3.75 lbs Type B",
+    "specification": "20.6cm | 20.5cm",
+    "weightKg": "1.70kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-031",
+    "productName": "Hoe H320 2.5 lbs",
+    "specification": "15cm | 24cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-032",
+    "productName": "Round Hoe H320R 3.25 lbs",
+    "specification": "21.3cm | 18cm",
+    "weightKg": "1.47kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-033",
+    "productName": "Hoe H321 2.5 lbs",
+    "specification": "18.5cm | 25cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-001",
+    "productName": "Garden Trowel 600g",
+    "specification": "10.5cm | 15cm",
+    "weightKg": "0.60kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-002",
+    "productName": "Garden Trowel 800g",
+    "specification": "12cm | 19cm",
+    "weightKg": "0.80kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-003",
+    "productName": "Garden Trowel 1000g",
+    "specification": "14cm | 21cm",
+    "weightKg": "1.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-004",
+    "productName": "Garden Trowel 1200g",
+    "specification": "16cm | 23cm",
+    "weightKg": "1.20kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-005",
+    "productName": "Garden Trowel H323 600g",
+    "specification": "12cm | 15.5cm",
+    "weightKg": "0.60kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-006",
+    "productName": "Garden Trowel H323 800g",
+    "specification": "14cm | 16.5cm",
+    "weightKg": "0.80kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-007",
+    "productName": "Garden Trowel H323 1000g",
+    "specification": "15.5cm | 18.5cm",
+    "weightKg": "1.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-034",
+    "productName": "Hoe H324 2 lbs",
+    "specification": "19.6cm | 19.2cm",
+    "weightKg": "0.91kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-035",
+    "productName": "Hoe H325 2 lbs",
+    "specification": "19cm | 19.5cm",
+    "weightKg": "0.91kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-036",
+    "productName": "Hoe H325 2.5 lbs",
+    "specification": "19.5cm | 21cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "WD-001",
+    "productName": "Weeder H326 1.125 kg",
+    "specification": "18cm | 25.2cm",
+    "weightKg": "1.12kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "WD-002",
+    "productName": "Weeder H327 0.75 kg",
+    "specification": "15cm | 16cm",
+    "weightKg": "0.75kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "WD-003",
+    "productName": "Weeder H327 1.125 kg",
+    "specification": "16.2cm | 20cm",
+    "weightKg": "1.12kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "WD-004",
+    "productName": "Weeder H329 2.5 lbs",
+    "specification": "33cm | 18.4cm",
+    "weightKg": "1.13kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-037",
+    "productName": "Hoe H330 1 kg",
+    "specification": "13.5cm | 18.3cm",
+    "weightKg": "1.00kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-038",
+    "productName": "Hoe H330 1.2 kg",
+    "specification": "15.8cm | 21.8cm",
+    "weightKg": "1.20kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-039",
+    "productName": "Hoe H330 1 kg Type B",
+    "specification": "13.4cm | 17.7cm",
+    "weightKg": "1.00kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-040",
+    "productName": "Hoe H330 1.2 kg Type B",
+    "specification": "14cm | 20cm",
+    "weightKg": "1.20kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-041",
+    "productName": "Hoe H331 0.7 kg",
+    "specification": "14.5cm | 15cm",
+    "weightKg": "0.70kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-042",
+    "productName": "Hoe H331 0.8 kg",
+    "specification": "16cm | 17.3cm",
+    "weightKg": "0.80kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-043",
+    "productName": "Hoe H331 0.9 kg",
+    "specification": "17cm | 19cm",
+    "weightKg": "0.90kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-044",
+    "productName": "Hoe H331 1 kg",
+    "specification": "18.5cm | 20cm",
+    "weightKg": "1.00kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-045",
+    "productName": "Hoe H332 1 kg",
+    "specification": "24cm | 19.2cm",
+    "weightKg": "1.00kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-046",
+    "productName": "Hoe H333 1 kg",
+    "specification": "18.2cm | 22.7cm",
+    "weightKg": "1.00kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-047",
+    "productName": "Hoe H334 2.5 lbs",
+    "specification": "22.8cm | 17.5cm",
+    "weightKg": "1.13kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-048",
+    "productName": "Hoe H335 2 lbs",
+    "specification": "19.8cm | 20.8cm",
+    "weightKg": "0.91kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-049",
+    "productName": "Hoe H336 0.75 kg",
+    "specification": "10cm | 28cm",
+    "weightKg": "0.75kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-050",
+    "productName": "Hoe H336 1 kg",
+    "specification": "12cm | 29.3cm",
+    "weightKg": "1.00kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-051",
+    "productName": "Hoe H337 600g",
+    "specification": "11.5cm | 19.5cm",
+    "weightKg": "0.60kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-052",
+    "productName": "Hoe H337 800g",
+    "specification": "13cm | 22cm",
+    "weightKg": "0.80kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-053",
+    "productName": "Hoe H338 650g",
+    "specification": "15.5cm | 21.5cm",
+    "weightKg": "0.65kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-054",
+    "productName": "Hoe H338 950g",
+    "specification": "15cm | 27cm",
+    "weightKg": "0.95kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-055",
+    "productName": "Hoe H339 750g",
+    "specification": "11.1cm | 23.7cm",
+    "weightKg": "0.75kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-008",
+    "productName": "Garden Trowel 400g",
+    "specification": "N/A",
+    "weightKg": "0.40kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-009",
+    "productName": "Garden Trowel 600g",
+    "specification": "N/A",
+    "weightKg": "0.60kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-010",
+    "productName": "Garden Trowel 800g",
+    "specification": "N/A",
+    "weightKg": "0.80kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-011",
+    "productName": "Garden Trowel 1000g",
+    "specification": "N/A",
+    "weightKg": "1.00kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-012",
+    "productName": "Small Trowel 300g",
+    "specification": "8.9cm | 12.5cm",
+    "weightKg": "0.30kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-013",
+    "productName": "Small Trowel 320g",
+    "specification": "6.4cm | 13cm",
+    "weightKg": "0.32kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "WD-005",
+    "productName": "Weeder 600g",
+    "specification": "7.4cm | 12cm",
+    "weightKg": "0.60kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "HE-056",
+    "productName": "Weeder 900g",
+    "specification": "14cm | 17.7cm",
+    "weightKg": "0.90kg",
+    "material": "65Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-014",
+    "productName": "Transplanter 400g",
+    "specification": "N/A",
+    "weightKg": "0.40kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-015",
+    "productName": "Transplanter 500g",
+    "specification": "N/A",
+    "weightKg": "0.50kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-016",
+    "productName": "Transplanter 550g",
+    "specification": "N/A",
+    "weightKg": "0.55kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-017",
+    "productName": "Transplanter 600g",
+    "specification": "N/A",
+    "weightKg": "0.60kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-018",
+    "productName": "Trowel G502 600g",
+    "specification": "N/A",
+    "weightKg": "0.60kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "TW-019",
+    "productName": "Trowel G502 700g",
+    "specification": "N/A",
+    "weightKg": "0.70kg",
+    "material": "Carbon Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-001",
+    "productName": "Pickaxe Head 5 lbs",
+    "specification": "N/A",
+    "weightKg": "2.27kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-002",
+    "productName": "Pickaxe Head 5.5 lbs",
+    "specification": "N/A",
+    "weightKg": "2.49kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-003",
+    "productName": "Pickaxe Head 1.5 kg",
+    "specification": "N/A",
+    "weightKg": "1.50kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-004",
+    "productName": "Pickaxe Head 1.8 kg",
+    "specification": "N/A",
+    "weightKg": "1.80kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-005",
+    "productName": "Pickaxe Head 2 kg",
+    "specification": "N/A",
+    "weightKg": "2.00kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-006",
+    "productName": "Pickaxe Head 2.2 kg",
+    "specification": "N/A",
+    "weightKg": "2.20kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-007",
+    "productName": "Pickaxe Head 2.5 kg",
+    "specification": "N/A",
+    "weightKg": "2.50kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-008",
+    "productName": "Pickaxe Head 2.7 kg",
+    "specification": "N/A",
+    "weightKg": "2.70kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-009",
+    "productName": "Pickaxe Head 3 kg",
+    "specification": "N/A",
+    "weightKg": "3.00kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "PA-010",
+    "productName": "Pickaxe Head 3.2 kg",
+    "specification": "N/A",
+    "weightKg": "3.20kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "SH-001",
+    "productName": "Shovel SH001 500g",
+    "specification": "N/A",
+    "weightKg": "0.50kg",
+    "material": "50Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "SH-002",
+    "productName": "Shovel SH001 650g",
+    "specification": "N/A",
+    "weightKg": "0.65kg",
+    "material": "50Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "SH-003",
+    "productName": "Shovel SH002 700g",
+    "specification": "N/A",
+    "weightKg": "0.70kg",
+    "material": "50Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "SH-004",
+    "productName": "Shovel SH003 700g",
+    "specification": "N/A",
+    "weightKg": "0.70kg",
+    "material": "50Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "SH-005",
+    "productName": "Shovel SH005 700g",
+    "specification": "N/A",
+    "weightKg": "0.70kg",
+    "material": "50Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "SH-006",
+    "productName": "Shovel SH006 600g",
+    "specification": "N/A",
+    "weightKg": "0.60kg",
+    "material": "50Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "SH-007",
+    "productName": "Shovel SH007 700g",
+    "specification": "N/A",
+    "weightKg": "0.70kg",
+    "material": "50Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "SH-008",
+    "productName": "Shovel SH008 700g",
+    "specification": "N/A",
+    "weightKg": "0.70kg",
+    "material": "50Mn Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-001",
+    "productName": "Axe Head 1.25 lbs",
+    "specification": "N/A",
+    "weightKg": "0.57kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-002",
+    "productName": "Axe Head 1.5 lbs",
+    "specification": "N/A",
+    "weightKg": "0.68kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-003",
+    "productName": "Axe Head 2 lbs",
+    "specification": "N/A",
+    "weightKg": "0.91kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-004",
+    "productName": "Axe Head 2.5 lbs",
+    "specification": "N/A",
+    "weightKg": "1.13kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-005",
+    "productName": "Axe Head 3 lbs",
+    "specification": "N/A",
+    "weightKg": "1.36kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-006",
+    "productName": "Axe Head 3.5 lbs",
+    "specification": "N/A",
+    "weightKg": "1.59kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-007",
+    "productName": "Axe Head 4 lbs",
+    "specification": "N/A",
+    "weightKg": "1.81kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-008",
+    "productName": "Axe Head 4.5 lbs",
+    "specification": "N/A",
+    "weightKg": "2.04kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-009",
+    "productName": "Axe Head 5 lbs",
+    "specification": "N/A",
+    "weightKg": "2.27kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-010",
+    "productName": "Axe Head 5.5 lbs",
+    "specification": "N/A",
+    "weightKg": "2.49kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  },
+  {
+    "modelNo": "AX-011",
+    "productName": "Axe Head 6 lbs",
+    "specification": "N/A",
+    "weightKg": "2.72kg",
+    "material": "45# Steel",
+    "priceFobUsd": "0.00"
+  }
+]

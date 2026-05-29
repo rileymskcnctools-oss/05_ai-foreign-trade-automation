@@ -28,11 +28,11 @@ ORDER BY avg_price DESC;
 
 ### 项目04数据概览
 
-| 数据集 | 行数 | 说明 |
-|--------|------|------|
-| products.csv | 1,000 | 产品目录（价格、评分、Listing质量指标） |
-| reviews.csv | 629 | 用户评论（情感、验证、国家数据） |
-| competitors.csv | 787 | 竞品关联数据 |
+| 数据集             | 行数    | 说明                      |
+| --------------- | ----- | ----------------------- |
+| products.csv    | 1,000 | 产品目录（价格、评分、Listing质量指标） |
+| reviews.csv     | 629   | 用户评论（情感、验证、国家数据）        |
+| competitors.csv | 787   | 竞品关联数据                  |
 
 ---
 
@@ -94,6 +94,7 @@ competitors_clean.csv: ___ 行, ___ 列
 ## 明天预告
 
 Day 2：SQL进阶 - JOIN
+
 - 关联products表 + competitors表
 - 理解INNER JOIN vs LEFT JOIN
 - 写3个JOIN查询

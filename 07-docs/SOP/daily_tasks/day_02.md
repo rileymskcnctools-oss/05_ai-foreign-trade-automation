@@ -24,11 +24,11 @@ LEFT JOIN competitors_clean c ON p.asin = c.product_asin;
 
 ### 项目04中的应用
 
-| JOIN类型 | 业务问题 |
-|----------|---------|
-| INNER JOIN | 哪些产品同时出现在产品表和竞品表中？ |
-| LEFT JOIN | 所有产品中，哪些没有被竞品关联？ |
-| LEFT JOIN + IS NULL | 找出没有竞品关联的孤儿产品 |
+| JOIN类型              | 业务问题               |
+| ------------------- | ------------------ |
+| INNER JOIN          | 哪些产品同时出现在产品表和竞品表中？ |
+| LEFT JOIN           | 所有产品中，哪些没有被竞品关联？   |
+| LEFT JOIN + IS NULL | 找出没有竞品关联的孤儿产品      |
 
 ---
 
@@ -76,5 +76,6 @@ LEFT JOIN competitors_clean c ON p.asin = c.product_asin;
 ## 明天预告
 
 Day 3：SQL进阶 - 子查询 + CTE
+
 - 用CTE改写复杂查询
 - 写2个嵌套子查询
