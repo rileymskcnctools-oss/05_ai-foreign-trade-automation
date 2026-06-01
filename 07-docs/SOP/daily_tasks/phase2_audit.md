@@ -17,7 +17,6 @@
 
 **问题记录：**
 
-
 ---
 
 ### 1.2 CSV数据库
@@ -31,29 +30,28 @@
 
 ### 2.1 文件存在性
 
-| Prompt文件 | 存在 | 可读 | 大小(KB) | 备注 |
-|-----------|------|------|----------|------|
-| 02-prompts/seo/seo_title_prompt.md | ☐ | ☐ | | |
-| 02-prompts/detail_page/selling_points_prompt.md | ☐ | ☐ | | |
-| 02-prompts/detail_page/alibaba_detail_prompt.md | ☐ | ☐ | | |
-| 02-prompts/rfq/rfq_reply_prompt.md | ☐ | ☐ | | |
-| 02-prompts/whatsapp/whatsapp_script_prompt.md | ☐ | ☐ | | |
-| 02-prompts/batch_workflow/market_localization_prompt.md | ☐ | ☐ | | |
-| 02-prompts/prompt_index.md | ☐ | ☐ | | |
+| Prompt文件                                                | 存在  | 可读  | 大小(KB) | 备注  |
+| ------------------------------------------------------- | --- | --- | ------ | --- |
+| 02-prompts/seo/seo_title_prompt.md                      | ☐   | ☐   |        |     |
+| 02-prompts/detail_page/selling_points_prompt.md         | ☐   | ☐   |        |     |
+| 02-prompts/detail_page/alibaba_detail_prompt.md         | ☐   | ☐   |        |     |
+| 02-prompts/rfq/rfq_reply_prompt.md                      | ☐   | ☐   |        |     |
+| 02-prompts/whatsapp/whatsapp_script_prompt.md           | ☐   | ☐   |        |     |
+| 02-prompts/batch_workflow/market_localization_prompt.md | ☐   | ☐   |        |     |
+| 02-prompts/prompt_index.md                              | ☐   | ☐   |        |     |
 
 ### 2.2 Prompt质量快速评估
 
-| Prompt | 结构清晰度(1-5) | 示例充分性(1-5) | 输出格式明确(1-5) | 备注 |
-|--------|-----------------|-----------------|-------------------|------|
-| seo_title | | | | |
-| selling_points | | | | |
-| alibaba_detail | | | | |
-| rfq_reply | | | | |
-| whatsapp_script | | | | |
-| market_localization | | | | |
+| Prompt              | 结构清晰度(1-5) | 示例充分性(1-5) | 输出格式明确(1-5) | 备注  |
+| ------------------- | ---------- | ---------- | ----------- | --- |
+| seo_title           |            |            |             |     |
+| selling_points      |            |            |             |     |
+| alibaba_detail      |            |            |             |     |
+| rfq_reply           |            |            |             |     |
+| whatsapp_script     |            |            |             |     |
+| market_localization |            |            |             |     |
 
 **问题记录：**
-
 
 ---
 
@@ -72,42 +70,42 @@
 ### 3.2 空壳文件标记（<100字节）
 
 | 产品编码 | 空壳文件 | 当前大小 |
-|----------|---------|---------|
-| | | |
-| | | |
-| | | |
+| ---- | ---- | ---- |
+|      |      |      |
+|      |      |      |
+|      |      |      |
 
 ---
 
 ## 四、工作流脚本检查
 
-| 脚本/文件 | 存在 | 可运行 | 备注 |
-|-----------|------|--------|------|
-| 03-workflows/hermes/Hermes工作流说明.md | ☐ | N/A | 文档 |
-| 03-workflows/batch_processing/ | ☐ | N/A | 目录为空 |
-| 03-workflows/automation/ | ☐ | N/A | 目录为空 |
+| 脚本/文件                              | 存在  | 可运行 | 备注   |
+| ---------------------------------- | --- | --- | ---- |
+| 03-workflows/hermes/Hermes工作流说明.md | ☐   | N/A | 文档   |
+| 03-workflows/batch_processing/     | ☐   | N/A | 目录为空 |
+| 03-workflows/automation/           | ☐   | N/A | 目录为空 |
 
 ---
 
 ## 五、配置文件检查
 
-| 文件 | 存在 | 内容完整 | 备注 |
-|------|------|---------|------|
-| 00-config/field_mapping.md | ☐ | ☐ | |
-| 00-config/project_config.md | ☐ | ☐ | |
-| 00-config/workflow_rules.md | ☐ | ☐ | |
+| 文件                          | 存在  | 内容完整 | 备注  |
+| --------------------------- | --- | ---- | --- |
+| 00-config/field_mapping.md  | ☐   | ☐    |     |
+| 00-config/project_config.md | ☐   | ☐    |     |
+| 00-config/workflow_rules.md | ☐   | ☐    |     |
 
 ---
 
 ## 六、知识库文件检查
 
-| 文件 | 存在 | 大小(KB) | 内容是否充实 |
-|------|------|----------|-------------|
-| 04-database/output/product_knowledge.md | ☐ | | |
-| 04-database/output/keyword_database.md | ☐ | | |
-| 04-database/output/customer_knowledge.md | ☐ | | |
-| 04-database/output/market_knowledge.md | ☐ | | |
-| 04-database/output/extraction_summary.json | ☐ | | |
+| 文件                                         | 存在  | 大小(KB) | 内容是否充实 |
+| ------------------------------------------ | --- | ------ | ------ |
+| 04-database/output/product_knowledge.md    | ☐   |        |        |
+| 04-database/output/keyword_database.md     | ☐   |        |        |
+| 04-database/output/customer_knowledge.md   | ☐   |        |        |
+| 04-database/output/market_knowledge.md     | ☐   |        |        |
+| 04-database/output/extraction_summary.json | ☐   |        |        |
 
 ---
 
