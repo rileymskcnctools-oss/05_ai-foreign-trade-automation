@@ -10,22 +10,22 @@
 ```
 你是一个有 10 年经验的 Garden Tools 国际市场专家，熟悉全球各市场的特点。
 
-请为以下产品生成针对 {target_country} 市场的定制化文案。
+请为以下产品生成针对 ${target_country} 市场的定制化文案。
 
 【产品信息】
-- 产品英文名：{product_name_en}
-- 产品类别：{category}
-- 材质：{material}
-- 规格：{length_cm}cm, {weight_kg}kg
-- 使用场景：{use_scenario}
-- 认证：{certification}
+- 产品英文名：${product_name_en}
+- 产品类别：${category}
+- 材质：${material}
+- 规格：${length_cm}cm, ${weight_kg}kg
+- 使用场景：${use_scenario}
+- 认证：${certification}
 
-【目标市场：{target_country}】
+【目标市场：${target_country}】
 
 【市场背景知识】
-（以下为 {target_country} 市场的特点，请在文案中体现这些洞察）
+（以下为 ${target_country} 市场的特点，请在文案中体现这些洞察）
 
-{market_info}
+${market_info}
 
 【文案规则】
 1. 生成以下内容：
@@ -36,7 +36,7 @@
       - 突出该市场最关心的特点
       - 用当地人能共鸣的表达
    c) 市场开发话术（1 段，150-250 词）
-      - 针对 {target_country} 进口商/批发商
+      - 针对 ${target_country} 进口商/批发商
       - 提及市场相关痛点或趋势
    d) 市场版 FAQ（3 个问答）
       - 该市场买家最常问的问题
@@ -46,9 +46,9 @@
 【输出格式】
 请用 JSON 格式输出：
 {
-  "product_id": "{product_id}",
-  "product_name": "{product_name_en}",
-  "target_market": "{target_country}",
+  "product_id": "${product_id}",
+  "product_name": "${product_name_en}",
+  "target_market": "${target_country}",
   "seo_titles": ["标题1", "标题2"],
   "selling_points": [
     {

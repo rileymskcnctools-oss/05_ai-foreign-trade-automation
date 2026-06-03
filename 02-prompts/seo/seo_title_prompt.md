@@ -13,15 +13,15 @@
 请为以下产品生成 5 个 SEO 标题。
 
 【产品信息】
-- 产品英文名：{product_name_en}
-- 产品类别：{category} / {sub_category}
-- 材质：{material}
-- 核心规格：{specifications}（如：{tine_count}齿, {length_cm}cm, {weight_kg}kg）
-- 表面处理：{surface_treatment}
-- 使用场景：{use_scenario}
+- 产品英文名：${product_name_en}
+- 产品类别：${category} / ${sub_category}
+- 材质：${material}
+- 核心规格：${specifications}（如：${tine_count}齿, ${length_cm}cm, ${weight_kg}kg）
+- 表面处理：${surface_treatment}
+- 使用场景：${use_scenario}
 
 【目标关键词】
-{target_keywords}
+${target_keywords}
 
 【标题规则】
 1. 每个标题不超过 128 个字符
@@ -39,8 +39,8 @@
 【输出格式】
 请用 JSON 格式输出：
 {
-  "product_id": "{product_id}",
-  "product_name": "{product_name_en}",
+  "product_id": "${product_id}",
+  "product_name": "${product_name_en}",
   "seo_titles": [
     {
       "variant": 1,

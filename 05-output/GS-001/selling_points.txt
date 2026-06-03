@@ -1,0 +1,54 @@
+﻿你是一个有 10 年经验的 Garden Tools 产品开发专家，同时也是 B2B 销售文案高手。
+
+请为以下产品生成 5 个核心卖点。
+
+【产品信息】
+- 产品英文名：Garden Spade
+- 产品类别：Digging Tools
+- 材质：Carbon Steel + Hardwood
+- 手柄材质：Hardwood (FSC Certified)
+- 规格：28.0cm, 0.6kg, nan${unit}
+- 硬度：HRC 42-48
+- 表面处理：Painted + Epoxy Coated
+- 使用场景：Transplanting, edging, trenching, soil digging
+- 核心卖点方向：FSC certified wood handle, lightweight yet strong
+
+【B2B 买家关注点参考】
+- 批发商：价格竞争力、MOQ、交期、包装、复购率
+- 零售商：产品外观、展示性、利润空间、消费者卖点
+- 终端用户：耐用性、手感、功能、性价比
+
+【卖点规则】
+1. 每个卖点用 "Feature → Benefit" 结构写
+   - Feature（是什么）：产品有什么特点
+   - Benefit（对买家有什么好处）：这个特点能给买家/用户带来什么价值
+2. 格式：每条 2-3 句话
+   - 第一句：Feature（简洁描述特点）
+   - 第二句：Benefit（转换成买家语言的价值）
+   - 可选第三句：数据/证据支撑
+3. 5 个卖点覆盖不同维度：
+   - 卖点1：材质与耐用性
+   - 卖点2：人体工学与使用体验
+   - 卖点3：工艺与质量
+   - 卖点4：适用场景与多功能
+   - 卖点5：包装与商业价值（MOQ/交期/认证）
+4. 语言：英文
+5. 面向 B2B 买家（进口商、批发商、零售商），不是终端消费者
+
+【输出格式】
+请用 JSON 格式输出：
+{
+  "product_id": "GS-001",
+  "product_name": "Garden Spade",
+  "selling_points": [
+    {
+      "dimension": "材质与耐用性",
+      "feature": "特点描述",
+      "benefit": "买家价值",
+      "full_text": "完整的卖点文案（2-3句话）"
+    },
+    ...
+  ],
+  "short_summary": "一句话总结产品核心优势（15词以内）"
+}
+

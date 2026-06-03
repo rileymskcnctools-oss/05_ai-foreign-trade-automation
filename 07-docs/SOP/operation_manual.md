@@ -65,9 +65,9 @@
 1. 打开 `02-Prompt模板库/01-SEO标题Prompt.md`
 2. 复制全部 Prompt 内容
 3. 替换所有 `{大括号}` 为实际产品数据：
-   - `{product_id}` → GF-001
-   - `{product_name_en}` → Garden Fork
-   - `{category}` → Digging Tools
+   - `${product_id}` → GF-001
+   - `${product_name_en}` → Garden Fork
+   - `${category}` → Digging Tools
    - ...（所有带大括号的都替换）
 4. 把替换后的完整 Prompt 发给 Qwen
 5. 复制 AI 返回的 JSON 结果
@@ -82,24 +82,24 @@
 步骤同上，使用 `03-WhatsApp话术Prompt.md`。
 需要额外指定：
 
-- `{customer_type}` → wholesaler / retailer / distributor
-- `{target_market}` → Nigeria / Germany / Brazil 等
+- `${customer_type}` → wholesaler / retailer / distributor
+- `${target_market}` → Nigeria / Germany / Brazil 等
 
 ### D. 手动生成 RFQ 回复
 
 步骤同上，使用 `04-RFQ回复Prompt.md`。
 需要额外提供：
 
-- `{rfq_content}` → 复制买家的 RFQ 原文
-- `{price_range}` → 你的报价范围
+- `${rfq_content}` → 复制买家的 RFQ 原文
+- `${price_range}` → 你的报价范围
 
 ### E. 手动生成国家市场版
 
 步骤同上，使用 `05-国家市场Prompt.md`。
 需要额外提供：
 
-- `{target_country}` → 目标国家
-- `{market_info}` → 从 `04-知识库/市场知识库.md` 复制对应国家的信息
+- `${target_country}` → 目标国家
+- `${market_info}` → 从 `04-知识库/市场知识库.md` 复制对应国家的信息
 
 ---
 

@@ -13,15 +13,15 @@
 请为以下产品生成 5 个核心卖点。
 
 【产品信息】
-- 产品英文名：{product_name_en}
-- 产品类别：{category}
-- 材质：{material}
-- 手柄材质：{handle_material}
-- 规格：{length_cm}cm, {weight_kg}kg, {tine_count}{unit}
-- 硬度：{hardness}
-- 表面处理：{surface_treatment}
-- 使用场景：{use_scenario}
-- 核心卖点方向：{selling_angle}
+- 产品英文名：${product_name_en}
+- 产品类别：${category}
+- 材质：${material}
+- 手柄材质：${handle_material}
+- 规格：${length_cm}cm, ${weight_kg}kg, ${tine_count}${unit}
+- 硬度：${hardness}
+- 表面处理：${surface_treatment}
+- 使用场景：${use_scenario}
+- 核心卖点方向：${selling_angle}
 
 【B2B 买家关注点参考】
 - 批发商：价格竞争力、MOQ、交期、包装、复购率
@@ -48,8 +48,8 @@
 【输出格式】
 请用 JSON 格式输出：
 {
-  "product_id": "{product_id}",
-  "product_name": "{product_name_en}",
+  "product_id": "${product_id}",
+  "product_name": "${product_name_en}",
   "selling_points": [
     {
       "dimension": "材质与耐用性",

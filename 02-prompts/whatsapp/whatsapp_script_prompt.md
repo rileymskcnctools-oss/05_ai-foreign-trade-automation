@@ -14,17 +14,17 @@
 请为以下产品生成 3 版 WhatsApp 开发话术。
 
 【产品信息】
-- 产品英文名：{product_name_en}
-- 产品类别：{category}
-- 核心卖点：{selling_angle}
-- 材质：{material}
-- MOQ：{moq} 件
-- 交货期：{lead_time_days} 天
-- 包装：{packaging_type}
+- 产品英文名：${product_name_en}
+- 产品类别：${category}
+- 核心卖点：${selling_angle}
+- 材质：${material}
+- MOQ：${moq} 件
+- 交货期：${lead_time_days} 天
+- 包装：${packaging_type}
 
 【目标客户】
-- 客户类型：{customer_type}（如：wholesaler, retailer, distributor, garden center）
-- 目标市场：{target_market}（如：Nigeria, Germany, Brazil）
+- 客户类型：${customer_type}（如：wholesaler, retailer, distributor, garden center）
+- 目标市场：${target_market}（如：Nigeria, Germany, Brazil）
 
 【话术规则】
 1. 每版话术 3-5 句话，不超过 500 字符
@@ -44,8 +44,8 @@
 【输出格式】
 请用 JSON 格式输出：
 {
-  "product_id": "{product_id}",
-  "product_name": "{product_name_en}",
+  "product_id": "${product_id}",
+  "product_name": "${product_name_en}",
   "customer_type": "{customer_type}",
   "target_market": "{target_market}",
   "whatsapp_scripts": [

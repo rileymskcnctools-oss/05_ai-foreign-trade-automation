@@ -13,20 +13,20 @@
 请根据以下 RFQ 内容和产品信息，生成一份专业的 RFQ 回复。
 
 【RFQ 内容】
-{rfq_content}
+${rfq_content}
 
 【我方产品信息】
-- 产品英文名：{product_name_en}
-- 产品类别：{category}
-- 材质：{material}
-- 规格：{length_cm}cm, {weight_kg}kg
-- MOQ：{moq} 件
-- 单价范围：{price_range}（FOB China）
-- 交货期：{lead_time_days} 天
-- 认证：{certification}
-- 包装：{packaging_type}
-- 工厂年产能：{annual_capacity}
-- 核心优势：{selling_angle}
+- 产品英文名：${product_name_en}
+- 产品类别：${category}
+- 材质：${material}
+- 规格：${length_cm}cm, ${weight_kg}kg
+- MOQ：${moq} 件
+- 单价范围：${price_range}（FOB China）
+- 交货期：${lead_time_days} 天
+- 认证：${certification}
+- 包装：${packaging_type}
+- 工厂年产能：${annual_capacity}
+- 核心优势：${selling_angle}
 
 【回复规则】
 1. 总长度 200-400 词，不要太长

@@ -1,13 +1,3 @@
-# 阿里国际站详情页 Prompt
-
-> 用途：生成阿里国际站产品详情页文案
-> 结构：Banner → 卖点 → 参数 → 工厂 → FAQ
-
----
-
-## Prompt 模板
-
-```
 你是一个有 10 年经验的阿里国际站详情页设计师，专门做 Garden Tools 品类。
 你知道什么样的详情页能提高转化率。
 
@@ -80,49 +70,3 @@ Section 7: FAQ (常见问题)
 请直接输出 Markdown 格式的详情页内容，按以上 Section 顺序排列。
 ```
 
----
-
-## 实际使用示例
-
-```
-你是一个有 10 年经验的阿里国际站详情页设计师...
-
-【产品信息】
-- 产品英文名：Garden Fork
-- 产品编号：GF-001
-- 产品类别：Digging Tools
-- 材质：Carbon Steel + Ash Wood
-- 手柄材质：Ash Wood
-- 规格：30cm, 0.8kg, 4齿
-- 硬度：HRC 45-50
-- 表面处理：Polished + Lacquered
-- 使用场景：Garden soil turning, compost mixing
-- MOQ：500
-- 包装：Color Box
-- 交货期：25 天
-- 认证：CE, GS
-- 核心卖点：Extra-strong tines, ergonomic handle
-
-【工厂信息】
-- 工厂经验：15 年
-- 年产能：500,000 pcs
-- 出口市场：Europe, Africa, South America
-- 工厂面积：10,000 sqm
-- 员工数：200+
-- 认证：ISO 9001, BSCI, CE, GS
-
-【详情页结构】
-（同上）
-
-【输出格式】
-（同上）
-```
-
----
-
-## 使用技巧
-
-1. **图片占位符**：用 `[Image: 描述]` 标注需要配图的位置，后期让设计补图
-2. **数据化**：工厂优势要用具体数字（"15年经验" 比 "多年经验" 好）
-3. **SEO**：详情页中自然融入关键词，有助于阿里搜索排名
-4. **移动端适配**：内容分段要短，方便手机端阅读
