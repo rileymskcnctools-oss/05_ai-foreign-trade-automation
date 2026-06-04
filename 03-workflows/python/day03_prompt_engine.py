@@ -17,6 +17,7 @@ def load_template(template_name):
 p = get_product('GS-001')
 #读取seo模板，f_string填充生成文案
 seo_template = load_template('seo_title_template.txt')
+
 # 保存到output/GS-001/seo.txt，安全格式化缺失字段为''
 
 output_path = os.path.join(PROJECT_ROOT, '05-output', 'GS-001', 'seo.txt')
