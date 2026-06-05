@@ -1,31 +1,54 @@
+# FT Workspace v2.0 — .gitignore
+
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
+dist/
+build/
 .venv/
 venv/
 
-# Cache and temp
-.cache/
-*.tmp
-*.log
+# Database files (keep schema, not data)
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/backups/
 
-# OS
+# Environment / secrets
+config/.env
+*.env
+*.key
+
+# OS files
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Archive (not tracked)
-archive/
-
-# Excel temp/lock files
+# Excel lock files
 ~$*.xlsx
 ~$*.xls
 
-# Large data
-*.parquet
-*.sqlite
-*.db
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Old directory (locked files, safe to ignore)
-01-产品数据库模板/
+# Output files (generated content, not tracked)
+output/
+*.pdf
+*.docx
+*.pptx
+
+# Large assets
+assets/images/*.png
+assets/images/*.jpg
+assets/images/*.jpeg
+
+# Logs
+*.log
+
+# Archive
+archive/

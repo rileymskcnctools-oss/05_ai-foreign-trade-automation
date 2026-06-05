@@ -1,0 +1,49 @@
+# FT Workspace v2.0 - Settings
+# Copy this file and fill in actual values.
+# Sensitive values (API keys) go in .env, not here.
+
+app:
+  name: "FT Workspace"
+  version: "2.0.0"
+  language: "en"
+
+database:
+  path: "data/ft_workspace.db"
+  backup_dir: "data/backups"
+  backup_frequency: "daily"
+
+llm:
+  providers:
+    qwen:
+      api_key: "${QWEN_API_KEY}"
+      model: "qwen3.6-plus"
+      base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    openai:
+      api_key: "${OPENAI_API_KEY}"
+      model: "gpt-4o"
+    claude:
+      api_key: "${ANTHROPIC_API_KEY}"
+      model: "claude-sonnet-4-20250514"
+  default_provider: "qwen"
+  routing:
+    seo_content: "qwen"
+    market_research: "openai"
+    client_analysis: "claude"
+    outreach: "qwen"
+    quotation: "qwen"
+
+search:
+  serper_api_key: "${SERPER_API_KEY}"
+
+paths:
+  imports: "data/imports"
+  output: "output"
+  assets: "assets"
+  templates: "templates"
+  prompts: "prompts"
+
+defaults:
+  currency: "USD"
+  incoterm: "FOB"
+  port: "Tianjin"
+  language: "en"
