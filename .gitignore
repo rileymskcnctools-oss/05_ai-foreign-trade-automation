@@ -11,9 +11,9 @@ build/
 venv/
 
 # Database files (keep schema, not data)
-data/*.db
-data/*.db-wal
-data/*.db-shm
+*.db
+*.db-wal
+*.db-shm
 data/backups/
 
 # Environment / secrets

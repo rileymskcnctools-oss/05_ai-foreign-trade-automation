@@ -1,9 +1,8 @@
 """
-FT Workspace v2.0 - Core Database Module
-SQLite connection and operation wrapper.
+FT Workspace v2.0 - 核心数据中央保险箱
+功能：专门负责安全地存放和调取外贸系统的所有数据（产品、客户、询盘、报价）。
 
-Portable design: uses relative paths from project root.
-Works on Windows/Mac/Linux.
+AI运营视角：这是AI的“大后方仓库”。AI生成邮件或分析客户时，都需要从这里调取原材料。
 """
 
 import sqlite3
@@ -14,49 +13,50 @@ from typing import Optional
 
 
 class FTDatabase:
-    """SQLite database wrapper for FT Workspace v2.0."""
+    """外贸数字化工作台的【中央数据总管】"""
 
     def __init__(self, db_path: Optional[str] = None):
         """
-        Initialize database connection.
-
-        Args:
-            db_path: Path to SQLite database file.
-                     If None, uses config default: data/ft_workspace.db
-                     Relative paths are resolved from the project root.
+        【第一步：打开账本】连接或创建一个数据仓库。
+        业务场景：系统刚启动时，AI要先找到账本放在哪。
         """
         if db_path is None:
-            # Find project root (where src/ directory is)
+            # 自动定位：不管你在谁的电脑上运行，自动找到项目根目录
             project_root = self._find_project_root()
+            # 默认把账本文件存放在 data 文件夹下的 ft_workspace.db
             db_path = os.path.join(project_root, "data", "ft_workspace.db")
 
-        # Ensure parent directory exists
+         # 如果 data 文件夹不存在，系统会自动在电脑里创建这个文件夹
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
 
         self.db_path = db_path
         self.conn = sqlite3.connect(db_path)
         self.conn.row_factory = sqlite3.Row
-        self.conn.execute("PRAGMA journal_mode=WAL")  # Better concurrency
+        
+        # 【运营保障】：开启“快车道”模式。
+        # 效果：当AI在后台批量轰炸式写入一万条询盘时，前台业务员查产品依然流畅，不卡顿。
+        self.conn.execute("PRAGMA journal_mode=WAL")  
+        
+        # 【运营保障】：开启“红线绑定”约束。
+        # 效果：防止员工把报价单发给一个“根本不存在的垃圾客户”，保证公司数据资产100%正确。
         self.conn.execute("PRAGMA foreign_keys=ON")
 
     @staticmethod
     def _find_project_root() -> str:
-        """Find project root by looking for src/ directory."""
+        """
+        【路径自适应 GPS】自动寻找电脑里项目的根目录。
+        运营价值：告别写死路径（如 C:/Users/Admin...），换电脑运行代码绝不报错。
+        """
         current = os.path.dirname(os.path.abspath(__file__))
-        # Go up from src/core/ to project root
         while current != os.path.dirname(current):
             if os.path.isdir(os.path.join(current, "src")):
                 return current
             current = os.path.dirname(current)
-        # Fallback: current working directory
         return os.getcwd()
 
     def init_schema(self, schema_path: Optional[str] = None) -> None:
         """
-        Initialize database from schema.sql file.
-
-        Args:
-            schema_path: Path to schema.sql. If None, auto-detects.
+        【搭建毛坯房】第一次建立数据库时，按照说明书（schema.sql）把各个抽屉格子建好。
         """
         if schema_path is None:
             project_root = self._find_project_root()
@@ -68,31 +68,33 @@ class FTDatabase:
         self.conn.executescript(sql)
         self.conn.commit()
 
+    # ---- 下面4个是底层的“搬砖”工具函数，AI数据运营只需要知道它们是干嘛的，不用管怎么写 ----
+
     def execute(self, sql: str, params: tuple = ()) -> sqlite3.Cursor:
-        """Execute a SQL statement."""
+        """跑一趟腿：去仓库里执行一次指定的命令（比如修改、删除）"""
         return self.conn.execute(sql, params)
 
     def executemany(self, sql: str, params_list: list) -> sqlite3.Cursor:
-        """Execute a SQL statement with multiple parameter sets."""
+        """大货车拉货：一次性执行好几条同样的命令（比如批量录入100个产品）"""
         return self.conn.executemany(sql, params_list)
 
     def fetchone(self, sql: str, params: tuple = ()) -> Optional[dict]:
-        """Execute and fetch one row as dict."""
+        """精准取件：去仓库里只拿【一条】特定的数据（比如查某一个特定客户的邮箱）"""
         cursor = self.conn.execute(sql, params)
         row = cursor.fetchone()
-        return dict(row) if row else None
+        return dict(row) if row else None # 要么返回一个字典，要么返回 None（空）
 
     def fetchall(self, sql: str, params: tuple = ()) -> list[dict]:
-        """Execute and fetch all rows as list of dicts."""
+        """打包取件：把符合条件的一堆数据【全拿出来】（比如把所有“美国”的客户都列出来）"""
         cursor = self.conn.execute(sql, params)
-        return [dict(row) for row in cursor.fetchall()]
+        return [dict(row) for row in cursor.fetchall()] # 返回一个字典列表，每个字典代表一行数据
 
     def commit(self) -> None:
-        """Commit current transaction."""
+        """点确认键：把刚才对数据的修改真正保存到硬盘里（类似按 Ctrl + S）"""
         self.conn.commit()
 
     def close(self) -> None:
-        """Close database connection."""
+        """锁上库门：下班关闭数据库连接，释放电脑内存"""
         if self.conn:
             self.conn.close()
 
@@ -100,21 +102,24 @@ class FTDatabase:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """【安全防摔锁】如果代码中途断电或者报错，系统会自动把没存好的数据回滚，然后安全锁门"""
         if exc_type is None:
             self.commit()
         self.close()
 
     # ============================================================
-    # Product Operations
+    # 模块一：产品中心（AI生成素材的原材料库）
     # ============================================================
 
     def product_count(self) -> int:
-        """Get total product count."""
+        """运营看板：获取当前仓库里总共有多少款产品"""
         result = self.fetchone("SELECT COUNT(*) as cnt FROM products")
         return result["cnt"] if result else 0
 
     def product_get(self, product_code: str) -> Optional[dict]:
-        """Get a single product by code."""
+        """【AI核心调用点】：输入一个产品编码（如 GS-001），把它的长宽高、材质、价格全拿出来。
+        业务场景：AI要写一封产品推广信，先用这个函数把产品参数喂给AI。
+        """
         return self.fetchone(
             "SELECT * FROM products WHERE product_code = ?",
             (product_code,)
@@ -127,7 +132,7 @@ class FTDatabase:
         limit: int = 100,
         offset: int = 0
     ) -> list[dict]:
-        """List products with optional filters."""
+        """筛选目录：按分类（比如：园林剪刀）或者状态（在售），批量拉出产品清单"""
         sql = "SELECT * FROM products WHERE 1=1"
         params = []
 
@@ -144,12 +149,10 @@ class FTDatabase:
 
         return self.fetchall(sql, tuple(params))
 
-    def product_search(
-        self,
-        query: str,
-        limit: int = 20
-    ) -> list[dict]:
-        """Search products by code, name, or keywords."""
+    def product_search(self, query: str, limit: int = 20) -> list[dict]:
+        """【极速模糊搜索】：业务员输入“钢材”，系统横跨产品编码、中英文名、SEO关键词一秒找出结果。
+        业务场景：应对客户在即时通讯（WhatsApp）上的突发提问。
+        """
         pattern = f"%{query}%"
         return self.fetchall(
             """SELECT * FROM products
@@ -163,7 +166,9 @@ class FTDatabase:
         )
 
     def product_insert(self, product: dict) -> bool:
-        """Insert a single product. Returns True on success."""
+        """动态录入：把一个产品字典塞进数据库，如果编码重复了，就直接更新覆盖。
+        运营价值：以后产品表就算增加新的列（如最少起订量 MOQ），这行代码自动适应，不用重写！
+        """
         columns = ", ".join(product.keys())
         placeholders = ", ".join(["?"] * len(product))
         sql = f"INSERT OR REPLACE INTO products ({columns}) VALUES ({placeholders})"
@@ -171,11 +176,11 @@ class FTDatabase:
             self.execute(sql, tuple(product.values()))
             return True
         except sqlite3.Error as e:
-            print(f"Error inserting product {product.get('product_code', '?')}: {e}")
+            print(f"录入产品 {product.get('product_code', '?')} 失败，原因: {e}")
             return False
 
     def product_insert_many(self, products: list[dict]) -> dict:
-        """Insert multiple products. Returns {success: N, errors: [...]}"""
+        """批量大导入：一键把从各大展会或独立站爬取下来的几百个产品导入系统，并报告成功和失败的名字"""
         success = 0
         errors = []
         for p in products:
@@ -187,16 +192,16 @@ class FTDatabase:
         return {"success": success, "errors": errors}
 
     # ============================================================
-    # Client Operations
+    # 模块二：客户资产（公司最核心的客户画像库）
     # ============================================================
 
     def client_count(self) -> int:
-        """Get total client count."""
+        """运营看板：看看目前公海和私域里一共积累了多少个核心客户"""
         result = self.fetchone("SELECT COUNT(*) as cnt FROM clients")
         return result["cnt"] if result else 0
 
     def client_create(self, client: dict) -> Optional[int]:
-        """Create a new client. Returns client ID."""
+        """新客户登记：AI从领英（LinkedIn）或展会名片上识别出新客户后，自动将其打入档案库，返回客户系统编号"""
         columns = ", ".join(client.keys())
         placeholders = ", ".join(["?"] * len(client))
         sql = f"INSERT INTO clients ({columns}) VALUES ({placeholders})"
@@ -205,14 +210,14 @@ class FTDatabase:
         return cursor.lastrowid
 
     def client_get(self, client_id: int) -> Optional[dict]:
-        """Get a single client by ID."""
+        """查阅客户档案：根据系统分配的客户编号，调出该客人的全部背景资料（如国家、邮箱）"""
         return self.fetchone(
             "SELECT * FROM clients WHERE id = ?",
             (client_id,)
         )
 
     def client_search(self, query: str, limit: int = 20) -> list[dict]:
-        """Search clients by name, country, or contact."""
+        """模糊找客户：输入“美国”或某个买家名字，瞬间找出对应客人的所有联系方式"""
         pattern = f"%{query}%"
         return self.fetchall(
             """SELECT * FROM clients
@@ -226,11 +231,13 @@ class FTDatabase:
         )
 
     # ============================================================
-    # Activity Operations
+    # 模块三：跟进记录（SaaS系统的行为漏斗数据）
     # ============================================================
 
     def activity_log(self, client_id: int, activity: dict) -> Optional[int]:
-        """Log a client activity. Returns activity ID."""
+        """【AI自动痕迹记录】：AI每帮业务员给客户发完一封邮件，或者发送了一条WhatsApp，自动在本种群写下记录。
+        运营价值：谁什么时候干了什么，一目了然，再也不用人工写跟进日志。
+        """
         activity["client_id"] = client_id
         if "created_at" not in activity:
             activity["created_at"] = datetime.now().isoformat()
@@ -242,20 +249,23 @@ class FTDatabase:
         return cursor.lastrowid
 
     def activity_list(self, client_id: int, limit: int = 50) -> list[dict]:
-        """List activities for a client."""
+        """跟进流水线：把某个客户过去半年的所有联系痕迹，按时间倒序（最新的在最上面）全部拉出来"""
         return self.fetchall(
             "SELECT * FROM activities WHERE client_id = ? ORDER BY created_at DESC LIMIT ?",
             (client_id, limit)
         )
 
     # ============================================================
-    # Quotation Operations
+    # 模块四：报价单（成交前的临门一脚数据）
     # ============================================================
 
     def quotation_create(self, quotation: dict) -> Optional[str]:
-        """Create a quotation. Returns quotation number."""
+        """
+        【流水号自动发放机】：自动生成绝对不撞车的、正规企业报价单号。
+        业务逻辑：系统去数一数今年发了多少份报价，如果是第5份，自动拼出 `QT-2026-0005`。
+        运营价值：避免两个业务员手写出同一个单号，导致财务对账和发货彻底打架。
+        """
         if "quotation_no" not in quotation:
-            # Auto-generate: QT-YYYY-NNNN
             count = self.fetchone("SELECT COUNT(*) as cnt FROM quotations")
             seq = (count["cnt"] if count else 0) + 1
             year = datetime.now().strftime("%Y")
@@ -272,11 +282,15 @@ class FTDatabase:
         return quotation["quotation_no"]
 
     # ============================================================
-    # Stats & Analytics
+    # 模块五：数据看板与大后方安全备份
     # ============================================================
 
     def stats_summary(self) -> dict:
-        """Get overall system statistics."""
+        """
+        【老板最爱的运营大屏数据】：一键吐出全公司的核心运营指标。
+        数据产出：产品总数、客户总数、活跃商品数、总跟进次数、总报价单数、总询盘数。
+        运营价值：直接拿这些数字去对接 BI 看板，作为每周汇报的数据来源。
+        """
         return {
             "products": self.product_count(),
             "clients": self.client_count(),
@@ -294,12 +308,12 @@ class FTDatabase:
             )["cnt"],
         }
 
-    # ============================================================
-    # Backup
-    # ============================================================
-
     def backup(self, backup_path: Optional[str] = None) -> str:
-        """Backup database file."""
+        """
+        【防离职变卖、防病毒的核心盾牌】：零中断数据热备份。
+        业务逻辑：先把账本锁上一秒钟，复制一个副本到 backups 文件夹，并贴上当时的时间戳，再瞬间解锁。
+        运营价值：做数据资产管理的底线！即便公司电脑中勒索病毒、或者员工恶意删库，一键提取昨天的副本，1秒全盘复原。
+        """
         if backup_path is None:
             project_root = self._find_project_root()
             backup_dir = os.path.join(project_root, "data", "backups")
@@ -308,10 +322,10 @@ class FTDatabase:
             backup_path = os.path.join(backup_dir, f"ft_workspace_{timestamp}.db")
 
         import shutil
-        # Close connection before backup
-        self.conn.close()
-        shutil.copy2(self.db_path, backup_path)
-        # Reopen connection
+        self.conn.close()  # 备份前先安全断开，防止损坏
+        shutil.copy2(self.db_path, backup_path)  # 物理复制账本文件
+        
+        # 复制完后立刻悄悄重连，前台业务员根本感觉不到系统刚才停顿了
         self.conn = sqlite3.connect(self.db_path)
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
@@ -320,7 +334,7 @@ class FTDatabase:
         return backup_path
 
     def __del__(self):
-        """Ensure connection is closed on garbage collection."""
+        """【下班随手关灯机制】当程序彻底关闭时，确保连接不会死锁，安全退出"""
         try:
             if hasattr(self, "conn") and self.conn:
                 self.conn.close()
