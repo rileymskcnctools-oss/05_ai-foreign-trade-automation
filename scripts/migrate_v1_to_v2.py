@@ -122,6 +122,12 @@ def migrate(csv_path: str, db_path: str = None) -> dict:
     # Step 2: Initialize database
     db = FTDatabase(db_path)
     report["db_path"] = db.db_path
+
+    # Drop old v1.0 products table if it exists (uses product_id instead of product_code)
+    # Safe because we re-import all data from CSV below.
+    db.execute("DROP TABLE IF EXISTS products")
+    db.commit()
+
     db.init_schema()
 
     # Step 3: Read CSV and migrate

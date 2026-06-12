@@ -131,6 +131,8 @@ def find_missing_fields(
         fields = [
             "product_name_en", "category", "material",
             "length_cm", "weight_kg", "moq", "packaging_type",
+            "hs_code",
+            "loading_qty_20ft", "loading_qty_40ft", "loading_qty_40hq",
         ]
 
     if db is None:
