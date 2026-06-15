@@ -1,7 +1,6 @@
 """
 FT Workspace v2.0 — Quick CLI tool (外贸AI工作台命令行总控制器)
 
-【第二周运营官视角】：
 这个脚本是整个工作台的“前台营业厅”。你敲击的各种快捷命令（如 stats, search, get）都会由它接收。
 在第二周的开发目标中，这里将是扩展 `python ft_cli.py generate GS-001 --type seo` 指令的主战场。
 """
@@ -136,22 +135,118 @@ def cmd_missing(db):
     在第二周的业务流里，AI 生成完 SEO 标题后会保存数据库。你可以通过运行这个命令，
     一眼看清还有多少产品的 `seo_title` 字段是（empty）漏填状态。
     """
-    missing = find_missing_fields(db=db)
+    missing = find_missing_fields(db=db) # 揪出缺失字段的产品清单
     if not missing:
         print("All required fields are filled!")
         return
 
-    print("Missing Fields Report:")
-    print("=" * 50)
-    for field, codes in sorted(missing.items(), key=lambda x: -len(x[1])):
-        print(f"  {field:25s} {len(codes):>4d} products missing")
-        if len(codes) <= 5:
+    print("Missing fields:")
+    # 循环告诉运营：比如有 10 个产品缺“产品尺寸”，有 5 个产品缺“包装信息”
+    for field, codes in missing.items():
+        print(f"  {field}: {len(codes)} products missing")
+        # 如果缺的产品少于10个，把产品编码全部打出来；如果太多，就只打前5个，剩下的省略
+        if len(codes) <= 10:
             for c in codes:
                 print(f"    - {c}")
         else:
-            for c in codes[:3]:
+            for c in codes[:5]:
                 print(f"    - {c}")
-            print(f"    ... and {len(codes) - 3} more")
+            print(f"    ... and {len(codes) - 5} more")
+
+
+def cmd_generate(db, product_code, content_type="seo"):
+    """
+    【命令六: AI内容生成器】对应: python scripts/ft_cli.py generate GF-001 --type seo
+
+    数据管道: 数据库产品数据 -> Prompt模板填充 -> AI生成 -> 结果回写数据库
+
+    支持的 content_type:
+      - seo: 生成3个阿里国际站SEO标题
+      - selling_points: 生成5个产品卖点
+      - whatsapp: 生成WhatsApp开发话术
+    """
+    from src.core.llm_client import LLMClient
+    from src.utils.prompts import load_prompt, fill_prompt, build_product_data
+
+    # 第一步: 从数据库获取产品数据
+    product = db.product_get(product_code)
+    if not product:
+        print(f"❌ 产品 {product_code} 不存在")
+        return
+
+    print(f"📦 产品: {product.get('product_name_en', 'Unknown')}")
+    print(f"📋 生成类型: {content_type}")
+
+    # 第二步: 根据类型选择对应的 Prompt 模板
+    template_map = {
+        "seo": "seo/alibaba_title",
+        "selling_points": "seo/selling_points",
+        "whatsapp": "social/whatsapp",
+    }
+
+    if content_type not in template_map:
+        print(f"❌ 不支持的类型: {content_type}")
+        print(f"   支持的类型: {', '.join(template_map.keys())}")
+        return
+
+    # 第三步: 加载模板并填充产品数据
+    try:
+        data = build_product_data(product)
+        template = load_prompt(template_map[content_type])
+        filled = fill_prompt(template, data)
+    except Exception as e:
+        print(f"❌ 模板加载失败: {e}")
+        return
+
+    # 第四步: 调用 AI 生成内容
+    print("🤖 正在调用 AI 生成...")
+    try:
+        llm = LLMClient(scenario="seo_content")
+        response = llm.chat(filled, max_tokens=1000, temperature=0.7)
+    except Exception as e:
+        print(f"❌ AI 调用失败: {e}")
+        return
+
+    # 第五步: 把 AI 生成的结果保存回数据库
+    try:
+        if content_type == "seo":
+            titles = [line.strip() for line in response.strip().split("\n")
+                      if line.strip() and len(line.strip()) > 10]
+            titles = titles[:3]
+            while len(titles) < 3:
+                titles.append("")
+
+            db.execute(
+                "UPDATE products SET seo_title_1=?, seo_title_2=?, seo_title_3=?, "
+                "updated_at=datetime('now') WHERE product_code=?",
+                (titles[0], titles[1], titles[2], product_code)
+            )
+            print(f"\n✅ 生成完成! 共 {len([t for t in titles if t])} 个标题:")
+            for i, t in enumerate(titles, 1):
+                if t:
+                    print(f"  标题{i}: {t}")
+
+        elif content_type == "selling_points":
+            db.execute(
+                "UPDATE products SET selling_points=?, updated_at=datetime('now') WHERE product_code=?",
+                (response.strip(), product_code)
+            )
+            print(f"\n✅ 卖点生成完成!")
+
+        elif content_type == "whatsapp":
+            db.execute(
+                "UPDATE products SET whatsapp_script=?, updated_at=datetime('now') WHERE product_code=?",
+                (response.strip(), product_code)
+            )
+            print(f"\n✅ WhatsApp 话术生成完成!")
+
+        db.commit()
+        print(f"💾 已保存到数据库")
+
+    except Exception as e:
+        print(f"❌ 保存失败: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 def print_help():
@@ -169,6 +264,7 @@ def print_help():
     print("  list [--category CAT]        List products")
     print("  get <product_code>           Get product details")
     print("  export <filepath>            Export to CSV")
+    print("  generate <code> [--type TYPE]  Generate AI content (seo/selling_points/whatsapp)")
     print("  missing                      Show missing fields")
     print("  help                         Show this help")
 
@@ -227,9 +323,20 @@ def main():
             
         elif command == "missing":
             cmd_missing(db)
-            
+
+        elif command == "generate":
+            if len(args) < 2:
+                print("Usage: ft_cli.py generate <product_code> [--type seo|selling_points|whatsapp]")
+                return
+            product_code = args[1]
+            content_type = "seo"
+            if "--type" in args:
+                idx = args.index("--type")
+                if idx + 1 < len(args):
+                    content_type = args[idx + 1]
+            cmd_generate(db, product_code, content_type)
+        
         else:
-            # 💡 第二周的项目任务：你需要在下面追加一个 `elif command == "generate":` 分支！
             print(f"Unknown command: {command}")
             print_help()
             

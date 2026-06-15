@@ -51,12 +51,12 @@ class LLMClient:
 
     # Provider routing map: scenario -> provider key
     ROUTING = {
-        "seo_content": "qwen",
-        "market_research": "openai",
-        "client_analysis": "claude",
-        "outreach": "qwen",
-        "quotation": "qwen",
-        "default": "qwen",
+        "seo_content": "deepseek",
+        "market_research": "deepseek",
+        "client_analysis": "deepseek",
+        "outreach": "deepseek",
+        "quotation": "deepseek",
+        "default": "deepseek",
     }
 
     def __init__(
@@ -132,6 +132,13 @@ class LLMClient:
                 "default_model": "gemini-2.0-flash",
                 "base_url": None,
                 "base_url_env": None,
+            },
+            "deepseek": {
+                "api_key_env": "DEEPSEEK_API_KEY",
+                "model_env": "DEEPSEEK_MODEL",
+                "default_model": "deepseek-chat",
+                "base_url": "https://api.deepseek.com",
+                "base_url_env": "DEEPSEEK_BASE_URL",
             },
         }
         return config.get(self.provider, config["qwen"])

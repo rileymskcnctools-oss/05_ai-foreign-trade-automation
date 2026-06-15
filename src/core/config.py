@@ -148,7 +148,7 @@ class Config:
         系统会立刻启动 B 计划，去系统的 `.env` 环境里强制抓取 `DEEPSEEK_API_KEY`。
         """
         key = self.get(f"llm.providers.{provider}.api_key")
-        if key and key.startswith("sk-your") or not key:
+        if key and (key.startswith("sk-your") or key.startswith("${")) or not key:
             env_key = os.environ.get(f"{provider.upper()}_API_KEY")
             if env_key:
                 return env_key

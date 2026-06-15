@@ -24,13 +24,17 @@ llm:
     claude:
       api_key: "${ANTHROPIC_API_KEY}"
       model: "claude-sonnet-4-20250514"
-  default_provider: "qwen"
+    deepseek:
+      api_key: "${DEEPSEEK_API_KEY}"
+      model: "deepseek-chat"
+      base_url: "https://api.deepseek.com"
+  default_provider: "deepseek"
   routing:
-    seo_content: "qwen"
-    market_research: "openai"
-    client_analysis: "claude"
-    outreach: "qwen"
-    quotation: "qwen"
+    seo_content: "deepseek"
+    market_research: "deepseek"
+    client_analysis: "deepseek"
+    outreach: "deepseek"
+    quotation: "deepseek"
 
 search:
   serper_api_key: "${SERPER_API_KEY}"

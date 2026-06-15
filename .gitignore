@@ -52,3 +52,4 @@ assets/images/*.jpeg
 
 # Archive
 archive/
+config/.env.bak
