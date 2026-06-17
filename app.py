@@ -1,6 +1,6 @@
 """
 FT Workspace v2.0 — Streamlit Web界面
-第6周：产品搜索页面 + AI内容展示
+第7周：产品搜索 + AI内容生成完整工作台
 
 启动方式: streamlit run app.py
 """
@@ -32,6 +32,88 @@ def get_db():
     return FTDatabase()
 
 db = get_db()
+
+# ============================================================
+# AI生成函数（复用CLI的逻辑）
+# ============================================================
+def generate_ai_content(product_code, content_type):
+    """
+    调用AI生成内容并保存到数据库
+    返回: (success: bool, message: str)
+    """
+    import traceback
+    from src.core.llm_client import LLMClient
+    from src.utils.prompts import load_prompt, fill_prompt, build_product_data
+
+    # 1. 获取产品数据
+    product = db.product_get(product_code)
+    if not product:
+        return False, f"产品 {product_code} 不存在"
+
+    # 2. 选择Prompt模板
+    template_map = {
+        "seo": "seo/alibaba_title",
+        "selling_points": "seo/selling_points",
+        "whatsapp": "social/whatsapp",
+    }
+
+    if content_type not in template_map:
+        return False, f"不支持的类型: {content_type}"
+
+    # 3. 加载模板并填充数据
+    try:
+        data = build_product_data(product)
+        template = load_prompt(template_map[content_type])
+        filled = fill_prompt(template, data)
+    except Exception as e:
+        tb = traceback.format_exc()
+        return False, f"模板加载失败: {e}\n\n{tb}"
+
+    # 4. 调用AI
+    try:
+        llm = LLMClient(scenario="seo_content")
+        response = llm.chat(filled, max_tokens=1000, temperature=0.7)
+    except Exception as e:
+        tb = traceback.format_exc()
+        return False, f"AI调用失败: {e}\n\n{tb}"
+
+    # 5. 保存到数据库
+    try:
+        if content_type == "seo":
+            titles = [line.strip() for line in response.strip().split("\n")
+                      if line.strip() and len(line.strip()) > 10]
+            titles = titles[:3]
+            while len(titles) < 3:
+                titles.append("")
+
+            db.execute(
+                "UPDATE products SET seo_title_1=?, seo_title_2=?, seo_title_3=?, "
+                "updated_at=datetime('now') WHERE product_code=?",
+                (titles[0], titles[1], titles[2], product_code)
+            )
+            count = len([t for t in titles if t])
+            return True, f"生成了 {count} 个SEO标题"
+
+        elif content_type == "selling_points":
+            db.execute(
+                "UPDATE products SET selling_points=?, updated_at=datetime('now') WHERE product_code=?",
+                (response.strip(), product_code)
+            )
+            return True, "卖点生成完成"
+
+        elif content_type == "whatsapp":
+            db.execute(
+                "UPDATE products SET whatsapp_script=?, updated_at=datetime('now') WHERE product_code=?",
+                (response.strip(), product_code)
+            )
+            return True, "WhatsApp话术生成完成"
+
+        db.commit()
+        return True, "保存成功"
+
+    except Exception as e:
+        return False, f"保存失败: {e}"
+
 
 # ============================================================
 # 侧边栏：搜索和筛选
@@ -125,9 +207,8 @@ else:
 
         if product:
             # 把数据库行转成字典（方便取值）
-            col_names = [desc[0] for desc in db.execute("PRAGMA table_info(products)").fetchall()]
             col_names = [c[1] for c in db.execute("PRAGMA table_info(products)").fetchall()]
-            prod_dict = dict(zip([c[0] for c in db.execute("PRAGMA table_info(products)").fetchall()], product))
+            prod_dict = dict(zip([c[1] for c in db.execute("PRAGMA table_info(products)").fetchall()], product))
 
             # 左右两栏布局
             left, right = st.columns([1, 1])
@@ -167,17 +248,57 @@ else:
             st.divider()
 
             # ============================================================
-            # AI生成内容展示
+            # 第7周新增：AI生成功能区
             # ============================================================
-            st.subheader("🤖 AI生成内容")
+            st.subheader("🤖 AI内容生成")
+
+            # 三个生成按钮并排
+            gen_col1, gen_col2, gen_col3 = st.columns(3)
+
+            with gen_col1:
+                if st.button("📝 生成SEO标题", key="btn_seo", use_container_width=True):
+                    with st.spinner("正在调用AI生成SEO标题..."):
+                        success, msg = generate_ai_content(selected_code, "seo")
+                    if success:
+                        st.success(f"✅ {msg}")
+                        st.rerun()  # 刷新页面显示新内容
+                    else:
+                        st.error(f"❌ {msg}")
+
+            with gen_col2:
+                if st.button("💡 生成卖点", key="btn_selling", use_container_width=True):
+                    with st.spinner("正在调用AI生成卖点..."):
+                        success, msg = generate_ai_content(selected_code, "selling_points")
+                    if success:
+                        st.success(f"✅ {msg}")
+                        st.rerun()
+                    else:
+                        st.error(f"❌ {msg}")
+
+            with gen_col3:
+                if st.button("📱 生成WhatsApp话术", key="btn_whatsapp", use_container_width=True):
+                    with st.spinner("正在调用AI生成WhatsApp话术..."):
+                        success, msg = generate_ai_content(selected_code, "whatsapp")
+                    if success:
+                        st.success(f"✅ {msg}")
+                        st.rerun()
+                    else:
+                        st.error(f"❌ {msg}")
+
+            st.divider()
+
+            # ============================================================
+            # AI生成内容展示（已有内容显示，没有则提示）
+            # ============================================================
+            st.subheader("📄 AI生成结果")
 
             # SEO标题
             seo1 = prod_dict.get('seo_title_1', '')
             seo2 = prod_dict.get('seo_title_2', '')
             seo3 = prod_dict.get('seo_title_3', '')
 
+            st.markdown("#### 📝 SEO标题（阿里国际站）")
             if seo1 or seo2 or seo3:
-                st.markdown("#### 📝 SEO标题（阿里国际站）")
                 if seo1:
                     st.info(f"**标题1:** {seo1}")
                 if seo2:
@@ -185,23 +306,23 @@ else:
                 if seo3:
                     st.info(f"**标题3:** {seo3}")
             else:
-                st.warning("SEO标题尚未生成，请先运行: python scripts/ft_cli.py generate " + selected_code)
+                st.warning("尚未生成，请点击上方「生成SEO标题」按钮")
 
             # 卖点
             selling = prod_dict.get('selling_points', '')
+            st.markdown("#### 💡 产品卖点")
             if selling:
-                st.markdown("#### 💡 产品卖点")
                 st.text_area("卖点内容", selling, height=150, disabled=True, key="selling")
             else:
-                st.warning("卖点尚未生成，请先运行: python scripts/ft_cli.py generate " + selected_code + " --type selling_points")
+                st.warning("尚未生成，请点击上方「生成卖点」按钮")
 
             # WhatsApp话术
             whatsapp = prod_dict.get('whatsapp_script', '')
+            st.markdown("#### 📱 WhatsApp话术")
             if whatsapp:
-                st.markdown("#### 📱 WhatsApp话术")
                 st.text_area("话术内容", whatsapp, height=150, disabled=True, key="whatsapp")
             else:
-                st.warning("WhatsApp话术尚未生成，请先运行: python scripts/ft_cli.py generate " + selected_code + " --type whatsapp")
+                st.warning("尚未生成，请点击上方「生成WhatsApp话术」按钮")
 
             # 目标关键词和使用场景
             st.divider()

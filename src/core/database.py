@@ -30,7 +30,7 @@ class FTDatabase:
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
 
         self.db_path = db_path
-        self.conn = sqlite3.connect(db_path, check_same_thread=False)
+        self.conn = sqlite3.connect(db_path, check_same_thread=False, timeout=10)
         self.conn.row_factory = sqlite3.Row
         
         # 【运营保障】：开启“快车道”模式。
