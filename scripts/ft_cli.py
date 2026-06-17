@@ -172,7 +172,7 @@ def cmd_generate(db, product_code, content_type="seo"):
     product = db.product_get(product_code)
     if not product:
         print(f"❌ 产品 {product_code} 不存在")
-        return
+        return False
 
     print(f"📦 产品: {product.get('product_name_en', 'Unknown')}")
     print(f"📋 生成类型: {content_type}")
@@ -187,7 +187,7 @@ def cmd_generate(db, product_code, content_type="seo"):
     if content_type not in template_map:
         print(f"❌ 不支持的类型: {content_type}")
         print(f"   支持的类型: {', '.join(template_map.keys())}")
-        return
+        return False
 
     # 第三步: 加载模板并填充产品数据
     try:
@@ -196,7 +196,7 @@ def cmd_generate(db, product_code, content_type="seo"):
         filled = fill_prompt(template, data)
     except Exception as e:
         print(f"❌ 模板加载失败: {e}")
-        return
+        return False
 
     # 第四步: 调用 AI 生成内容
     print("🤖 正在调用 AI 生成...")
@@ -205,7 +205,7 @@ def cmd_generate(db, product_code, content_type="seo"):
         response = llm.chat(filled, max_tokens=1000, temperature=0.7)
     except Exception as e:
         print(f"❌ AI 调用失败: {e}")
-        return
+        return False
 
     # 第五步: 把 AI 生成的结果保存回数据库
     try:
@@ -242,11 +242,170 @@ def cmd_generate(db, product_code, content_type="seo"):
 
         db.commit()
         print(f"💾 已保存到数据库")
+        return True
 
     except Exception as e:
         print(f"❌ 保存失败: {e}")
         import traceback
         traceback.print_exc()
+        return False
+
+
+def cmd_generate_all(db, content_types=None, max_retries=3, limit=None):
+    """
+    【第5周新增: 批量AI生成器】对应: python scripts/ft_cli.py generate --all
+
+    批量为所有产品生成AI内容，支持:
+      - 失败重试（默认3次）
+      - 日志记录到 output/generate_log.txt
+      - 实时进度显示
+      - 生成状态汇总
+      - --limit N 限制处理数量（测试用）
+    """
+    import time
+    import datetime
+    from src.core.llm_client import LLMClient
+    from src.utils.prompts import load_prompt, fill_prompt, build_product_data
+
+    if content_types is None:
+        content_types = ["seo", "selling_points", "whatsapp"]
+
+    # 获取所有产品
+    products = db.product_list(limit=9999)
+    if not products:
+        print("❌ 数据库中没有产品")
+        return
+
+    # 如果设置了 limit，只取前 N 个产品
+    if limit and limit > 0:
+        products = products[:limit]
+
+    total = len(products)
+    print("=" * 60)
+    print("FT Workspace v2.0 — 批量生成")
+    print("=" * 60)
+    print(f"  产品总数: {total}")
+    print(f"  生成类型: {', '.join(content_types)}")
+    print(f"  最大重试: {max_retries} 次")
+    print()
+
+    # 初始化日志文件
+    log_dir = os.path.join(PROJECT_ROOT, "output")
+    os.makedirs(log_dir, exist_ok=True)
+    log_path = os.path.join(log_dir, "generate_log.txt")
+
+    # 状态统计
+    stats = {"success": 0, "failed": 0, "skipped": 0, "retries": 0}
+    start_time = time.time()
+
+    template_map = {
+        "seo": "seo/alibaba_title",
+        "selling_points": "seo/selling_points",
+        "whatsapp": "social/whatsapp",
+    }
+
+    def log_msg(msg):
+        """写入日志文件"""
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open(log_path, "a", encoding="utf-8") as f:
+            f.write(f"[{timestamp}] {msg}\n")
+
+    log_msg(f"========== 批量生成开始 ==========")
+    log_msg(f"产品总数: {total}, 生成类型: {content_types}")
+
+    for idx, product in enumerate(products, 1):
+        code = product["product_code"]
+        name = product.get("product_name_en", "Unknown")
+        progress = f"[{idx}/{total}]"
+
+        print(f"\n{progress} {code} — {name}")
+
+        for ctype in content_types:
+            if ctype not in template_map:
+                continue
+
+            success = False
+            for attempt in range(1, max_retries + 1):
+                try:
+                    # 获取完整产品数据
+                    full_product = db.product_get(code)
+                    if not full_product:
+                        print(f"  ⏭️  {ctype}: 产品不存在，跳过")
+                        stats["skipped"] += 1
+                        log_msg(f"SKIP {code} {ctype}: 产品不存在")
+                        success = True  # 标记为已处理
+                        break
+
+                    # 加载模板并填充
+                    data = build_product_data(full_product)
+                    template = load_prompt(template_map[ctype])
+                    filled = fill_prompt(template, data)
+
+                    # 调用 AI
+                    llm = LLMClient(scenario="seo_content")
+                    response = llm.chat(filled, max_tokens=1000, temperature=0.7)
+
+                    # 保存到数据库
+                    if ctype == "seo":
+                        titles = [line.strip() for line in response.strip().split("\n")
+                                  if line.strip() and len(line.strip()) > 10][:3]
+                        while len(titles) < 3:
+                            titles.append("")
+                        db.execute(
+                            "UPDATE products SET seo_title_1=?, seo_title_2=?, seo_title_3=?, "
+                            "updated_at=datetime('now') WHERE product_code=?",
+                            (titles[0], titles[1], titles[2], code)
+                        )
+                    elif ctype == "selling_points":
+                        db.execute(
+                            "UPDATE products SET selling_points=?, updated_at=datetime('now') WHERE product_code=?",
+                            (response.strip(), code)
+                        )
+                    elif ctype == "whatsapp":
+                        db.execute(
+                            "UPDATE products SET whatsapp_script=?, updated_at=datetime('now') WHERE product_code=?",
+                            (response.strip(), code)
+                        )
+
+                    db.commit()
+                    print(f"  ✅ {ctype} 生成成功")
+                    log_msg(f"OK {code} {ctype}")
+                    success = True
+                    break
+
+                except Exception as e:
+                    if attempt < max_retries:
+                        print(f"  ⚠️  {ctype} 第{attempt}次失败: {e}，重试中...")
+                        log_msg(f"RETRY {code} {ctype} attempt {attempt}: {e}")
+                        stats["retries"] += 1
+                        time.sleep(2 * attempt)  # 递增等待
+                    else:
+                        print(f"  ❌ {ctype} 失败（已重试{max_retries}次）: {e}")
+                        log_msg(f"FAIL {code} {ctype}: {e}")
+
+            if success:
+                stats["success"] += 1
+            else:
+                stats["failed"] += 1
+
+    # 最终汇总
+    elapsed = time.time() - start_time
+    minutes = int(elapsed // 60)
+    seconds = int(elapsed % 60)
+
+    print()
+    print("=" * 60)
+    print("批量生成完成!")
+    print("=" * 60)
+    print(f"  ✅ 成功: {stats['success']}")
+    print(f"  ❌ 失败: {stats['failed']}")
+    print(f"  ⏭️  跳过: {stats['skipped']}")
+    print(f"  🔄 重试次数: {stats['retries']}")
+    print(f"  ⏱️  总耗时: {minutes}分{seconds}秒")
+    print(f"  📝 日志文件: {log_path}")
+
+    log_msg(f"========== 批量生成结束 ==========")
+    log_msg(f"成功: {stats['success']}, 失败: {stats['failed']}, 跳过: {stats['skipped']}, 重试: {stats['retries']}, 耗时: {minutes}分{seconds}秒")
 
 
 def print_help():
@@ -265,6 +424,7 @@ def print_help():
     print("  get <product_code>           Get product details")
     print("  export <filepath>            Export to CSV")
     print("  generate <code> [--type TYPE]  Generate AI content (seo/selling_points/whatsapp)")
+    print("  generate all [--type TYPE]     Batch generate for ALL products")
     print("  missing                      Show missing fields")
     print("  help                         Show this help")
 
@@ -326,15 +486,36 @@ def main():
 
         elif command == "generate":
             if len(args) < 2:
-                print("Usage: ft_cli.py generate <product_code> [--type seo|selling_points|whatsapp]")
+                print("Usage: ft_cli.py generate <product_code|all> [--type seo|selling_points|whatsapp]")
+                print("       ft_cli.py generate all                    # 批量生成全部产品")
+                print("       ft_cli.py generate all --type seo          # 批量只生成SEO")
                 return
-            product_code = args[1]
-            content_type = "seo"
-            if "--type" in args:
-                idx = args.index("--type")
-                if idx + 1 < len(args):
-                    content_type = args[idx + 1]
-            cmd_generate(db, product_code, content_type)
+
+            # 检查是否是 --all 批量模式
+            if args[1] == "all":
+                content_types = ["seo", "selling_points", "whatsapp"]
+                limit = None
+                if "--type" in args:
+                    idx = args.index("--type")
+                    if idx + 1 < len(args):
+                        content_types = [args[idx + 1]]
+                if "--limit" in args:
+                    idx = args.index("--limit")
+                    if idx + 1 < len(args):
+                        try:
+                            limit = int(args[idx + 1])
+                        except ValueError:
+                            print("❌ --limit 必须是数字")
+                            return
+                cmd_generate_all(db, content_types=content_types, limit=limit)
+            else:
+                product_code = args[1]
+                content_type = "seo"
+                if "--type" in args:
+                    idx = args.index("--type")
+                    if idx + 1 < len(args):
+                        content_type = args[idx + 1]
+                cmd_generate(db, product_code, content_type)
         
         else:
             print(f"Unknown command: {command}")
