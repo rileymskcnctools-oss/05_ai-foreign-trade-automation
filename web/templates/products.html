@@ -161,7 +161,11 @@ function buildDetailHTML(p) {
         ${p.target_keywords ? `<div class="border-t border-gray-200 pt-3"><label class="text-xs text-gray-500 uppercase">关键词</label><p class="text-sm">${p.target_keywords}</p></div>` : ''}
         ${p.specifications ? `<div class="border-t border-gray-200 pt-3"><label class="text-xs text-gray-500 uppercase">📐 产品规格</label><pre class="text-sm text-gray-700 whitespace-pre-wrap font-sans mt-1 bg-gray-50 rounded-lg p-3">${p.specifications}</pre></div>` : ''}
         ${p.dimensions_image ? `<div class="border-t border-gray-200 pt-3"><label class="text-xs text-gray-500 uppercase">尺寸图</label><p class="text-sm text-primary-600">${p.dimensions_image}</p></div>` : ''}
-        ${p.selling_points ? `<div class="border-t border-gray-200 pt-3"><label class="text-xs text-gray-500 uppercase">卖点</label><p class="text-sm whitespace-pre-wrap">${p.selling_points}</p></div>` : ''}
+        ${p.selling_points ? `
+        <div class="border-t border-gray-200 pt-3">
+            <label class="text-xs text-gray-500 uppercase">✨ 卖点</label>
+            <div class="mt-2 bg-gray-50 rounded-lg p-4 space-y-3 text-sm text-gray-700 leading-relaxed selling-points">${formatSellingPoints(p.selling_points)}</div>
+        </div>` : ''}
 
         <!-- AI 内容生成按钮 -->
         <div class="border-t border-gray-200 pt-4">
@@ -302,5 +306,26 @@ function copyAiResult() {
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
 });
+
+// 格式化卖点文本: **粗体** → <b>, 换行 → <br>, 段落分隔
+function formatSellingPoints(text) {
+    if (!text) return '';
+    return text
+        // **bold** → <b>bold</b>
+        .replace(/\*\*(.+?)\*\*/g, '<span class="font-semibold text-gray-900 block text-base mb-1">$1</span>')
+        // 换行分段: 连续两个换行 = 段落分隔
+        .split(/\n\s*\n/)
+        .map(para => {
+            // 单个换行变 <br>
+            const html = para.trim().replace(/\n/g, '<br>');
+            // 如果以 Feature: 或 Benefit: 开头，加左侧色条
+            if (html.startsWith('Feature:') || html.startsWith('Benefit:')) {
+                const color = html.startsWith('Feature:') ? 'border-blue-400' : 'border-green-400';
+                return `<div class="pl-3 ${color} border-l-2">${html}</div>`;
+            }
+            return `<div>${html}</div>`;
+        })
+        .join('');
+}
 </script>
 {% endblock %}
