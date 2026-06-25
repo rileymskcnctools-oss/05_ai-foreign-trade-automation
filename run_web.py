@@ -7,7 +7,7 @@ import uvicorn
 if __name__ == "__main__":
     print("=" * 50)
     print("🔨 FT Workspace v3.0")
-    print("🌐 http://localhost:8000")
-    print("📖 API Docs: http://localhost:8000/docs")
+    print("🌐 http://localhost:8001")
+    print("📖 API Docs: http://localhost:8001/docs")
     print("=" * 50)
-    uvicorn.run("web.main:app", host="0.0.0.0", port=8000, reload=True, log_level="info")
+    uvicorn.run("web.main:app", host="0.0.0.0", port=8001, reload=True, log_level="info")

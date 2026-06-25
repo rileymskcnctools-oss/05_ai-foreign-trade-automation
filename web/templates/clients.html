@@ -21,10 +21,10 @@
 <!-- Pipeline 概览 -->
 {% if pipeline %}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-    {% for stage in pipeline %}
+    {% for status, count in pipeline.items() %}
     <div class="bg-white rounded-xl border border-gray-200 p-4 card-hover">
-        <p class="text-xs text-gray-500 uppercase">{{ stage.status }}</p>
-        <p class="text-xl font-bold text-gray-900">{{ stage.count }}</p>
+        <p class="text-xs text-gray-500 uppercase">{{ status }}</p>
+        <p class="text-xl font-bold text-gray-900">{{ count }}</p>
     </div>
     {% endfor %}
 </div>
