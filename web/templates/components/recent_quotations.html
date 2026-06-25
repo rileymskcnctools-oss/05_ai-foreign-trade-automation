@@ -1,0 +1,19 @@
+<!-- 最近报价 (HTMX 局部) -->
+{% if quotations %}
+<div class="space-y-3">
+    {% for q in quotations %}
+    <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+        <div>
+            <p class="text-sm font-medium text-gray-900">{{ q.quotation_no }}</p>
+            <p class="text-xs text-gray-500">{{ q.company_name or '-' }} · {{ q.country or '' }}</p>
+        </div>
+        <div class="text-right">
+            <p class="text-sm font-medium text-gray-900">${{ "%.2f"|format(q.total_amount or 0) }}</p>
+            <p class="text-xs text-gray-500">{{ q.status or 'draft' }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-sm text-gray-400">暂无报价记录</p>
+{% endif %}

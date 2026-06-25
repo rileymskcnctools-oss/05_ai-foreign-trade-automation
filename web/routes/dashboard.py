@@ -25,6 +25,35 @@ async def dashboard_page(request: Request):
     })
 
 
+@router.get("/dashboard/partials/recent-quotations", response_class=HTMLResponse)
+async def partial_recent_quotations(request: Request):
+    """HTMX: 最近报价局部"""
+    db = get_db()
+    quotations = db.fetchall(
+        """SELECT q.quotation_no, c.company_name, c.country, q.total_amount, q.status, q.created_at
+           FROM quotations q LEFT JOIN clients c ON q.client_id = c.id
+           ORDER BY q.created_at DESC LIMIT 5"""
+    )
+    return templates.TemplateResponse(request, "components/recent_quotations.html", {
+        "request": request, "quotations": quotations,
+    })
+
+
+@router.get("/dashboard/partials/reminders", response_class=HTMLResponse)
+async def partial_reminders(request: Request):
+    """HTMX: 跟进提醒局部"""
+    db = get_db()
+    try:
+        from src.m8_crm.reminder import FollowUpReminder
+        reminder = FollowUpReminder(db)
+        summary = reminder.reminder_summary()
+    except Exception:
+        summary = []
+    return templates.TemplateResponse(request, "components/reminders.html", {
+        "request": request, "reminders": summary,
+    })
+
+
 @router.get("/api/dashboard/stats")
 async def dashboard_stats():
     """API: 快速统计数据 (JSON)"""

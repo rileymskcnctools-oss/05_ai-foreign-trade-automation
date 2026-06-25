@@ -1,0 +1,36 @@
+<!-- 产品表格 (HTMX 局部替换) -->
+<div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">编码</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">英文名</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">分类</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">材质</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">长度</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">重量</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
+            </tr>
+        </thead>
+        <tbody id="product-table-body" class="divide-y divide-gray-200">
+            {% for p in products %}
+            <tr class="table-row-hover">
+                <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ p.product_code }}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">{{ p.product_name_en }}</td>
+                <td class="px-4 py-3 text-sm text-gray-500">{{ p.category or '-' }}</td>
+                <td class="px-4 py-3 text-sm text-gray-500">{{ p.material or '-' }}</td>
+                <td class="px-4 py-3 text-sm text-gray-500">{{ p.length_cm or '-' }} cm</td>
+                <td class="px-4 py-3 text-sm text-gray-500">{{ p.weight_kg or '-' }} kg</td>
+                <td class="px-4 py-3 text-sm">
+                    <button onclick="openProductDetail('{{ p.product_code }}')"
+                            class="text-primary-600 hover:text-primary-800 font-medium text-sm">详情</button>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="px-4 py-8 text-center text-gray-500">没有找到匹配的产品</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

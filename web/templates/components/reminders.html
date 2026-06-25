@@ -1,0 +1,24 @@
+<!-- 跟进提醒 (HTMX 局部) -->
+{% if reminders %}
+<div class="space-y-3">
+    {% for r in reminders %}
+    <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+        <div>
+            <p class="text-sm font-medium text-gray-900">{{ r.client_name or r.company_name or 'Unknown' }}</p>
+            <p class="text-xs text-gray-500">{{ r.reason or r.activity_type or '需要跟进' }}</p>
+        </div>
+        <div>
+            {% if r.days_overdue and r.days_overdue > 0 %}
+            <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">逾期 {{ r.days_overdue }} 天</span>
+            {% elif r.follow_up_date %}
+            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">{{ r.follow_up_date }}</span>
+            {% else %}
+            <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">待定</span>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-sm text-gray-400">暂无待跟进客户 👍</p>
+{% endif %}

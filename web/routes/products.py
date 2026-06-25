@@ -37,6 +37,30 @@ async def products_page(
     })
 
 
+@router.get("/partials/table", response_class=HTMLResponse)
+async def products_table_partial(
+    request: Request,
+    q: str = Query("", description="搜索关键词"),
+    category: str = Query("", description="分类筛选"),
+    page: int = Query(1, ge=1),
+):
+    """HTMX: 返回产品表格局部 HTML (不包含 base.html)"""
+    db = get_db()
+    from src.m1_product_db.search import get_categories, search, filter_products
+
+    categories = get_categories(db)
+    if q:
+        products = search(q, db=db, limit=50)
+    elif category:
+        products = filter_products(category=category, db=db, limit=50)
+    else:
+        products = db.product_list(limit=50, offset=(page - 1) * 50)
+
+    return templates.TemplateResponse(request, "components/product_table.html", {
+        "request": request, "products": products, "categories": categories,
+    })
+
+
 @router.get("/api/search")
 async def api_search(q: str = Query(""), limit: int = Query(20)):
     """API: 产品搜索 (JSON)"""
