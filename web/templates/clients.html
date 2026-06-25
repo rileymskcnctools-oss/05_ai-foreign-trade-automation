@@ -196,6 +196,105 @@
         </div>
     </div>
 </div>
+
+<!-- 客户详情滑出面板 -->
+<div id="client-detail-panel" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-30" onclick="closeClientDetail()"></div>
+    <div class="absolute top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl overflow-y-auto transform transition-transform duration-300 translate-x-full" id="client-detail-slide">
+        <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+            <div class="flex items-center gap-3">
+                <h2 id="detail-company-name" class="text-lg font-semibold text-gray-900">客户详情</h2>
+                <span id="detail-grade-badge" class="px-2 py-0.5 text-xs font-bold rounded-full"></span>
+            </div>
+            <button onclick="closeClientDetail()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        </div>
+        <div class="p-6 space-y-6" id="detail-content">
+            <!-- 联系信息卡片 -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100">
+                <h3 class="text-sm font-semibold text-gray-700 mb-3">📇 联系信息</h3>
+                <div id="detail-contacts" class="grid grid-cols-2 gap-3"></div>
+            </div>
+            <!-- 业务信息 -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5">
+                <h3 class="text-sm font-semibold text-gray-700 mb-3">🏢 业务信息</h3>
+                <div id="detail-business" class="grid grid-cols-2 gap-3"></div>
+            </div>
+            <!-- 跟进记录 -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-semibold text-gray-700">📋 跟进记录</h3>
+                    <button onclick="showAddActivity()" class="text-xs text-primary-600 hover:text-primary-800 font-medium">+ 新增记录</button>
+                </div>
+                <div id="detail-activities" class="space-y-3"></div>
+            </div>
+            <!-- AI 背调 -->
+            <div class="bg-white rounded-xl border border-gray-200 p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-semibold text-gray-700">🤖 AI 客户分析</h3>
+                    <button id="btn-run-analysis" onclick="runClientAnalysis()" class="px-3 py-1.5 bg-purple-600 text-white text-xs rounded-lg hover:bg-purple-700 font-medium">🔍 运行背调</button>
+                </div>
+                <div id="detail-analysis" class="text-sm text-gray-500">点击"运行背调"开始 AI 分析</div>
+            </div>
+            <!-- 快捷操作 -->
+            <div class="flex gap-3">
+                <button onclick="editCurrentClient()" class="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm font-medium">✏️ 编辑客户</button>
+                <button onclick="closeClientDetail()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增跟进记录弹窗 -->
+<div id="add-activity-modal" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-40" onclick="document.getElementById('add-activity-modal').classList.add('hidden')"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl">
+        <div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">📝 新增跟进记录</h2>
+            <button onclick="document.getElementById('add-activity-modal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        </div>
+        <form class="p-6 space-y-4" onsubmit="submitActivity(event)">
+            <input type="hidden" id="activity-client-id">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">类型</label>
+                    <select name="activity_type" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm">
+                        <option value="email">📧 邮件</option>
+                        <option value="whatsapp">📱 WhatsApp</option>
+                        <option value="call">📞 电话</option>
+                        <option value="meeting">🤝 会面</option>
+                        <option value="note">📝 备注</option>
+                        <option value="quotation">💰 报价</option>
+                        <option value="sample">📦 寄样</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">方向</label>
+                    <select name="direction" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm">
+                        <option value="outbound">→ 发出</option>
+                        <option value="inbound">← 收到</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">主题</label>
+                <input type="text" name="subject" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="如: 报价跟进">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">内容</label>
+                <textarea name="content" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="记录详情..."></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">下次跟进日期</label>
+                <input type="date" name="follow_up_date" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('add-activity-modal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">取消</button>
+                <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -348,10 +447,14 @@ function generateClients() {
         </div>`;
         html += '<div class="space-y-3" id="ai-clients-list">';
         data.clients.forEach((c, i) => {
+            const hasContact = c.email || c.whatsapp || c.linkedin;
+            const contactBadge = hasContact
+                ? '<span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">有联系方式</span>'
+                : '<span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700">无联系方式</span>';
             html += `<div class="bg-white border border-gray-200 rounded-lg p-4">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="font-medium text-gray-900">${c.company_name}</p>
+                        <p class="font-medium text-gray-900">${c.company_name} ${contactBadge}</p>
                         <p class="text-xs text-gray-500">${c.country || ''} · ${c.business_type || ''}</p>
                     </div>
                     <span class="px-2 py-1 text-xs font-bold rounded-full ${c.grade==='A'?'bg-green-100 text-green-700':c.grade==='B'?'bg-blue-100 text-blue-700':'bg-yellow-100 text-yellow-700'}">
@@ -359,11 +462,18 @@ function generateClients() {
                     </span>
                 </div>
                 <p class="text-sm text-gray-600 mt-2">${c.target_note || ''}</p>
-                <div class="flex gap-4 mt-2 text-xs text-gray-400">
-                    <span>📦 ${c.estimated_volume || ''}</span>
-                    <span>🔍 ${c.source || ''}</span>
+                <div class="flex flex-wrap gap-3 mt-2 text-xs text-gray-500">
+                    <span>📦 ${c.estimated_container_volume || c.estimated_annual_import_volume || ''}</span>
                     <span>🛒 ${c.main_products || ''}</span>
+                    ${c.source ? '<span class="text-purple-600 font-medium">📌 ' + c.source + '</span>' : ''}
+                    ${c.source_channel ? '<span class="text-indigo-500">🔗 ' + c.source_channel + '</span>' : ''}
                 </div>
+                ${hasContact ? `<div class="flex flex-wrap gap-3 mt-1.5 text-xs text-gray-400">
+                    ${c.contact_person ? '<span>👤 ' + c.contact_person + '</span>' : ''}
+                    ${c.email ? '<span>✉️ ' + c.email + '</span>' : ''}
+                    ${c.whatsapp ? '<span>📱 ' + c.whatsapp + '</span>' : ''}
+                    ${c.linkedin ? '<span>💼 ' + c.linkedin + '</span>' : ''}
+                </div>` : ''}
             </div>`;
         });
         html += '</div>';
@@ -390,12 +500,223 @@ function batchInsertClients() {
     .then(r => r.json())
     .then(result => {
         if (result.success) {
-            showToast(`✅ 成功录入 ${result.inserted} 个客户`);
-            setTimeout(() => location.reload(), 1000);
+            let msg = `✅ 成功录入 ${result.inserted} 个客户`;
+            if (result.skipped > 0) {
+                msg += `，跳过 ${result.skipped} 个重复客户`;
+            }
+            showToast(msg);
+            setTimeout(() => location.reload(), 1500);
         } else {
             showToast('❌ 录入失败', 'error');
         }
     });
+}
+
+// ========== 客户详情面板 ==========
+let _currentClientId = null;
+let _currentClientData = null;
+
+const GRADE_COLORS = {
+    'A': 'bg-green-100 text-green-700',
+    'B': 'bg-blue-100 text-blue-700',
+    'C': 'bg-yellow-100 text-yellow-700',
+    'D': 'bg-red-100 text-red-700',
+};
+
+const ACTIVITY_ICONS = {
+    'email': '📧', 'whatsapp': '📱', 'call': '📞', 'meeting': '🤝',
+    'note': '📝', 'quotation': '💰', 'sample': '📦',
+};
+
+function openClientDetail(id) {
+    _currentClientId = id;
+    const panel = document.getElementById('client-detail-panel');
+    const slide = document.getElementById('client-detail-slide');
+    panel.classList.remove('hidden');
+    requestAnimationFrame(() => { slide.classList.remove('translate-x-full'); });
+
+    // 加载客户数据
+    fetch(`/clients/api/${id}`)
+        .then(r => r.json())
+        .then(c => {
+            _currentClientData = c;
+            document.getElementById('detail-company-name').textContent = c.company_name || '未知公司';
+            const badge = document.getElementById('detail-grade-badge');
+            badge.textContent = c.grade || '-';
+            badge.className = `px-2 py-0.5 text-xs font-bold rounded-full ${GRADE_COLORS[c.grade] || 'bg-gray-100 text-gray-700'}`;
+
+            // 联系信息
+            let contactHtml = '';
+            const contactFields = [
+                {icon: '👤', label: '联系人', val: c.contact_person},
+                {icon: '✉️', label: '邮箱', val: c.email, link: `mailto:${c.email}`},
+                {icon: '📱', label: 'WhatsApp', val: c.whatsapp, link: c.whatsapp ? `https://wa.me/${c.whatsapp.replace(/[^0-9]/g,'')}` : ''},
+                {icon: '📞', label: '电话', val: c.phone, link: c.phone ? `tel:${c.phone}` : ''},
+                {icon: '💼', label: 'LinkedIn', val: c.linkedin, link: c.linkedin},
+                {icon: '🌐', label: '网站', val: c.website, link: c.website},
+            ];
+            contactFields.forEach(f => {
+                if (f.val) {
+                    const display = f.link
+                        ? `<a href="${f.link}" target="_blank" class="text-primary-600 hover:underline">${f.val}</a>`
+                        : `<span>${f.val}</span>`;
+                    contactHtml += `<div class="flex items-center gap-2 text-sm"><span>${f.icon}</span><span class="text-gray-500">${f.label}:</span>${display}</div>`;
+                }
+            });
+            if (!contactHtml) contactHtml = '<p class="text-gray-400 text-sm col-span-2">暂无联系方式</p>';
+            document.getElementById('detail-contacts').innerHTML = contactHtml;
+
+            // 业务信息
+            const bizFields = [
+                {label: '业务类型', val: c.business_type},
+                {label: '主营产品', val: c.main_products},
+                {label: '目标市场', val: c.market_regions},
+                {label: '预估体量', val: c.estimated_volume},
+                {label: '来源', val: c.source},
+                {label: '状态', val: c.status},
+            ];
+            let bizHtml = '';
+            bizFields.forEach(f => {
+                bizHtml += `<div class="text-sm"><span class="text-gray-500">${f.label}:</span> <span class="font-medium">${f.val || '-'}</span></div>`;
+            });
+            if (c.notes) bizHtml += `<div class="text-sm col-span-2"><span class="text-gray-500">备注:</span> <span>${c.notes}</span></div>`;
+            document.getElementById('detail-business').innerHTML = bizHtml;
+
+            // 加载跟进记录
+            loadActivities(id);
+
+            // 加载已有分析
+            loadExistingAnalysis(id);
+        });
+}
+
+function closeClientDetail() {
+    const slide = document.getElementById('client-detail-slide');
+    slide.classList.add('translate-x-full');
+    setTimeout(() => {
+        document.getElementById('client-detail-panel').classList.add('hidden');
+    }, 300);
+}
+
+function editCurrentClient() {
+    closeClientDetail();
+    setTimeout(() => editClient(_currentClientId), 350);
+}
+
+function loadActivities(clientId) {
+    fetch(`/clients/api/${clientId}/activities`)
+        .then(r => r.json())
+        .then(data => {
+            const activities = data.activities || [];
+            const container = document.getElementById('detail-activities');
+            if (!activities.length) {
+                container.innerHTML = '<p class="text-gray-400 text-sm">暂无跟进记录</p>';
+                return;
+            }
+            let html = '';
+            activities.forEach(a => {
+                const icon = ACTIVITY_ICONS[a.activity_type] || '📋';
+                const dir = a.direction === 'inbound' ? '←' : '→';
+                const date = a.created_at ? a.created_at.substring(0, 16) : '';
+                html += `<div class="flex gap-3 p-3 bg-gray-50 rounded-lg">
+                    <span class="text-lg">${icon}</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="font-medium text-sm">${a.subject || a.activity_type}</span>
+                            <span class="text-xs text-gray-400">${dir}</span>
+                            <span class="text-xs text-gray-400 ml-auto">${date}</span>
+                        </div>
+                        ${a.content ? `<p class="text-xs text-gray-600 mt-1 truncate">${a.content}</p>` : ''}
+                        ${a.follow_up_date ? `<span class="text-xs text-orange-500 mt-1 inline-block">⏰ 跟进: ${a.follow_up_date}</span>` : ''}
+                    </div>
+                </div>`;
+            });
+            container.innerHTML = html;
+        });
+}
+
+function loadExistingAnalysis(clientId) {
+    fetch(`/clients/api/${clientId}/analyses`)
+        .then(r => r.json())
+        .then(data => {
+            const analyses = data.analyses || [];
+            if (analyses.length > 0) {
+                const latest = analyses[0];
+                renderAnalysis(latest);
+            }
+        })
+        .catch(() => {}); // 静默失败
+}
+
+function renderAnalysis(a) {
+    const container = document.getElementById('detail-analysis');
+    let html = '';
+    if (a.summary) {
+        html += `<div class="bg-purple-50 rounded-lg p-4 mb-3"><p class="text-sm text-purple-900 whitespace-pre-wrap">${a.summary}</p></div>`;
+    }
+    if (a.recommendations) {
+        html += `<div class="bg-green-50 rounded-lg p-4 mb-3"><h4 class="text-xs font-semibold text-green-700 mb-1">💡 建议</h4><p class="text-sm text-green-900 whitespace-pre-wrap">${a.recommendations}</p></div>`;
+    }
+    if (a.grade_suggested) {
+        html += `<div class="text-xs text-gray-500">建议评级: <span class="font-bold">${a.grade_suggested}</span> · 分析时间: ${a.created_at || '-'}</div>`;
+    }
+    if (html) container.innerHTML = html;
+}
+
+function showAddActivity() {
+    document.getElementById('activity-client-id').value = _currentClientId;
+    document.getElementById('add-activity-modal').classList.remove('hidden');
+}
+
+function submitActivity(e) {
+    e.preventDefault();
+    const form = e.target;
+    const clientId = document.getElementById('activity-client-id').value;
+    const data = {};
+    new FormData(form).forEach((v, k) => { if (v) data[k] = v; });
+
+    fetch(`/clients/api/${clientId}/activities`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+    })
+    .then(r => r.json())
+    .then(result => {
+        if (result.success) {
+            showToast('✅ 跟进记录已添加');
+            document.getElementById('add-activity-modal').classList.add('hidden');
+            form.reset();
+            loadActivities(parseInt(clientId));
+        } else {
+            showToast('❌ 保存失败', 'error');
+        }
+    });
+}
+
+function runClientAnalysis() {
+    const btn = document.getElementById('btn-run-analysis');
+    const container = document.getElementById('detail-analysis');
+    btn.textContent = '⏳ 分析中...';
+    btn.disabled = true;
+    container.innerHTML = '<p class="text-blue-500">🤖 AI 正在分析客户信息，请稍候...</p>';
+
+    fetch(`/clients/api/${_currentClientId}/analyze`, { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            btn.textContent = '🔍 运行背调';
+            btn.disabled = false;
+            if (data.success) {
+                renderAnalysis(data.analysis);
+                showToast('✅ 客户分析完成');
+            } else {
+                container.innerHTML = `<p class="text-red-500">分析失败: ${data.error}</p>`;
+            }
+        })
+        .catch(err => {
+            btn.textContent = '🔍 运行背调';
+            btn.disabled = false;
+            container.innerHTML = `<p class="text-red-500">请求失败: ${err.message}</p>`;
+        });
 }
 </script>
 {% endblock %}

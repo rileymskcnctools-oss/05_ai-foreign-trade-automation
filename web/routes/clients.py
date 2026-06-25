@@ -167,6 +167,144 @@ async def api_export_clients_csv():
     )
 
 
+@router.get("/api/{client_id}/analyses")
+async def api_get_client_analyses(client_id: int):
+    """API: 获取客户分析记录"""
+    db = get_db()
+    analyses = db.fetchall(
+        "SELECT * FROM client_analyses WHERE client_id=? ORDER BY created_at DESC LIMIT 5",
+        (client_id,)
+    )
+    return {"analyses": analyses}
+
+
+@router.post("/api/{client_id}/analyze")
+async def api_run_client_analysis(client_id: int):
+    """API: 运行 AI 客户背调分析"""
+    import json as _json
+    db = get_db()
+    db.conn.rollback()  # 释放可能的残留锁
+
+    # 获取客户信息
+    client = db.fetchone("SELECT * FROM clients WHERE id=?", (client_id,))
+    if not client:
+        return JSONResponse(status_code=404, content={"success": False, "error": "客户不存在"})
+
+    # 构建客户信息摘要
+    client_info = f"""
+公司名: {client.get('company_name', '')}
+国家: {client.get('country', '')}
+联系人: {client.get('contact_person', '')}
+邮箱: {client.get('email', '')}
+WhatsApp: {client.get('whatsapp', '')}
+LinkedIn: {client.get('linkedin', '')}
+网站: {client.get('website', '')}
+业务类型: {client.get('business_type', '')}
+主营产品: {client.get('main_products', '')}
+目标市场: {client.get('market_regions', '')}
+预估体量: {client.get('estimated_volume', '')}
+来源: {client.get('source', '')}
+当前状态: {client.get('status', '')}
+当前评级: {client.get('grade', '')}
+备注: {client.get('notes', '')}
+""".strip()
+
+    # 获取跟进记录
+    activities = db.fetchall(
+        "SELECT activity_type, direction, subject, content, created_at FROM activities WHERE client_id=? ORDER BY created_at DESC LIMIT 10",
+        (client_id,)
+    )
+    activity_summary = ""
+    if activities:
+        activity_summary = "\n\n跟进记录:\n"
+        for a in activities:
+            activity_summary += f"- [{a.get('created_at', '')}] {a.get('activity_type', '')} ({a.get('direction', '')}): {a.get('subject', '')} - {a.get('content', '')[:200]}\n"
+
+    # 尝试网页抓取
+    website_content = ""
+    website = client.get('website', '')
+    if website:
+        try:
+            import urllib.request
+            import re
+            url = website if website.startswith('http') else f'https://{website}'
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
+            resp = urllib.request.urlopen(req, timeout=10)
+            html = resp.read().decode('utf-8', errors='ignore')[:8000]
+            # 提取文本
+            text = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL)
+            text = re.sub(r'<style[^>]*>.*?</style>', '', text, flags=re.DOTALL)
+            text = re.sub(r'<[^>]+>', ' ', text)
+            text = re.sub(r'\s+', ' ', text).strip()[:3000]
+            if text:
+                website_content = f"\n\n官网内容摘录:\n{text}"
+        except Exception as e:
+            website_content = f"\n\n(官网抓取失败: {str(e)[:100]})"
+
+    # 构建分析 prompt
+    prompt = f"""你是一位资深的外贸客户分析师。请根据以下客户信息，进行专业的客户背调分析。
+
+客户信息:
+{client_info}
+{activity_summary}
+{website_content}
+
+请从以下维度分析:
+
+1. **公司概况**: 根据已有信息推断公司规模、业务范围、市场定位
+2. **采购潜力**: 分析该客户的采购需求、体量、频率
+3. **竞争分析**: 该客户可能的供应商选择标准、价格敏感度
+4. **沟通策略**: 针对该客户的最佳沟通方式、注意事项
+5. **风险评估**: 付款风险、合作风险
+6. **建议评级**: A/B/C/D 及理由
+
+请用中文回答，格式清晰。如果信息不足，请明确标注"信息不足，建议补充"。"""
+
+    try:
+        from src.core.llm_client import LLMClient
+        llm = LLMClient()
+        analysis_text = llm.chat(prompt, temperature=0.3, max_tokens=2000)
+
+        # 提取建议评级
+        grade_suggested = ""
+        for g in ['A', 'B', 'C', 'D']:
+            if f'建议评级.*{g}' in analysis_text or f'评级.*{g}' in analysis_text:
+                grade_suggested = g
+                break
+        if not grade_suggested:
+            for g in ['A', 'B', 'C', 'D']:
+                if f'{g}级' in analysis_text or f'评级{g}' in analysis_text:
+                    grade_suggested = g
+                    break
+
+        # 提取建议部分
+        recommendations = ""
+        if '建议' in analysis_text:
+            parts = analysis_text.split('建议')
+            if len(parts) > 1:
+                recommendations = '建议' + parts[1][:500]
+
+        # 保存到数据库
+        db.execute(
+            """INSERT INTO client_analyses (client_id, analysis_type, summary, full_analysis, grade_suggested, recommendations)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (client_id, 'background_check', analysis_text[:2000], analysis_text, grade_suggested, recommendations)
+        )
+        db.commit()
+
+        return {
+            "success": True,
+            "analysis": {
+                "summary": analysis_text,
+                "grade_suggested": grade_suggested,
+                "recommendations": recommendations,
+                "created_at": "刚刚",
+            }
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 @router.post("/api/generate-potential")
 async def api_generate_potential_clients(request: Request):
     """API: AI生成潜在客户画像"""
@@ -178,9 +316,19 @@ async def api_generate_potential_clients(request: Request):
     # 加载提示词模板
     from src.utils.prompts import load_prompt, fill_prompt
     template = load_prompt("outreach/generate_potential_client")
+
+    # 获取已有客户名单用于去重
+    from src.core.database import FTDatabase
+    db_ro = FTDatabase()
+    existing_rows = db_ro.fetchall("SELECT company_name, country FROM clients")
+    db_ro.close()
+    existing_list = [f"- {r['company_name']} ({r.get('country', '')})" for r in existing_rows]
+    existing_str = "\n".join(existing_list) if existing_list else "(CRM is empty - no existing clients)"
+
     prompt = fill_prompt(template, {
         "target_market": target_market,
         "count": str(count),
+        "existing_clients": existing_str,
     })
 
     # 调用AI生成
@@ -215,13 +363,34 @@ async def api_batch_insert_clients(request: Request):
     if not clients:
         return JSONResponse(status_code=400, content={"error": "No clients provided"})
 
-    db = get_db()
+    # 用独立连接避免锁冲突
+    from src.core.database import FTDatabase
+    db = FTDatabase()
+    valid_cols = {c['name'] for c in db.fetchall('PRAGMA table_info(clients)')}
+    valid_cols.discard('id')
+    valid_cols.discard('created_at')
+    valid_cols.discard('updated_at')
+
     inserted = []
     errors = []
+    skipped = []
     for c in clients:
         try:
-            cid = db.client_create(c)
+            # 去重检查：同名客户不重复插入
+            name = c.get("company_name", "").strip()
+            if name:
+                existing = db.fetchall(
+                    "SELECT id FROM clients WHERE company_name = ?", (name,)
+                )
+                if existing:
+                    skipped.append(name)
+                    continue
+
+            filtered = {k: v for k, v in c.items() if k in valid_cols}
+            cid = db.client_create(filtered)
             inserted.append({"id": cid, "company_name": c.get("company_name", "")})
         except Exception as e:
             errors.append({"company_name": c.get("company_name", ""), "error": str(e)})
-    return {"success": True, "inserted": len(inserted), "errors": errors, "details": inserted}
+    db.close()
+    return {"success": True, "inserted": len(inserted), "skipped": len(skipped),
+            "skipped_names": skipped, "errors": errors, "details": inserted}
