@@ -104,3 +104,38 @@ async def api_reminder_summary():
     db = get_db()
     from src.m8_crm.reminder import FollowUpReminder
     return FollowUpReminder(db).reminder_summary()
+
+
+@router.get("/api/export/csv")
+async def api_export_clients_csv():
+    """API: 导出客户数据为 CSV"""
+    import csv
+    import io
+    from fastapi.responses import StreamingResponse
+
+    db = get_db()
+    clients = db.fetchall("SELECT * FROM clients ORDER BY company_name")
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["id", "company_name", "country", "contact_name",
+                     "email", "whatsapp", "status", "grade", "source"])
+    for c in clients:
+        writer.writerow([
+            c.get("id", ""),
+            c.get("company_name", ""),
+            c.get("country", ""),
+            c.get("contact_name", ""),
+            c.get("email", ""),
+            c.get("whatsapp", ""),
+            c.get("status", ""),
+            c.get("grade", ""),
+            c.get("source", ""),
+        ])
+
+    output.seek(0)
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=clients_export.csv"},
+    )
