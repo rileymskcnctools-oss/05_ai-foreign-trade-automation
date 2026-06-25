@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS products (
     seo_title_3         TEXT,
     selling_points      TEXT,                        -- Full text selling points
     whatsapp_script     TEXT,
+    specifications      TEXT,                        -- Detailed dimensions: head size, handle, total length, etc.
+    dimensions_image    TEXT,                        -- Path to dimensions diagram image
     alibaba_detail_status TEXT DEFAULT 'not_started',-- not_started / generated
     image_urls          TEXT,                        -- JSON array of URLs
     image_paths         TEXT,                        -- JSON array of local paths
