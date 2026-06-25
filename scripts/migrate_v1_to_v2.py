@@ -234,7 +234,7 @@ if __name__ == "__main__":
     # Default paths
     csv_path = os.path.join(
         PROJECT_ROOT,
-        "04-database", "csv", "product_database_filled.csv"
+        "archive", "v0.1", "04-database", "csv", "product_database_filled.csv"
     )
     db_path = None  # Auto-detect
 
