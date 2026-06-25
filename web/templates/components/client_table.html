@@ -36,8 +36,12 @@
                 </td>
                 <td class="px-4 py-3 text-sm text-gray-500">{{ c.source or '-' }}</td>
                 <td class="px-4 py-3 text-sm">
-                    <button onclick="viewClient({{ c.id }})"
-                            class="text-primary-600 hover:text-primary-800 font-medium text-sm">详情</button>
+                    <div class="flex gap-2">
+                        <button onclick="editClient({{ c.id }})"
+                                class="text-blue-600 hover:text-blue-800 text-sm">✏️</button>
+                        <button onclick="deleteClient({{ c.id }}, '{{ c.company_name }}')"
+                                class="text-red-600 hover:text-red-800 text-sm">🗑️</button>
+                    </div>
                 </td>
             </tr>
             {% else %}

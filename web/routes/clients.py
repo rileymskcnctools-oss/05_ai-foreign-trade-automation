@@ -63,11 +63,37 @@ async def api_get_client(client_id: int):
 async def api_update_client(client_id: int, request: Request):
     """API: 更新客户信息"""
     db = get_db()
-    from src.m8_crm.client_manager import ClientManager
     data = await request.json()
-    mgr = ClientManager(db)
-    success = mgr.update(client_id, data)
-    return {"success": success}
+    data.pop("id", None)
+    if not data:
+        return JSONResponse(status_code=400, content={"error": "No fields to update"})
+    set_clause = ", ".join(f"{k}=?" for k in data.keys())
+    sql = f"UPDATE clients SET {set_clause}, updated_at=datetime('now') WHERE id=?"
+    params = list(data.values()) + [client_id]
+    try:
+        cursor = db.execute(sql, tuple(params))
+        db.commit()
+        if cursor.rowcount == 0:
+            return JSONResponse(status_code=404, content={"error": "Client not found"})
+        return {"success": True, "updated_fields": list(data.keys())}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+@router.delete("/api/{client_id}")
+async def api_delete_client(client_id: int):
+    """API: 删除客户"""
+    db = get_db()
+    try:
+        # 先删关联的跟进记录
+        db.execute("DELETE FROM activities WHERE client_id=?", (client_id,))
+        cursor = db.execute("DELETE FROM clients WHERE id=?", (client_id,))
+        db.commit()
+        if cursor.rowcount == 0:
+            return JSONResponse(status_code=404, content={"error": "Client not found"})
+        return {"success": True, "deleted_id": client_id}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 
 @router.get("/api/{client_id}/activities")
@@ -118,14 +144,14 @@ async def api_export_clients_csv():
 
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(["id", "company_name", "country", "contact_name",
+    writer.writerow(["id", "company_name", "country", "contact_person",
                      "email", "whatsapp", "status", "grade", "source"])
     for c in clients:
         writer.writerow([
             c.get("id", ""),
             c.get("company_name", ""),
             c.get("country", ""),
-            c.get("contact_name", ""),
+            c.get("contact_person", ""),
             c.get("email", ""),
             c.get("whatsapp", ""),
             c.get("status", ""),
@@ -139,3 +165,63 @@ async def api_export_clients_csv():
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=clients_export.csv"},
     )
+
+
+@router.post("/api/generate-potential")
+async def api_generate_potential_clients(request: Request):
+    """API: AI生成潜在客户画像"""
+    import json as _json
+    body = await request.json()
+    target_market = body.get("target_market", "Africa")
+    count = body.get("count", 5)
+
+    # 加载提示词模板
+    from src.utils.prompts import load_prompt, fill_prompt
+    template = load_prompt("outreach/generate_potential_client")
+    prompt = fill_prompt(template, {
+        "target_market": target_market,
+        "count": str(count),
+    })
+
+    # 调用AI生成
+    try:
+        from src.core.llm_client import LLMClient
+        llm = LLMClient(scenario="outreach")
+        result_text = llm.chat(prompt, temperature=0.8, max_tokens=4000)
+
+        # 尝试解析JSON
+        # 先找到JSON块
+        if "```json" in result_text:
+            json_str = result_text.split("```json")[1].split("```")[0].strip()
+        elif "```" in result_text:
+            json_str = result_text.split("```")[1].split("```")[0].strip()
+        else:
+            json_str = result_text.strip()
+
+        result = _json.loads(json_str)
+        clients = result.get("clients", [])
+        return {"success": True, "clients": clients, "count": len(clients)}
+    except _json.JSONDecodeError as e:
+        return {"success": False, "error": f"AI返回格式错误: {str(e)}", "raw": result_text[:500]}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"success": False, "error": str(e)})
+
+
+@router.post("/api/batch-insert")
+async def api_batch_insert_clients(request: Request):
+    """API: 批量插入AI生成的潜在客户"""
+    body = await request.json()
+    clients = body.get("clients", [])
+    if not clients:
+        return JSONResponse(status_code=400, content={"error": "No clients provided"})
+
+    db = get_db()
+    inserted = []
+    errors = []
+    for c in clients:
+        try:
+            cid = db.client_create(c)
+            inserted.append({"id": cid, "company_name": c.get("company_name", "")})
+        except Exception as e:
+            errors.append({"company_name": c.get("company_name", ""), "error": str(e)})
+    return {"success": True, "inserted": len(inserted), "errors": errors, "details": inserted}
