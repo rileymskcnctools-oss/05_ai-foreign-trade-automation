@@ -1,0 +1,32 @@
+<aside class="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h1 class="text-xl font-bold text-gray-900">🔨 FT Workspace</h1>
+        <p class="text-xs text-gray-500">v3.0 | AI Foreign Trade</p>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-1">
+        <a href="/dashboard" class="flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors {{ 'bg-primary-50 text-primary-700 font-medium' if page == 'dashboard' else 'text-gray-700 hover:bg-gray-100' }}">
+            <span class="mr-3 text-lg">📊</span> 数据概览
+        </a>
+        <a href="/products" class="flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors {{ 'bg-primary-50 text-primary-700 font-medium' if page == 'products' else 'text-gray-700 hover:bg-gray-100' }}">
+            <span class="mr-3 text-lg">📦</span> 产品管理
+        </a>
+        <a href="/market" class="flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors {{ 'bg-primary-50 text-primary-700 font-medium' if page == 'market' else 'text-gray-700 hover:bg-gray-100' }}">
+            <span class="mr-3 text-lg">🔍</span> 市场研究
+        </a>
+        <a href="/clients" class="flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors {{ 'bg-primary-50 text-primary-700 font-medium' if page == 'clients' else 'text-gray-700 hover:bg-gray-100' }}">
+            <span class="mr-3 text-lg">👥</span> 客户CRM
+        </a>
+        <a href="/outreach" class="flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors {{ 'bg-primary-50 text-primary-700 font-medium' if page == 'outreach' else 'text-gray-700 hover:bg-gray-100' }}">
+            <span class="mr-3 text-lg">📧</span> 开发信
+        </a>
+        <a href="/quotation" class="flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors {{ 'bg-primary-50 text-primary-700 font-medium' if page == 'quotation' else 'text-gray-700 hover:bg-gray-100' }}">
+            <span class="mr-3 text-lg">💰</span> 报价助手
+        </a>
+        <a href="/analytics" class="flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors {{ 'bg-primary-50 text-primary-700 font-medium' if page == 'analytics' else 'text-gray-700 hover:bg-gray-100' }}">
+            <span class="mr-3 text-lg">📈</span> 数据分析
+        </a>
+    </nav>
+    <div class="px-4 py-3 border-t border-gray-200 text-xs text-gray-400">
+        Powered by FastAPI + HTMX
+    </div>
+</aside>

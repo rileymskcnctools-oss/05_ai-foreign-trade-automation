@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}数据概览 - FT Workspace{% endblock %}
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-900">📊 数据概览</h1>
+    <p class="text-sm text-gray-500 mt-1">外贸业务核心指标一览</p>
+</div>
+
+<!-- KPI 卡片 -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+    <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+        <p class="text-sm text-gray-500">活跃产品</p>
+        <p class="text-3xl font-bold text-gray-900 mt-1">{{ stats.active_products }}</p>
+        <p class="text-xs text-gray-400 mt-2">📦 Total Products</p>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+        <p class="text-sm text-gray-500">客户总数</p>
+        <p class="text-3xl font-bold text-gray-900 mt-1">{{ stats.total_clients }}</p>
+        <p class="text-xs text-gray-400 mt-2">👥 Clients</p>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+        <p class="text-sm text-gray-500">报价单</p>
+        <p class="text-3xl font-bold text-gray-900 mt-1">{{ stats.total_quotations }}</p>
+        <p class="text-xs text-gray-400 mt-2">💰 Quotations</p>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+        <p class="text-sm text-gray-500">市场报告</p>
+        <p class="text-3xl font-bold text-gray-900 mt-1">{{ stats.market_reports }}</p>
+        <p class="text-xs text-gray-400 mt-2">🔍 Reports</p>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+        <p class="text-sm text-gray-500">本周活动</p>
+        <p class="text-3xl font-bold text-gray-900 mt-1">{{ stats.weekly_activities }}</p>
+        <p class="text-xs text-gray-400 mt-2">📈 Activities</p>
+    </div>
+</div>
+
+<!-- 图表 -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">📦 产品分类分布</h3>
+        <div class="h-64"><canvas id="categoryChart"></canvas></div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">👥 客户状态分布</h3>
+        <div class="h-64"><canvas id="statusChart"></canvas></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const catData = {{ home.products.categories | tojson }};
+if (catData && catData.length) {
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: { labels: catData.map(c=>c.name), datasets: [{ data: catData.map(c=>c.count), backgroundColor: ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899'] }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+    });
+}
+const statusData = {{ home.clients.by_status | tojson }};
+if (statusData && statusData.length) {
+    new Chart(document.getElementById('statusChart'), {
+        type: 'bar',
+        data: { labels: statusData.map(s=>s.status), datasets: [{ label: '客户数', data: statusData.map(s=>s.count), backgroundColor: '#3b82f6', borderRadius: 6 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
+}
+</script>
+{% endblock %}

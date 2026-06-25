@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}数据分析 - FT Workspace{% endblock %}
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">📈 数据分析</h1>
+    <p class="text-sm text-gray-500 mt-1">产品 / 客户 / 市场多维分析</p>
+</div>
+
+<!-- Tab 切换 -->
+<div class="border-b border-gray-200 mb-6">
+    <nav class="flex gap-6">
+        <button onclick="showAnalyticsTab('product')" id="atab-product" class="py-2 px-1 border-b-2 border-primary-600 text-primary-600 font-medium text-sm">📦 产品分析</button>
+        <button onclick="showAnalyticsTab('client')" id="atab-client" class="py-2 px-1 border-b-2 border-transparent text-gray-500 text-sm">👥 客户分析</button>
+        <button onclick="showAnalyticsTab('market')" id="atab-market" class="py-2 px-1 border-b-2 border-transparent text-gray-500 text-sm">🌍 市场分析</button>
+        <button onclick="showAnalyticsTab('pipeline')" id="atab-pipeline" class="py-2 px-1 border-b-2 border-transparent text-gray-500 text-sm">🔄 销售漏斗</button>
+    </nav>
+</div>
+
+<!-- 产品分析 -->
+<div id="panel-product" class="space-y-6">
+    <div class="grid grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+            <p class="text-sm text-gray-500">总产品数</p>
+            <p class="text-3xl font-bold text-gray-900">{{ product_overview.total_products }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+            <p class="text-sm text-gray-500">平均长度</p>
+            <p class="text-3xl font-bold text-gray-900">{{ product_overview.avg_length_cm }} cm</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+            <p class="text-sm text-gray-500">SEO覆盖率</p>
+            <p class="text-3xl font-bold text-gray-900">{{ seo_coverage.seo_pct }}%</p>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+            <h3 class="font-semibold mb-4">分类分布</h3>
+            <canvas id="catDistChart" height="200"></canvas>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+            <h3 class="font-semibold mb-4">长度区间分布</h3>
+            <canvas id="lengthChart" height="200"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- 客户分析 -->
+<div id="panel-client" class="space-y-6 hidden">
+    <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+            <p class="text-sm text-gray-500">总客户数</p>
+            <p class="text-3xl font-bold text-gray-900">{{ client_overview.total_clients }}</p>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+            <p class="text-sm text-gray-500">平均评分</p>
+            <p class="text-3xl font-bold text-gray-900">{{ client_overview.avg_score }}</p>
+        </div>
+    </div>
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 class="font-semibold mb-4">国家分布</h3>
+        {% if country_dist %}
+        <table class="min-w-full divide-y divide-gray-200"><tbody class="divide-y">
+        {% for c in country_dist %}
+        <tr><td class="px-3 py-2 text-sm">{{ c.country }}</td><td class="px-3 py-2 text-sm text-gray-500">{{ c.count }}</td></tr>
+        {% endfor %}
+        </tbody></table>
+        {% else %}<p class="text-gray-500 text-sm">暂无数据</p>{% endif %}
+    </div>
+</div>
+
+<!-- 市场分析 -->
+<div id="panel-market" class="space-y-6 hidden">
+    <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
+        <p class="text-sm text-gray-500">市场报告总数</p>
+        <p class="text-3xl font-bold text-gray-900">{{ market_overview.total_reports }}</p>
+    </div>
+</div>
+
+<!-- 销售漏斗 -->
+<div id="panel-pipeline" class="space-y-6 hidden">
+    <div class="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 class="font-semibold mb-4">销售漏斗</h3>
+        {% if pipeline.funnel %}
+        <table class="min-w-full divide-y divide-gray-200"><thead><tr>
+            <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">阶段</th>
+            <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">数量</th>
+        </tr></thead><tbody class="divide-y">
+        {% for f in pipeline.funnel %}
+        <tr><td class="px-3 py-2 text-sm">{{ f.status }}</td><td class="px-3 py-2 text-sm font-medium">{{ f.count }}</td></tr>
+        {% endfor %}
+        </tbody></table>
+        {% else %}<p class="text-gray-500 text-sm">暂无数据</p>{% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showAnalyticsTab(tab) {
+    ['product','client','market','pipeline'].forEach(t => {
+        document.getElementById('panel-'+t).classList.toggle('hidden', t!==tab);
+        document.getElementById('atab-'+t).className = t===tab ? 'py-2 px-1 border-b-2 border-primary-600 text-primary-600 font-medium text-sm' : 'py-2 px-1 border-b-2 border-transparent text-gray-500 text-sm';
+    });
+}
+// 分类分布图
+const catDist = {{ category_dist | tojson }};
+if (catDist && catDist.length) {
+    new Chart(document.getElementById('catDistChart'), {
+        type: 'bar',
+        data: { labels: catDist.map(c=>c.name||c.category), datasets: [{ label:'产品数', data: catDist.map(c=>c.count), backgroundColor:'#3b82f6', borderRadius:6 }] },
+        options: { responsive:true, plugins:{legend:{display:false}} }
+    });
+}
+const lenDist = {{ length_dist | tojson }};
+if (lenDist && lenDist.length) {
+    new Chart(document.getElementById('lengthChart'), {
+        type: 'bar',
+        data: { labels: lenDist.map(l=>l.range), datasets: [{ label:'产品数', data: lenDist.map(l=>l.count), backgroundColor:'#10b981', borderRadius:6 }] },
+        options: { responsive:true, plugins:{legend:{display:false}} }
+    });
+}
+</script>
+{% endblock %}
