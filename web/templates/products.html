@@ -87,77 +87,166 @@ function openProductDetail(productCode) {
         .then(r => r.json())
         .then(p => {
             document.getElementById('modal-title').textContent = p.product_name_en || p.product_code;
-            document.getElementById('product-detail-content').innerHTML = `
-                <div class="space-y-6">
-                    <!-- 基本信息 -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="text-xs text-gray-500 uppercase">编码</label>
-                            <p class="text-sm font-medium">${p.product_code}</p>
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500 uppercase">分类</label>
-                            <p class="text-sm">${p.category || '-'}</p>
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500 uppercase">材质</label>
-                            <p class="text-sm">${p.material || '-'}</p>
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500 uppercase">长度</label>
-                            <p class="text-sm">${p.length_cm || '-'} cm</p>
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500 uppercase">重量</label>
-                            <p class="text-sm">${p.weight_kg || '-'} kg</p>
-                        </div>
-                        <div>
-                            <label class="text-xs text-gray-500 uppercase">中文名</label>
-                            <p class="text-sm">${p.product_name_cn || '-'}</p>
-                        </div>
-                    </div>
-
-                    <!-- AI 内容生成按钮 -->
-                    <div class="border-t border-gray-200 pt-4">
-                        <h3 class="text-sm font-semibold text-gray-900 mb-3">🤖 AI 内容生成</h3>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="generateContent('${p.product_code}', 'seo')"
-                                    class="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-sm font-medium"
-                                    id="btn-seo">
-                                📝 SEO 标题
-                            </button>
-                            <button onclick="generateContent('${p.product_code}', 'selling_points')"
-                                    class="px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 text-sm font-medium"
-                                    id="btn-selling">
-                                ✨ 卖点提炼
-                            </button>
-                            <button onclick="generateContent('${p.product_code}', 'whatsapp')"
-                                    class="px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 text-sm font-medium"
-                                    id="btn-whatsapp">
-                                💬 WhatsApp 话术
-                            </button>
-                            <button onclick="generateContent('${p.product_code}', 'alibaba')"
-                                    class="px-3 py-2 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 text-sm font-medium"
-                                    id="btn-alibaba">
-                                🏪 阿里巴巴详情
-                            </button>
-                        </div>
-                        <div id="ai-result" class="mt-4 hidden">
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <h4 class="text-sm font-medium" id="ai-result-title">结果</h4>
-                                    <button onclick="copyAiResult()" class="text-xs text-primary-600 hover:text-primary-800">📋 复制</button>
-                                </div>
-                                <pre id="ai-result-text" class="text-sm text-gray-700 whitespace-pre-wrap font-sans"></pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+            document.getElementById('product-detail-content').innerHTML = buildDetailHTML(p);
         })
         .catch(() => {
             document.getElementById('product-detail-content').innerHTML = '<p class="text-red-500">加载失败</p>';
         });
+}
+
+// 可编辑字段定义 (label, field, type)
+const EDITABLE_FIELDS = [
+    {label:'英文名', field:'product_name_en', type:'text'},
+    {label:'中文名', field:'product_name_cn', type:'text'},
+    {label:'分类', field:'category', type:'text'},
+    {label:'子分类', field:'sub_category', type:'text'},
+    {label:'材质', field:'material', type:'text'},
+    {label:'手柄材质', field:'handle_material', type:'text'},
+    {label:'长度(cm)', field:'length_cm', type:'number'},
+    {label:'重量(kg)', field:'weight_kg', type:'number'},
+    {label:'头宽(cm)', field:'head_width_cm', type:'number'},
+    {label:'齿数', field:'tine_count', type:'number'},
+    {label:'硬度', field:'hardness', type:'text'},
+    {label:'表面处理', field:'surface_treatment', type:'text'},
+    {label:'MOQ', field:'moq', type:'number'},
+    {label:'包装方式', field:'packaging_type', type:'text'},
+    {label:'每箱数量', field:'qty_per_carton', type:'number'},
+    {label:'箱规(cm)', field:'carton_size_cm', type:'text'},
+    {label:'箱毛重(kg)', field:'gw_per_carton_kg', type:'number'},
+    {label:'交期(天)', field:'lead_time_days', type:'number'},
+    {label:'认证', field:'certification', type:'text'},
+    {label:'关键词', field:'target_keywords', type:'text'},
+    {label:'使用场景', field:'use_scenario', type:'text'},
+    {label:'目标市场', field:'target_markets', type:'text'},
+    {label:'卖点角度', field:'selling_angle', type:'text'},
+    {label:'竞品参考', field:'competitor_ref', type:'text'},
+    {label:'HS编码', field:'hs_code', type:'text'},
+    {label:'20ft装柜量', field:'loading_qty_20ft', type:'number'},
+    {label:'40ft装柜量', field:'loading_qty_40ft', type:'number'},
+    {label:'40HQ装柜量', field:'loading_qty_40hq', type:'number'},
+];
+
+function buildDetailHTML(p) {
+    return `
+    <div id="detail-view-mode" class="space-y-6">
+        <!-- 编辑按钮 -->
+        <div class="flex justify-end">
+            <button onclick="switchToEdit('${p.product_code}')"
+                    class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm font-medium">
+                ✏️ 编辑产品
+            </button>
+        </div>
+
+        <!-- 基本信息(只读展示) -->
+        <div class="grid grid-cols-2 gap-4">
+            <div><label class="text-xs text-gray-500 uppercase">编码</label><p class="text-sm font-medium">${p.product_code}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">状态</label><p class="text-sm">${p.status || 'active'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">英文名</label><p class="text-sm">${p.product_name_en || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">中文名</label><p class="text-sm">${p.product_name_cn || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">分类</label><p class="text-sm">${p.category || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">材质</label><p class="text-sm">${p.material || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">长度</label><p class="text-sm">${p.length_cm || '-'} cm</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">重量</label><p class="text-sm">${p.weight_kg || '-'} kg</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">MOQ</label><p class="text-sm">${p.moq || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">交期</label><p class="text-sm">${p.lead_time_days || '-'} 天</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">包装</label><p class="text-sm">${p.packaging_type || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">每箱数量</label><p class="text-sm">${p.qty_per_carton || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">箱规</label><p class="text-sm">${p.carton_size_cm || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">表面处理</label><p class="text-sm">${p.surface_treatment || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">HS编码</label><p class="text-sm">${p.hs_code || '-'}</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">认证</label><p class="text-sm">${p.certification || '-'}</p></div>
+        </div>
+
+        ${p.target_keywords ? `<div class="border-t border-gray-200 pt-3"><label class="text-xs text-gray-500 uppercase">关键词</label><p class="text-sm">${p.target_keywords}</p></div>` : ''}
+        ${p.selling_points ? `<div class="border-t border-gray-200 pt-3"><label class="text-xs text-gray-500 uppercase">卖点</label><p class="text-sm whitespace-pre-wrap">${p.selling_points}</p></div>` : ''}
+
+        <!-- AI 内容生成按钮 -->
+        <div class="border-t border-gray-200 pt-4">
+            <h3 class="text-sm font-semibold text-gray-900 mb-3">🤖 AI 内容生成</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="generateContent('${p.product_code}', 'seo')" class="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 text-sm font-medium" id="btn-seo">📝 SEO 标题</button>
+                <button onclick="generateContent('${p.product_code}', 'selling_points')" class="px-3 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 text-sm font-medium" id="btn-selling">✨ 卖点提炼</button>
+                <button onclick="generateContent('${p.product_code}', 'whatsapp')" class="px-3 py-2 bg-emerald-50 text-emerald-700 rounded-lg hover:bg-emerald-100 text-sm font-medium" id="btn-whatsapp">💬 WhatsApp 话术</button>
+                <button onclick="generateContent('${p.product_code}', 'alibaba')" class="px-3 py-2 bg-orange-50 text-orange-700 rounded-lg hover:bg-orange-100 text-sm font-medium" id="btn-alibaba">🏪 阿里巴巴详情</button>
+            </div>
+            <div id="ai-result" class="mt-4 hidden">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-sm font-medium" id="ai-result-title">结果</h4>
+                        <button onclick="copyAiResult()" class="text-xs text-primary-600 hover:text-primary-800">📋 复制</button>
+                    </div>
+                    <pre id="ai-result-text" class="text-sm text-gray-700 whitespace-pre-wrap font-sans"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑模式(默认隐藏) -->
+    <div id="detail-edit-mode" class="hidden">
+        <form id="edit-product-form" onsubmit="saveProduct(event, '${p.product_code}')">
+            <div class="grid grid-cols-2 gap-4">
+                ${EDITABLE_FIELDS.map(f => `
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">${f.label}</label>
+                    <input type="${f.type}" name="${f.field}" value="${p[f.field] ?? ''}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+                           ${f.type==='number' ? 'step="any"' : ''}>
+                </div>
+                `).join('')}
+            </div>
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
+                <button type="button" onclick="switchToView('${p.product_code}')"
+                        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">取消</button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">💾 保存修改</button>
+            </div>
+        </form>
+    </div>`;
+}
+
+function switchToEdit(code) {
+    document.getElementById('detail-view-mode').classList.add('hidden');
+    document.getElementById('detail-edit-mode').classList.remove('hidden');
+    document.getElementById('modal-title').textContent = '编辑: ' + code;
+}
+
+function switchToView(code) {
+    // 重新加载最新数据
+    openProductDetail(code);
+}
+
+function saveProduct(e, code) {
+    e.preventDefault();
+    const form = document.getElementById('edit-product-form');
+    const formData = new FormData(form);
+    const data = {};
+    for (const [key, val] of formData.entries()) {
+        if (val !== '') {
+            // 数字字段转数字
+            const fieldDef = EDITABLE_FIELDS.find(f => f.field === key);
+            if (fieldDef && fieldDef.type === 'number') {
+                data[key] = parseFloat(val);
+            } else {
+                data[key] = val;
+            }
+        }
+    }
+
+    fetch(`/products/api/${code}`, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+    })
+    .then(r => r.json())
+    .then(result => {
+        if (result.success) {
+            showToast('✅ 产品信息已更新');
+            openProductDetail(code); // 回到查看模式并刷新数据
+        } else {
+            showToast('❌ 更新失败: ' + (result.error || ''), 'error');
+        }
+    })
+    .catch(err => showToast('❌ 请求失败: ' + err.message, 'error'));
 }
 
 function closeModal() {

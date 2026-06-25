@@ -124,6 +124,29 @@ async def api_get_product(product_code: str):
     return product
 
 
+@router.put("/api/{product_code}")
+async def api_update_product(product_code: str, request: Request):
+    """API: 更新产品信息"""
+    db = get_db()
+    data = await request.json()
+    # 不允许修改主键
+    data.pop("product_code", None)
+    data.pop("id", None)
+    if not data:
+        return JSONResponse(status_code=400, content={"error": "No fields to update"})
+    set_clause = ", ".join(f"{k}=?" for k in data.keys())
+    sql = f"UPDATE products SET {set_clause}, updated_at=datetime('now') WHERE product_code=?"
+    params = list(data.values()) + [product_code]
+    try:
+        cursor = db.execute(sql, tuple(params))
+        db.commit()
+        if cursor.rowcount == 0:
+            return JSONResponse(status_code=404, content={"error": "Product not found"})
+        return {"success": True, "updated_fields": list(data.keys())}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
 @router.get("/api/{product_code}/generate/{content_type}")
 async def api_generate_content(product_code: str, content_type: str):
     """API: 生成产品内容 (SEO/selling_points/whatsapp/alibaba)"""
