@@ -31,7 +31,7 @@ class DashboardData:
             "products": {
                 "total": product_overview["total_products"],
                 "categories": product_overview["categories"],
-                "avg_length_cm": product_overview["avg_length_cm"],
+                "unique_colors": product_overview["unique_colors"],
             },
             "clients": {
                 "total": client_overview["total_clients"],

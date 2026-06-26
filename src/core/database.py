@@ -33,9 +33,10 @@ class FTDatabase:
         self.conn = sqlite3.connect(db_path, check_same_thread=False, timeout=10)
         self.conn.row_factory = sqlite3.Row
         
-        # 【运营保障】：开启“快车道”模式。
+        # 【运营保障】：开启"快车道"模式。
         # 效果：当AI在后台批量轰炸式写入一万条询盘时，前台业务员查产品依然流畅，不卡顿。
         self.conn.execute("PRAGMA journal_mode=WAL")  
+        self.conn.execute("PRAGMA busy_timeout=5000")  # 5秒超时，避免锁冲突  
         
         # 【运营保障】：开启“红线绑定”约束。
         # 效果：防止员工把报价单发给一个“根本不存在的垃圾客户”，保证公司数据资产100%正确。
@@ -164,6 +165,71 @@ class FTDatabase:
                LIMIT ?""",
             (pattern, pattern, pattern, pattern, limit)
         )
+
+    def product_delete(self, product_code: str) -> bool:
+        """删除产品：根据产品编码删除一条产品记录"""
+        try:
+            cursor = self.execute("DELETE FROM products WHERE product_code = ?", (product_code,))
+            self.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"删除产品 {product_code} 失败，原因: {e}")
+            return False
+
+    def quotation_delete(self, quotation_no: str) -> bool:
+        """删除报价单：根据报价单号删除"""
+        try:
+            cursor = self.execute("DELETE FROM quotations WHERE quotation_no = ?", (quotation_no,))
+            self.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"删除报价单 {quotation_no} 失败，原因: {e}")
+            return False
+
+    def quotation_update(self, quotation_no: str, data: dict) -> bool:
+        """更新报价单"""
+        if not data:
+            return False
+        set_clause = ", ".join(f"{k}=?" for k in data.keys())
+        sql = f"UPDATE quotations SET {set_clause} WHERE quotation_no=?"
+        params = list(data.values()) + [quotation_no]
+        try:
+            cursor = self.execute(sql, tuple(params))
+            self.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"更新报价单 {quotation_no} 失败，原因: {e}")
+            return False
+
+    def quotation_get(self, quotation_no: str) -> Optional[dict]:
+        """获取单个报价单详情"""
+        return self.fetchone(
+            """SELECT q.*, c.company_name, c.country
+               FROM quotations q LEFT JOIN clients c ON q.client_id = c.id
+               WHERE q.quotation_no = ?""",
+            (quotation_no,)
+        )
+
+    def quotation_list(self, limit: int = 20) -> list[dict]:
+        """获取报价单列表"""
+        return self.fetchall(
+            """SELECT q.quotation_no, q.client_id, c.company_name, c.country,
+                      q.total_amount, q.status, q.created_at, q.incoterm,
+                      q.margin_pct, q.notes
+               FROM quotations q LEFT JOIN clients c ON q.client_id = c.id
+               ORDER BY q.created_at DESC LIMIT ?""",
+            (limit,)
+        )
+
+    def report_delete(self, report_id: int) -> bool:
+        """删除市场报告"""
+        try:
+            cursor = self.execute("DELETE FROM market_reports WHERE id = ?", (report_id,))
+            self.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"删除报告 {report_id} 失败，原因: {e}")
+            return False
 
     def product_insert(self, product: dict) -> bool:
         """动态录入：把一个产品字典塞进数据库，如果编码重复了，就直接更新覆盖。

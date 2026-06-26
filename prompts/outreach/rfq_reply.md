@@ -19,7 +19,7 @@ ${rfq_content}
 - 产品英文名：${product_name_en}
 - 产品类别：${category}
 - 材质：${material}
-- 规格：${length_cm}cm, ${weight_kg}kg
+- 规格：颜色${color}, ${weight_kg}kg
 - MOQ：${moq} 件
 - 单价范围：${price_range}（FOB China）
 - 交货期：${lead_time_days} 天

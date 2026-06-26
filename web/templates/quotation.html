@@ -3,7 +3,7 @@
 {% block content %}
 <div class="mb-6">
     <h1 class="text-2xl font-bold text-gray-900">💰 报价助手</h1>
-    <p class="text-sm text-gray-500 mt-1">价格计算 + 装柜量 + 报价邮件</p>
+    <p class="text-sm text-gray-500 mt-1">价格计算 + 装柜量 + 报价单管理</p>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -39,10 +39,37 @@
         </div>
     </div>
 
-    <!-- 右: 报价结果 -->
+    <!-- 右: 报价结果 + 保存 -->
     <div class="bg-white rounded-xl border border-gray-200 p-6">
         <h3 class="text-lg font-semibold mb-4">📊 报价结果</h3>
         <div id="quote-result" class="text-gray-500 text-sm">选择产品后点击计算</div>
+        <!-- 保存报价区域 -->
+        <div id="save-quotation-area" class="hidden mt-4 pt-4 border-t border-gray-200">
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">关联客户</label>
+                    <select id="save-client" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm">
+                        <option value="">-- 选择客户 --</option>
+                        {% for c in clients %}
+                        <option value="{{ c.id }}">{{ c.company_name }} ({{ c.country or 'N/A' }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">状态</label>
+                    <select id="save-status" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-sm">
+                        <option value="draft">草稿</option>
+                        <option value="sent">已发送</option>
+                        <option value="accepted">已接受</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="block text-xs text-gray-500 mb-1">备注</label>
+                <input type="text" id="save-notes" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="可选...">
+            </div>
+            <button onclick="saveQuotation()" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium">💾 保存报价单</button>
+        </div>
     </div>
 </div>
 
@@ -56,16 +83,37 @@
             <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">客户</th>
             <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">国家</th>
             <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">金额</th>
+            <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">术语</th>
             <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">状态</th>
+            <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">日期</th>
+            <th class="px-3 py-2 text-left text-xs text-gray-500 uppercase">操作</th>
         </tr></thead>
         <tbody class="divide-y divide-gray-200">
             {% for q in quotations %}
-            <tr class="table-row-hover">
+            <tr class="table-row-hover" id="row-{{ q.quotation_no }}">
                 <td class="px-3 py-2 text-sm font-medium">{{ q.quotation_no }}</td>
                 <td class="px-3 py-2 text-sm">{{ q.company_name or '-' }}</td>
                 <td class="px-3 py-2 text-sm text-gray-500">{{ q.country or '-' }}</td>
                 <td class="px-3 py-2 text-sm">${{ "%.2f"|format(q.total_amount) if q.total_amount else '-' }}</td>
-                <td class="px-3 py-2 text-sm text-gray-500">{{ q.status or '-' }}</td>
+                <td class="px-3 py-2 text-sm text-gray-500">{{ q.incoterm or '-' }}</td>
+                <td class="px-3 py-2 text-sm">
+                    {% set status_colors = {
+                        'draft': 'bg-gray-100 text-gray-700',
+                        'sent': 'bg-blue-100 text-blue-700',
+                        'accepted': 'bg-green-100 text-green-700',
+                        'rejected': 'bg-red-100 text-red-700'
+                    } %}
+                    <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ status_colors.get(q.status, 'bg-gray-100 text-gray-700') }}">{{ q.status or 'draft' }}</span>
+                </td>
+                <td class="px-3 py-2 text-sm text-gray-500">{{ q.created_at[:10] if q.created_at else '-' }}</td>
+                <td class="px-3 py-2 text-sm">
+                    <div class="flex gap-2">
+                        <button onclick="editQuotation('{{ q.quotation_no }}')"
+                                class="text-blue-600 hover:text-blue-800 text-sm">✏️</button>
+                        <button onclick="deleteQuotation('{{ q.quotation_no }}')"
+                                class="text-red-600 hover:text-red-800 text-sm">🗑️</button>
+                    </div>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -74,10 +122,56 @@
     <p class="text-gray-500 text-sm">暂无报价记录</p>
     {% endif %}
 </div>
+
+<!-- 编辑报价弹窗 -->
+<div id="edit-quotation-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-50" onclick="document.getElementById('edit-quotation-modal').classList.add('hidden')"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-2xl shadow-2xl">
+        <div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">✏️ 编辑报价单</h2>
+            <button onclick="document.getElementById('edit-quotation-modal').classList.add('hidden')"
+                    class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        </div>
+        <form id="edit-quotation-form" class="p-6" onsubmit="saveQuotationEdit(event)">
+            <input type="hidden" id="edit-q-no">
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">状态</label>
+                        <select id="edit-q-status" name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white">
+                            <option value="draft">草稿</option>
+                            <option value="sent">已发送</option>
+                            <option value="accepted">已接受</option>
+                            <option value="rejected">已拒绝</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">金额 (USD)</label>
+                        <input type="number" id="edit-q-amount" name="total_amount" step="0.01"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">备注</label>
+                    <textarea id="edit-q-notes" name="notes" rows="2"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
+                <button type="button" onclick="document.getElementById('edit-quotation-modal').classList.add('hidden')"
+                        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">取消</button>
+                <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">💾 保存修改</button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
+// 全局缓存上次计算结果
+let lastQuoteResult = null;
+
 async function calculateQuote() {
     const data = {
         product_code: document.getElementById('quote-product').value,
@@ -91,6 +185,8 @@ async function calculateQuote() {
         const resp = await fetch('/quotation/api/calculate', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
         const r = await resp.json();
         if (r.error) { resultDiv.innerHTML = '<p class="text-red-500">'+r.error+'</p>'; return; }
+        lastQuoteResult = r;
+        lastQuoteResult._input = data;
         resultDiv.innerHTML = `
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div class="bg-blue-50 rounded-lg p-4 text-center"><p class="text-xs text-gray-500">单价</p><p class="text-2xl font-bold text-blue-700">$${r.unit_price_usd?.toFixed(2) || '-'}</p></div>
@@ -99,7 +195,97 @@ async function calculateQuote() {
                 <div class="bg-purple-50 rounded-lg p-4 text-center"><p class="text-xs text-gray-500">总体积</p><p class="text-lg font-bold text-purple-700">${r.total_cbm?.toFixed(3) || '-'} CBM</p></div>
             </div>
             <p class="text-green-600 font-medium">✅ 报价计算完成</p>`;
+        document.getElementById('save-quotation-area').classList.remove('hidden');
     } catch(e) { resultDiv.innerHTML = '<p class="text-red-500">'+e+'</p>'; }
+}
+
+// ========== 保存报价单 ==========
+async function saveQuotation() {
+    if (!lastQuoteResult) { showToast('请先计算报价', 'error'); return; }
+    const clientId = document.getElementById('save-client').value;
+    if (!clientId) { showToast('请选择关联客户', 'error'); return; }
+    const data = {
+        client_id: parseInt(clientId),
+        incoterm: lastQuoteResult._input?.incoterm || 'FOB',
+        margin_pct: lastQuoteResult._input?.margin_pct || 15,
+        status: document.getElementById('save-status').value,
+        notes: document.getElementById('save-notes').value,
+        items: [{
+            product_code: lastQuoteResult._input?.product_code,
+            quantity: lastQuoteResult._input?.quantity,
+            unit_price: lastQuoteResult.unit_price_usd,
+            subtotal: lastQuoteResult.total_usd,
+        }],
+    };
+    try {
+        const resp = await fetch('/quotation/api/save', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+        const r = await resp.json();
+        if (r.success) {
+            showToast(`✅ 报价单 ${r.quotation_no} 已保存`);
+            setTimeout(() => location.reload(), 800);
+        } else {
+            showToast('❌ ' + (r.error || '保存失败'), 'error');
+        }
+    } catch(e) { showToast('❌ 请求失败: ' + e.message, 'error'); }
+}
+
+// ========== 编辑报价单 ==========
+async function editQuotation(qNo) {
+    try {
+        const resp = await fetch(`/quotation/api/${qNo}`);
+        const q = await resp.json();
+        document.getElementById('edit-q-no').value = qNo;
+        document.getElementById('edit-q-status').value = q.status || 'draft';
+        document.getElementById('edit-q-amount').value = q.total_amount || '';
+        document.getElementById('edit-q-notes').value = q.notes || '';
+        document.getElementById('edit-quotation-modal').classList.remove('hidden');
+    } catch(e) { showToast('获取报价单详情失败', 'error'); }
+}
+
+async function saveQuotationEdit(e) {
+    e.preventDefault();
+    const qNo = document.getElementById('edit-q-no').value;
+    const form = document.getElementById('edit-quotation-form');
+    const formData = new FormData(form);
+    const data = {};
+    for (const [k, v] of formData.entries()) {
+        if (v !== '') {
+            if (k === 'total_amount') data[k] = parseFloat(v);
+            else data[k] = v;
+        }
+    }
+    try {
+        const resp = await fetch(`/quotation/api/${qNo}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data),
+        });
+        const r = await resp.json();
+        if (r.success) {
+            showToast('✅ 报价单已更新');
+            document.getElementById('edit-quotation-modal').classList.add('hidden');
+            setTimeout(() => location.reload(), 500);
+        } else {
+            showToast('❌ ' + (r.error || '更新失败'), 'error');
+        }
+    } catch(e) { showToast('❌ 请求失败', 'error'); }
+}
+
+// ========== 删除报价单 ==========
+function deleteQuotation(qNo) {
+    if (!confirm(`确定要删除报价单 ${qNo} 吗？\n\n此操作不可撤销。`)) return;
+    fetch(`/quotation/api/${qNo}`, { method: 'DELETE' })
+        .then(r => r.json())
+        .then(result => {
+            if (result.success) {
+                showToast(`✅ 已删除 ${qNo}`);
+                const row = document.getElementById('row-' + qNo);
+                if (row) row.remove();
+            } else {
+                showToast('❌ 删除失败', 'error');
+            }
+        })
+        .catch(err => showToast('❌ 请求失败', 'error'));
 }
 </script>
 {% endblock %}

@@ -195,7 +195,7 @@ def build_product_data(product: dict) -> dict:
             "product_name_en": "Garden Fork",
             "material": "Carbon Steel",
             "handle_material": "Ash Wood",
-            "length_cm": 30.0,
+            "color": "Red",
             ...
         }
 
@@ -220,17 +220,17 @@ def build_product_data(product: dict) -> dict:
         specs.append(f"Material: {product['material']}")
     if product.get("handle_material"):
         specs.append(f"Handle: {product['handle_material']}")
-    if product.get("length_cm"):
-        specs.append(f"Length: {product['length_cm']}cm")
     if product.get("weight_kg"):
         specs.append(f"Weight: {product['weight_kg']}kg")
     if product.get("tine_count"):
         specs.append(f"Tines: {product['tine_count']}")
-    if product.get("surface_treatment"):
-        specs.append(f"Surface: {product['surface_treatment']}")
     if product.get("hardness"):
         specs.append(f"Hardness: {product['hardness']}")
+    if product.get("surface_treatment"):
+        specs.append(f"Surface: {product['surface_treatment']}")
+    if product.get("certification"):
+        specs.append(f"Certification: {product['certification']}")
 
-    data["specifications"] = "\n".join(specs) if specs else "N/A"
+    data["specifications"] = chr(10).join(specs) if specs else "N/A"
 
     return data

@@ -16,7 +16,7 @@
 - 产品英文名：${product_name_en}
 - 产品类别：${category}
 - 材质：${material}
-- 规格：${length_cm}cm, ${weight_kg}kg
+- 规格：颜色${color}, ${weight_kg}kg
 - 使用场景：${use_scenario}
 - 认证：${certification}
 

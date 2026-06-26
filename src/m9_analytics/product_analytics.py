@@ -20,8 +20,8 @@ class ProductAnalytics:
         categories = self.db.fetchall(
             "SELECT category, COUNT(*) as cnt FROM products WHERE status='active' GROUP BY category ORDER BY cnt DESC"
         )
-        avg_length = self.db.fetchone(
-            "SELECT AVG(length_cm) as avg_len FROM products WHERE length_cm > 0 AND status='active'"
+        color_count = self.db.fetchone(
+            "SELECT COUNT(DISTINCT color) as color_count FROM products WHERE color IS NOT NULL AND color != '' AND status='active'"
         )
         avg_weight = self.db.fetchone(
             "SELECT AVG(weight_kg) as avg_wt FROM products WHERE weight_kg > 0 AND status='active'"
@@ -29,7 +29,7 @@ class ProductAnalytics:
         return {
             "total_products": total,
             "categories": [{"name": c["category"], "count": c["cnt"]} for c in categories],
-            "avg_length_cm": round(avg_length["avg_len"] or 0, 1),
+            "unique_colors": color_count["color_count"] or 0,
             "avg_weight_kg": round(avg_weight["avg_wt"] or 0, 2),
         }
 
@@ -37,7 +37,7 @@ class ProductAnalytics:
         """分类分布"""
         return self.db.fetchall(
             """SELECT category, COUNT(*) as product_count,
-                      AVG(length_cm) as avg_length,
+                      COUNT(DISTINCT color) as color_count,
                       AVG(weight_kg) as avg_weight
                FROM products WHERE status='active'
                GROUP BY category ORDER BY product_count DESC"""
@@ -75,29 +75,19 @@ class ProductAnalytics:
                GROUP BY handle_material ORDER BY cnt DESC"""
         )
 
-    def length_distribution(self) -> list[dict]:
-        """长度区间分布"""
-        ranges = [
-            ("<30cm", 0, 30),
-            ("30-60cm", 30, 60),
-            ("60-90cm", 60, 90),
-            ("90-120cm", 90, 120),
-            ("120cm+", 120, 9999),
-        ]
-        result = []
-        for label, low, high in ranges:
-            row = self.db.fetchone(
-                "SELECT COUNT(*) as cnt FROM products WHERE length_cm >= ? AND length_cm < ? AND status='active'",
-                (low, high)
-            )
-            result.append({"range": label, "count": row["cnt"]})
-        return result
+    def color_distribution(self) -> list[dict]:
+        """颜色分布"""
+        return self.db.fetchall(
+            """SELECT color, COUNT(*) as cnt
+               FROM products WHERE status='active' AND color IS NOT NULL AND color != ''
+               GROUP BY color ORDER BY cnt DESC"""
+        )
 
     def top_products(self, limit: int = 10) -> list[dict]:
         """产品列表（按最近更新）"""
         return self.db.fetchall(
             """SELECT product_code, product_name_en, product_name_cn,
-                      category, material, length_cm, weight_kg
+                      category, material, color, weight_kg
                FROM products WHERE status='active'
                ORDER BY updated_at DESC LIMIT ?""",
             (limit,)

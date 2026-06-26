@@ -97,7 +97,7 @@ class MarketAnalytics:
         return self.db.fetchall(
             """SELECT category,
                       COUNT(*) as product_count,
-                      AVG(length_cm) as avg_length,
+                      COUNT(DISTINCT color) as color_count,
                       AVG(weight_kg) as avg_weight
                FROM products WHERE status='active'
                GROUP BY category ORDER BY product_count DESC"""

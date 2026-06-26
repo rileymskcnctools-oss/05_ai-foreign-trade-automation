@@ -12,7 +12,7 @@ Generate a compelling product description for the given garden tool, suitable fo
 - Category: {{category}}
 - Material: {{material}}
 - Handle Material: {{handle_material}}
-- Length: {{length_cm}}cm
+- Color: {{color}}
 - Weight: {{weight_kg}}kg
 - Selling Angle: {{selling_angle}}
 - Use Scenario: {{use_scenario}}

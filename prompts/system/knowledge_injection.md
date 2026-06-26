@@ -18,7 +18,7 @@ Product: {{product_name_en}} ({{product_code}})
 Category: {{category}} / {{sub_category}}
 Material: {{material}}
 Handle: {{handle_material}}
-Dimensions: {{length_cm}}cm / {{weight_kg}}kg
+Color: {{color}} / Weight: {{weight_kg}}kg
 MOQ: {{moq}}
 Packaging: {{packaging_type}}, {{qty_per_carton}}/ctn
 Keywords: {{target_keywords}}

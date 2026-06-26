@@ -91,7 +91,7 @@ async def api_export_csv():
     output = io.StringIO()
     writer = csv.writer(output)
     writer.writerow(["product_code", "product_name_en", "product_name_cn",
-                     "category", "material", "length_cm", "weight_kg", "handle_type"])
+                     "category", "material", "color", "weight_kg", "handle_type"])
     for p in products:
         writer.writerow([
             p.get("product_code", ""),
@@ -99,7 +99,7 @@ async def api_export_csv():
             p.get("product_name_cn", ""),
             p.get("category", ""),
             p.get("material", ""),
-            p.get("length_cm", ""),
+            p.get("color", ""),
             p.get("weight_kg", ""),
             p.get("handle_type", ""),
         ])
@@ -145,6 +145,42 @@ async def api_update_product(product_code: str, request: Request):
         return {"success": True, "updated_fields": list(data.keys())}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+@router.post("/api/create")
+async def api_create_product(request: Request):
+    """API: 新增产品"""
+    db = get_db()
+    data = await request.json()
+    if not data.get("product_code"):
+        return JSONResponse(status_code=400, content={"error": "product_code is required"})
+    if not data.get("product_name_en"):
+        return JSONResponse(status_code=400, content={"error": "product_name_en is required"})
+    if not data.get("category"):
+        return JSONResponse(status_code=400, content={"error": "category is required"})
+    # 检查是否已存在
+    existing = db.fetchone("SELECT product_code FROM products WHERE product_code=?", (data["product_code"],))
+    if existing:
+        return JSONResponse(status_code=409, content={"error": f"产品编码 {data['product_code']} 已存在"})
+    try:
+        data.setdefault("status", "active")
+        columns = ", ".join(data.keys())
+        placeholders = ", ".join(["?"] * len(data))
+        sql = f"INSERT INTO products ({columns}) VALUES ({placeholders})"
+        db.execute(sql, tuple(data.values()))
+        db.commit()
+        return {"success": True, "product_code": data["product_code"]}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+@router.delete("/api/{product_code}")
+async def api_delete_product(product_code: str):
+    """API: 删除产品"""
+    db = get_db()
+    if db.product_delete(product_code):
+        return {"success": True, "deleted": product_code}
+    return JSONResponse(status_code=404, content={"error": "Product not found"})
 
 
 @router.get("/api/{product_code}/generate/{content_type}")

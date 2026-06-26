@@ -1,17 +1,36 @@
 <!-- 跟进提醒 (HTMX 局部) -->
-{% if reminders %}
+{% set all_reminders = [] %}
+{% if reminders.get('overdue_clients') %}
+  {% for r in reminders.overdue_clients %}
+    {% if all_reminders.append(r) %}{% endif %}
+  {% endfor %}
+{% endif %}
+{% if reminders.get('upcoming_3_days') %}
+  {% for r in reminders.upcoming_3_days %}
+    {% if all_reminders.append(r) %}{% endif %}
+  {% endfor %}
+{% endif %}
+{% if reminders.get('stale_clients') %}
+  {% for r in reminders.stale_clients %}
+    {% if all_reminders.append(r) %}{% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if all_reminders %}
 <div class="space-y-3">
-    {% for r in reminders %}
+    {% for r in all_reminders[:8] %}
     <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
         <div>
-            <p class="text-sm font-medium text-gray-900">{{ r.client_name or r.company_name or 'Unknown' }}</p>
-            <p class="text-xs text-gray-500">{{ r.reason or r.activity_type or '需要跟进' }}</p>
+            <p class="text-sm font-medium text-gray-900">{{ r.company_name or r.client_name or 'Unknown' }}</p>
+            <p class="text-xs text-gray-500">{{ r.country or '' }} · {{ r.client_status or r.activity_type or '需要跟进' }}</p>
         </div>
         <div>
-            {% if r.days_overdue and r.days_overdue > 0 %}
-            <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">逾期 {{ r.days_overdue }} 天</span>
+            {% if r.overdue_days and r.overdue_days > 0 %}
+            <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">逾期 {{ r.overdue_days }} 天</span>
             {% elif r.follow_up_date %}
             <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">{{ r.follow_up_date }}</span>
+            {% elif r.inactive_days %}
+            <span class="px-2 py-1 bg-orange-100 bg-opacity-20 text-orange-700 rounded-full text-xs font-medium">闲置 {{ r.inactive_days }} 天</span>
             {% else %}
             <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">待定</span>
             {% endif %}

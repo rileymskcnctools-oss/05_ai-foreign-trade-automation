@@ -84,12 +84,10 @@ def filter_products(
             params.append(max_weight)
 
         if min_length is not None:
-            sql += " AND length_cm >= ?"
-            params.append(min_length)
+            pass  # length_cm removed
 
         if max_length is not None:
-            sql += " AND length_cm <= ?"
-            params.append(max_length)
+            pass  # length_cm removed
 
         if packaging_type:
             sql += " AND packaging_type = ?"

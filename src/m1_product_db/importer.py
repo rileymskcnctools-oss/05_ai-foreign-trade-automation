@@ -40,8 +40,8 @@ def normalize_col(name: str) -> str:
         "子类": "sub_category",
         "材质": "material",
         "手柄材质": "handle_material",
-        "长度": "length_cm",
-        "长度(cm)": "length_cm",
+        "颜色": "color",
+        "颜色(color)": "color",
         "重量": "weight_kg",
         "重量(kg)": "weight_kg",
         "头部宽度": "head_width_cm",
@@ -87,8 +87,8 @@ def normalize_col(name: str) -> str:
         "subcategory": "sub_category",
         "material": "material",
         "handle_material": "handle_material",
-        "length_cm": "length_cm",
-        "length": "length_cm",
+        "color": "color",
+        "length": "color",
         "weight_kg": "weight_kg",
         "weight": "weight_kg",
         "head_width_cm": "head_width_cm",
@@ -134,7 +134,7 @@ def normalize_col(name: str) -> str:
 # ============================================================
 
 NUMERIC_FIELDS = {
-    "length_cm", "weight_kg", "head_width_cm", "moq",
+    "weight_kg", "head_width_cm", "moq",
     "qty_per_carton", "gw_per_carton_kg", "lead_time_days", "tine_count",
 }
 

@@ -14,7 +14,7 @@ from src.core.database import FTDatabase
 DEFAULT_EXPORT_COLS = [
     "product_code", "product_name_en", "product_name_cn",
     "category", "sub_category", "material", "handle_material",
-    "length_cm", "weight_kg", "tine_count", "hardness",
+    "color", "weight_kg", "tine_count", "hardness",
     "moq", "packaging_type", "qty_per_carton", "carton_size_cm",
     "gw_per_carton_kg", "lead_time_days", "certification",
     "target_keywords", "use_scenario", "target_markets",

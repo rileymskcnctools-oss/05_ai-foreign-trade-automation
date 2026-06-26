@@ -82,16 +82,27 @@ async def api_update_client(client_id: int, request: Request):
 
 @router.delete("/api/{client_id}")
 async def api_delete_client(client_id: int):
-    """API: 删除客户"""
+    """API: 删除客户（级联删除所有关联记录）"""
     db = get_db()
     try:
-        # 先删关联的跟进记录
-        db.execute("DELETE FROM activities WHERE client_id=?", (client_id,))
-        cursor = db.execute("DELETE FROM clients WHERE id=?", (client_id,))
-        db.commit()
-        if cursor.rowcount == 0:
+        # 先检查客户是否存在
+        client = db.fetchone("SELECT id, company_name FROM clients WHERE id=?", (client_id,))
+        if not client:
             return JSONResponse(status_code=404, content={"error": "Client not found"})
-        return {"success": True, "deleted_id": client_id}
+        # 级联删除所有关联表
+        tables = [
+            "activities", "quotations", "orders", "inquiries",
+            "client_analyses", "client_tag_map"
+        ]
+        for table in tables:
+            try:
+                db.execute(f"DELETE FROM {table} WHERE client_id=?", (client_id,))
+            except Exception:
+                pass  # 表可能不存在或没有数据
+        # 最后删除客户本身
+        db.execute("DELETE FROM clients WHERE id=?", (client_id,))
+        db.commit()
+        return {"success": True, "deleted_id": client_id, "name": client["company_name"]}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
 
@@ -353,6 +364,128 @@ async def api_generate_potential_clients(request: Request):
         return {"success": False, "error": f"AI返回格式错误: {str(e)}", "raw": result_text[:500]}
     except Exception as e:
         return JSONResponse(status_code=500, content={"success": False, "error": str(e)})
+
+
+@router.post("/api/search-real-clients")
+async def api_search_real_clients(request: Request):
+    """API: 搜索真实客户 — 先尝试网页搜索，失败则用AI知识库直接分析"""
+    import json as _json
+    body = await request.json()
+    query = body.get("query", "").strip()
+    country = body.get("country", "").strip()
+    max_results = min(body.get("max_results", 8), 15)
+    market = body.get("market", "default")
+    mode = body.get("mode", "auto")  # auto / web_search / ai_direct
+
+    if not query and not country:
+        return JSONResponse(status_code=400, content={"error": "请提供搜索关键词或目标国家"})
+
+    if not query:
+        query = f"agricultural hand tools importer {country}"
+
+    raw_results = []
+    search_error = None
+
+    # ── Step 1: 尝试网页搜索 ──
+    if mode in ("auto", "web_search"):
+        try:
+            from src.m8_crm.browser_searcher import BrowserSearcher
+            import os
+            proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("HTTP_PROXY")
+            searcher = BrowserSearcher(proxy=proxy, headless=True)
+            raw_results = searcher.search(query=query, max_results=max_results)
+        except Exception as e:
+            search_error = str(e)
+            if mode == "web_search":
+                return JSONResponse(status_code=500, content={
+                    "success": False, "error": f"网页搜索失败: {search_error}"
+                })
+
+    # ── Step 2: AI 分析（有搜索结果则分析结果，无结果则用AI知识库） ──
+    try:
+        from src.utils.prompts import load_prompt, fill_prompt
+        from src.core.llm_client import LLMClient
+
+        # 获取已有客户名单用于去重
+        from src.core.database import FTDatabase
+        db_ro = FTDatabase()
+        existing_rows = db_ro.fetchall("SELECT company_name, country FROM clients")
+        db_ro.close()
+        existing_list = [f"- {r['company_name']} ({r.get('country', '')})" for r in existing_rows]
+        existing_str = "\n".join(existing_list) if existing_list else "(CRM is empty)"
+
+        if raw_results:
+            # 有搜索结果 → 用 analyze_real_company 模板分析
+            template = load_prompt("outreach/analyze_real_company")
+            companies_text = ""
+            for i, r in enumerate(raw_results, 1):
+                companies_text += f"\n### Company {i}\n"
+                companies_text += f"- Name: {r.get('name', 'Unknown')}\n"
+                companies_text += f"- URL: {r.get('url', 'N/A')}\n"
+                companies_text += f"- Domain: {r.get('domain', 'N/A')}\n"
+                if r.get("snippet"):
+                    companies_text += f"- Search snippet: {r['snippet'][:300]}\n"
+                if r.get("emails"):
+                    companies_text += f"- Emails found: {', '.join(r['emails'][:5])}\n"
+                if r.get("emails_from_search"):
+                    companies_text += f"- Emails (search): {', '.join(r['emails_from_search'])}\n"
+                if r.get("phones"):
+                    companies_text += f"- Phones found: {', '.join(r['phones'][:5])}\n"
+                if r.get("whatsapp"):
+                    companies_text += f"- WhatsApp: {', '.join(r['whatsapp'])}\n"
+                if r.get("linkedin"):
+                    companies_text += f"- LinkedIn: {', '.join(r['linkedin'])}\n"
+                if r.get("page_title"):
+                    companies_text += f"- Page title: {r['page_title']}\n"
+                if r.get("raw_text_snippet"):
+                    companies_text += f"- Page text excerpt: {r['raw_text_snippet'][:500]}\n"
+
+            prompt = fill_prompt(template, {
+                "search_query": query,
+                "companies_data": companies_text,
+            })
+        else:
+            # 无搜索结果 → 用 AI 知识库直接找真实公司
+            template = load_prompt("outreach/generate_potential_client")
+            prompt = fill_prompt(template, {
+                "target_market": country or market,
+                "count": str(max_results),
+                "existing_clients": existing_str,
+            })
+
+        llm = LLMClient(scenario="outreach")
+        result_text = llm.chat(prompt, temperature=0.3, max_tokens=4000)
+
+        # 解析JSON
+        if "```json" in result_text:
+            json_str = result_text.split("```json")[1].split("```")[0].strip()
+        elif "```" in result_text:
+            json_str = result_text.split("```")[1].split("```")[0].strip()
+        else:
+            json_str = result_text.strip()
+
+        result = _json.loads(json_str)
+        clients = result.get("clients", [])
+
+        return {
+            "success": True,
+            "clients": clients,
+            "raw": raw_results,
+            "count": len(clients),
+            "search_query": query,
+            "mode_used": "web_search+ai" if raw_results else "ai_direct",
+            "search_error": search_error,
+        }
+
+    except _json.JSONDecodeError as e:
+        return {
+            "success": True, "clients": [], "raw": raw_results, "count": 0,
+            "warning": f"AI返回格式错误: {str(e)}",
+        }
+    except Exception as e:
+        return JSONResponse(status_code=500, content={
+            "success": False, "error": f"AI分析失败: {str(e)}"
+        })
 
 
 @router.post("/api/batch-insert")

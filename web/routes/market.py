@@ -44,3 +44,12 @@ async def api_get_report(report_id: int):
     if not report:
         return JSONResponse(status_code=404, content={"error": "Report not found"})
     return report
+
+
+@router.delete("/api/reports/{report_id}")
+async def api_delete_report(report_id: int):
+    """API: 删除报告"""
+    db = get_db()
+    if db.report_delete(report_id):
+        return {"success": True, "deleted_id": report_id}
+    return JSONResponse(status_code=404, content={"error": "Report not found"})

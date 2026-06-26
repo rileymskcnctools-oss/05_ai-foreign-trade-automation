@@ -28,7 +28,7 @@ async def analytics_page(request: Request):
         "request": request, "page": "analytics",
         "product_overview": pa.overview(),
         "category_dist": pa.category_distribution(),
-        "length_dist": pa.length_distribution(),
+        "color_dist": pa.color_distribution(),
         "seo_coverage": pa.seo_coverage(),
         "client_overview": ca.overview(),
         "country_dist": ca.country_distribution(),

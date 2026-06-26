@@ -149,7 +149,7 @@ class CatalogPDF(FPDF):
         for field, label in [
             ("material", "Material"),
             ("handle_material", "Handle"),
-            ("length_cm", "Length (cm)"),
+            ("color", "Color"),
             ("weight_kg", "Weight (kg)"),
             ("head_width_cm", "Head Width (cm)"),
             ("hardness", "Hardness"),
@@ -389,7 +389,7 @@ class CatalogGenerator:
         spec_fields = [
             ("material", "Material"),
             ("handle_material", "Handle"),
-            ("length_cm", "Length (cm)"),
+            ("color", "Color"),
             ("weight_kg", "Weight (kg)"),
             ("head_width_cm", "Head Width (cm)"),
             ("hardness", "Hardness"),

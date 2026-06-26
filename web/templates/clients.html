@@ -54,7 +54,7 @@
 <!-- AI生成潜在客户 -->
 <button onclick="showAIGenerate()"
         class="mb-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium">
-    🤖 AI生成潜在客户
+    🤖 AI客户开发
 </button>
 
 <!-- 客户列表 -->
@@ -152,46 +152,100 @@
 <!-- AI生成潜在客户弹窗 -->
 <div id="ai-generate-modal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-black bg-opacity-50" onclick="document.getElementById('ai-generate-modal').classList.add('hidden')"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-            <h2 class="text-lg font-semibold">🤖 AI生成潜在客户</h2>
+            <h2 class="text-lg font-semibold">🔍 AI客户开发</h2>
             <button onclick="document.getElementById('ai-generate-modal').classList.add('hidden')"
                     class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
         </div>
         <div class="p-6">
-            <div class="flex gap-4 mb-4">
-                <div class="flex-1">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">目标市场</label>
-                    <select id="ai-market" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white">
-                        <option value="Africa">非洲</option>
-                        <option value="Europe">欧洲</option>
-                        <option value="Southeast Asia">东南亚</option>
-                        <option value="South America">南美</option>
-                        <option value="Middle East">中东</option>
-                        <option value="Global">全球</option>
-                    </select>
+            <!-- Tab 切换 -->
+            <div class="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1">
+                <button onclick="switchAITab('real')" id="tab-real"
+                        class="flex-1 px-4 py-2 rounded-md text-sm font-medium bg-white text-purple-700 shadow-sm">
+                    🌐 真实搜索
+                </button>
+                <button onclick="switchAITab('fiction')" id="tab-fiction"
+                        class="flex-1 px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-800">
+                    🤖 AI虚构（练习用）
+                </button>
+            </div>
+
+            <!-- 真实搜索面板 -->
+            <div id="panel-real">
+                <div class="flex gap-4 mb-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">搜索关键词 *</label>
+                        <input id="real-search-query" type="text"
+                               placeholder="如: agricultural tools importer Nigeria"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="w-40">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">目标国家</label>
+                        <input id="real-search-country" type="text"
+                               placeholder="如: Nigeria"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="w-32">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">搜索数量</label>
+                        <select id="real-search-count" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white">
+                            <option value="5">5个</option>
+                            <option value="8" selected>8个</option>
+                            <option value="12">12个</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button id="real-search-btn" onclick="searchRealClients()"
+                                class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium whitespace-nowrap">
+                            🔍 搜索真实客户
+                        </button>
+                    </div>
                 </div>
-                <div class="w-32">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">生成数量</label>
-                    <select id="ai-count" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white">
-                        <option value="3">3个</option>
-                        <option value="5" selected>5个</option>
-                        <option value="8">8个</option>
-                        <option value="10">10个</option>
-                    </select>
+                <div class="text-xs text-gray-500 mb-4">
+                    通过 Google 搜索目标市场的真实公司，抓取网站提取联系方式，AI 自动分析评级。
+                    搜索结果来自真实网页，联系方式可直接使用。
                 </div>
-                <div class="flex items-end">
-                    <button id="ai-generate-btn" onclick="generateClients()"
-                            class="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium">
-                        🚀 生成潜在客户
-                    </button>
+                <div id="real-result" class="bg-gray-50 rounded-lg p-4 min-h-[100px]">
+                    <p class="text-gray-400 text-sm">输入关键词点击搜索开始</p>
                 </div>
             </div>
-            <div class="text-xs text-gray-500 mb-4">
-                AI将根据目标市场生成潜在B2B客户画像，包括公司名、业务类型、评级等。生成后可一键录入CRM。
-            </div>
-            <div id="ai-result" class="bg-gray-50 rounded-lg p-4 min-h-[100px]">
-                <p class="text-gray-400 text-sm">点击"生成潜在客户"开始</p>
+
+            <!-- AI虚构面板（原有功能） -->
+            <div id="panel-fiction" class="hidden">
+                <div class="flex gap-4 mb-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">目标市场</label>
+                        <select id="ai-market" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white">
+                            <option value="Africa">非洲</option>
+                            <option value="Europe">欧洲</option>
+                            <option value="Southeast Asia">东南亚</option>
+                            <option value="South America">南美</option>
+                            <option value="Middle East">中东</option>
+                            <option value="Global">全球</option>
+                        </select>
+                    </div>
+                    <div class="w-32">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">生成数量</label>
+                        <select id="ai-count" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white">
+                            <option value="3">3个</option>
+                            <option value="5" selected>5个</option>
+                            <option value="8">8个</option>
+                            <option value="10">10个</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button id="ai-generate-btn" onclick="generateClients()"
+                                class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-medium">
+                            🤖 生成虚构客户
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                    <p class="text-xs text-amber-700">⚠️ <strong>注意：</strong>此模式生成的是虚构数据，联系方式为AI编造，不可用于真实联系。仅适合 CRM 练习和流程测试。</p>
+                </div>
+                <div id="ai-result" class="bg-gray-50 rounded-lg p-4 min-h-[100px]">
+                    <p class="text-gray-400 text-sm">点击"生成虚构客户"开始</p>
+                </div>
             </div>
         </div>
     </div>
@@ -408,9 +462,138 @@ function deleteClient(id, name) {
         });
 }
 
-// ========== AI生成潜在客户 ==========
+// ========== AI客户开发 ==========
 function showAIGenerate() {
     document.getElementById('ai-generate-modal').classList.remove('hidden');
+}
+
+// Tab 切换
+function switchAITab(tab) {
+    document.getElementById('panel-real').classList.toggle('hidden', tab !== 'real');
+    document.getElementById('panel-fiction').classList.toggle('hidden', tab !== 'fiction');
+    document.getElementById('tab-real').className = tab === 'real'
+        ? 'flex-1 px-4 py-2 rounded-md text-sm font-medium bg-white text-purple-700 shadow-sm'
+        : 'flex-1 px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-800';
+    document.getElementById('tab-fiction').className = tab === 'fiction'
+        ? 'flex-1 px-4 py-2 rounded-md text-sm font-medium bg-white text-purple-700 shadow-sm'
+        : 'flex-1 px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-800';
+}
+
+// 真实客户搜索
+function searchRealClients() {
+    const query = document.getElementById('real-search-query').value.trim();
+    const country = document.getElementById('real-search-country').value.trim();
+    const count = parseInt(document.getElementById('real-search-count').value);
+    const btn = document.getElementById('real-search-btn');
+    const resultDiv = document.getElementById('real-result');
+
+    if (!query && !country) {
+        showToast('⚠️ 请输入搜索关键词或目标国家', 'error');
+        return;
+    }
+
+    btn.textContent = '⏳ 搜索中...';
+    btn.disabled = true;
+    resultDiv.innerHTML = '<p class="text-gray-500">🔍 正在搜索 Google + 抓取网页 + AI分析，请稍候（约30-60秒）...</p>';
+
+    fetch('/clients/api/search-real-clients', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({query, country, max_results: count}),
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.textContent = '🔍 搜索真实客户';
+        btn.disabled = false;
+
+        if (!data.success) {
+            resultDiv.innerHTML = `<p class="text-red-500">搜索失败: ${data.error}</p>`;
+            return;
+        }
+
+        if (data.count === 0 && (!data.raw || data.raw.length === 0)) {
+            resultDiv.innerHTML = `<p class="text-gray-500">${data.message || '未找到结果，请尝试不同关键词'}</p>`;
+            return;
+        }
+
+        let clients = data.clients || [];
+        let html = '';
+
+        // 如果有 AI 分析结果
+        if (clients.length > 0) {
+            html += `<div class="flex justify-between items-center mb-3">
+                <p class="text-sm font-medium text-green-700">✅ 找到 ${clients.length} 个真实公司</p>
+                <button onclick="batchInsertClients()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium">
+                    📥 一键录入CRM
+                </button>
+            </div>`;
+            html += '<div class="space-y-3" id="ai-clients-list">';
+            clients.forEach((c, i) => {
+                const hasContact = c.email || c.phone || c.whatsapp || c.linkedin;
+                const contactBadge = hasContact
+                    ? '<span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">有联系方式</span>'
+                    : '<span class="px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-700">需手动查找</span>';
+                const confBadge = c.confidence === 'high'
+                    ? '<span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700">高可信</span>'
+                    : c.confidence === 'medium'
+                    ? '<span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">中可信</span>'
+                    : '';
+                html += `<div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-medium text-gray-900">${c.company_name || 'Unknown'} ${contactBadge} ${confBadge}</p>
+                            <p class="text-xs text-gray-500">${c.country || ''} · ${c.business_type || ''}</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-bold rounded-full ${c.grade==='A'?'bg-green-100 text-green-700':c.grade==='B'?'bg-blue-100 text-blue-700':'bg-yellow-100 text-yellow-700'}">
+                            ${c.grade || 'C'}
+                        </span>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">${c.analysis_notes || c.target_note || ''}</p>
+                    <div class="flex flex-wrap gap-3 mt-2 text-xs text-gray-500">
+                        ${c.website ? '<span>🌐 <a href="' + c.website + '" target="_blank" class="text-blue-600 hover:underline">' + (c.website.length > 40 ? c.website.substring(0,40)+'...' : c.website) + '</a></span>' : ''}
+                        ${c.source ? '<span class="text-purple-600 font-medium">📌 ' + c.source + '</span>' : ''}
+                    </div>
+                    ${hasContact ? `<div class="flex flex-wrap gap-3 mt-1.5 text-xs text-gray-400">
+                        ${c.contact_person ? '<span>👤 ' + c.contact_person + '</span>' : ''}
+                        ${c.email ? '<span>✉️ ' + c.email + '</span>' : ''}
+                        ${c.phone ? '<span>📞 ' + c.phone + '</span>' : ''}
+                        ${c.whatsapp ? '<span>📱 ' + c.whatsapp + '</span>' : ''}
+                        ${c.linkedin ? '<span>💼 <a href="' + c.linkedin + '" target="_blank" class="text-blue-500">LinkedIn</a></span>' : ''}
+                    </div>` : ''}
+                </div>`;
+            });
+            html += '</div>';
+        } else if (data.raw && data.raw.length > 0) {
+            // AI分析失败，展示原始搜索结果
+            html += `<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+                <p class="text-xs text-yellow-700">⚠️ ${data.warning || 'AI分析未返回结构化数据，以下为原始搜索结果'}</p>
+            </div>`;
+            html += '<div class="space-y-3">';
+            data.raw.forEach((r, i) => {
+                html += `<div class="bg-white border border-gray-200 rounded-lg p-4">
+                    <p class="font-medium text-gray-900">${r.name || 'Unknown'}</p>
+                    <p class="text-xs text-gray-500 mt-1">${r.snippet || ''}</p>
+                    <div class="flex flex-wrap gap-3 mt-2 text-xs">
+                        ${r.url ? '<span>🌐 <a href="' + r.url + '" target="_blank" class="text-blue-600 hover:underline">访问网站</a></span>' : ''}
+                        ${r.emails && r.emails.length ? '<span>✉️ ' + r.emails.join(', ') + '</span>' : ''}
+                        ${r.emails_from_search && r.emails_from_search.length ? '<span>✉️ ' + r.emails_from_search.join(', ') + '</span>' : ''}
+                        ${r.phones && r.phones.length ? '<span>📞 ' + r.phones.join(', ') + '</span>' : ''}
+                        ${r.whatsapp && r.whatsapp.length ? '<span>📱 ' + r.whatsapp.join(', ') + '</span>' : ''}
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+        }
+
+        // 存到全局变量供batch insert用
+        window._aiClients = clients;
+        resultDiv.innerHTML = html;
+    })
+    .catch(err => {
+        btn.textContent = '🔍 搜索真实客户';
+        btn.disabled = false;
+        resultDiv.innerHTML = `<p class="text-red-500">请求失败: ${err.message}</p>`;
+    });
 }
 
 function generateClients() {
@@ -430,7 +613,7 @@ function generateClients() {
     })
     .then(r => r.json())
     .then(data => {
-        btn.textContent = '🚀 生成潜在客户';
+        btn.textContent = '🤖 生成虚构客户';
         btn.disabled = false;
 
         if (!data.success) {
@@ -440,7 +623,7 @@ function generateClients() {
 
         // 展示结果 + 一键录入按钮
         let html = `<div class="flex justify-between items-center mb-3">
-            <p class="text-sm font-medium text-green-700">✅ 生成了 ${data.clients.length} 个潜在客户</p>
+            <p class="text-sm font-medium text-green-700">✅ 生成了 ${data.clients.length} 个虚构客户</p>
             <button onclick="batchInsertClients()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm font-medium">
                 📥 一键录入CRM
             </button>
@@ -483,7 +666,7 @@ function generateClients() {
         resultDiv.innerHTML = html;
     })
     .catch(err => {
-        btn.textContent = '🚀 生成潜在客户';
+        btn.textContent = '🤖 生成虚构客户';
         btn.disabled = false;
         resultDiv.innerHTML = `<p class="text-red-500">请求失败: ${err.message}</p>`;
     });

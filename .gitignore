@@ -53,3 +53,5 @@ assets/images/*.jpeg
 # Archive
 archive/
 config/.env.bak
+frontend/node_modules/
+frontend/dist/

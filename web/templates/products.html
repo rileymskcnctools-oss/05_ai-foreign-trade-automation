@@ -8,10 +8,16 @@
             <span id="product-count">{{ products|length }}</span> products
         </p>
     </div>
-    <a href="/products/api/export/csv"
-       class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
-        ⬇️ 导出 CSV
-    </a>
+    <div class="flex gap-3">
+        <a href="/products/api/export/csv"
+           class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
+            ⬇️ 导出 CSV
+        </a>
+        <button onclick="document.getElementById('new-product-modal').classList.remove('hidden')"
+                class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
+            + 新增产品
+        </button>
+    </div>
 </div>
 
 <!-- 搜索栏 (HTMX 实时搜索) -->
@@ -60,6 +66,79 @@
     {% include "components/product_table.html" %}
 </div>
 
+<!-- 新增产品弹窗 -->
+<div id="new-product-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-50" onclick="document.getElementById('new-product-modal').classList.add('hidden')"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <h2 class="text-lg font-semibold">📦 新增产品</h2>
+            <button onclick="document.getElementById('new-product-modal').classList.add('hidden')"
+                    class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        </div>
+        <form id="new-product-form" class="p-6" onsubmit="saveNewProduct(event)">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="block text-xs text-gray-500 mb-1">产品编码 *</label>
+                    <input type="text" name="product_code" required placeholder="如 AX-099"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">英文名 *</label>
+                    <input type="text" name="product_name_en" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">中文名</label>
+                    <input type="text" name="product_name_cn"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">分类 *</label>
+                    <input type="text" name="category" required placeholder="如 Garden Tools"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">材质</label>
+                    <input type="text" name="material"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">颜色</label>
+                    <input type="text" name="color" placeholder="如 Red, Blue"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">重量(kg)</label>
+                    <input type="number" name="weight_kg" step="any"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">MOQ</label>
+                    <input type="number" name="moq"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-500 mb-1">包装方式</label>
+                    <input type="text" name="packaging_type"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none">
+                </div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-xs text-gray-500 mb-1">📐 产品规格 (多行)</label>
+                <textarea name="specifications" rows="4"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none font-mono"
+                          placeholder="Head: 4-tine, 15×10cm&#10;Handle: Wood, 30cm"></textarea>
+            </div>
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
+                <button type="button" onclick="document.getElementById('new-product-modal').classList.add('hidden')"
+                        class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">取消</button>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">💾 保存产品</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- 产品详情弹窗 (HTMX 动态加载) -->
 <div id="product-detail-modal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-black bg-opacity-50" onclick="closeModal()"></div>
@@ -77,6 +156,60 @@
 
 {% block scripts %}
 <script>
+// ========== 新增产品 ==========
+function saveNewProduct(e) {
+    e.preventDefault();
+    const form = document.getElementById('new-product-form');
+    const formData = new FormData(form);
+    const data = {};
+    for (const [key, val] of formData.entries()) {
+        if (val !== '') {
+            if (['weight_kg', 'moq'].includes(key)) {
+                data[key] = parseFloat(val);
+            } else {
+                data[key] = val;
+            }
+        }
+    }
+    if (!data.product_code || !data.product_name_en || !data.category) {
+        showToast('请填写必填字段: 编码、英文名、分类', 'error');
+        return;
+    }
+    fetch('/products/api/create', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data),
+    })
+    .then(r => r.json())
+    .then(result => {
+        if (result.success) {
+            showToast('✅ 产品创建成功!');
+            document.getElementById('new-product-modal').classList.add('hidden');
+            form.reset();
+            setTimeout(() => location.reload(), 500);
+        } else {
+            showToast('❌ ' + (result.error || '创建失败'), 'error');
+        }
+    })
+    .catch(err => showToast('❌ 请求失败: ' + err.message, 'error'));
+}
+
+// ========== 删除产品 ==========
+function deleteProduct(code, name) {
+    if (!confirm(`确定要删除产品 "${code} - ${name}" 吗？\n\n此操作不可撤销。`)) return;
+    fetch(`/products/api/${code}`, { method: 'DELETE' })
+        .then(r => r.json())
+        .then(result => {
+            if (result.success) {
+                showToast(`✅ 已删除产品 ${code}`);
+                setTimeout(() => location.reload(), 500);
+            } else {
+                showToast('❌ 删除失败: ' + (result.error || ''), 'error');
+            }
+        })
+        .catch(err => showToast('❌ 请求失败', 'error'));
+}
+
 function openProductDetail(productCode) {
     const modal = document.getElementById('product-detail-modal');
     modal.classList.remove('hidden');
@@ -102,7 +235,7 @@ const EDITABLE_FIELDS = [
     {label:'子分类', field:'sub_category', type:'text'},
     {label:'材质', field:'material', type:'text'},
     {label:'手柄材质', field:'handle_material', type:'text'},
-    {label:'长度(cm)', field:'length_cm', type:'number'},
+    {label:'颜色', field:'color', type:'text'},
     {label:'重量(kg)', field:'weight_kg', type:'number'},
     {label:'头宽(cm)', field:'head_width_cm', type:'number'},
     {label:'齿数', field:'tine_count', type:'number'},
@@ -146,7 +279,7 @@ function buildDetailHTML(p) {
             <div><label class="text-xs text-gray-500 uppercase">中文名</label><p class="text-sm">${p.product_name_cn || '-'}</p></div>
             <div><label class="text-xs text-gray-500 uppercase">分类</label><p class="text-sm">${p.category || '-'}</p></div>
             <div><label class="text-xs text-gray-500 uppercase">材质</label><p class="text-sm">${p.material || '-'}</p></div>
-            <div><label class="text-xs text-gray-500 uppercase">长度</label><p class="text-sm">${p.length_cm || '-'} cm</p></div>
+            <div><label class="text-xs text-gray-500 uppercase">颜色</label><p class="text-sm">${p.color || '-'}</p></div>
             <div><label class="text-xs text-gray-500 uppercase">重量</label><p class="text-sm">${p.weight_kg || '-'} kg</p></div>
             <div><label class="text-xs text-gray-500 uppercase">MOQ</label><p class="text-sm">${p.moq || '-'}</p></div>
             <div><label class="text-xs text-gray-500 uppercase">交期</label><p class="text-sm">${p.lead_time_days || '-'} 天</p></div>

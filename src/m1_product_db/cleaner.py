@@ -54,7 +54,7 @@ def clean_product(product: dict) -> dict:
 
     # Ensure numeric fields are proper types
     numeric_fields = {
-        "length_cm", "weight_kg", "head_width_cm",
+        "color", "weight_kg", "head_width_cm",
         "gw_per_carton_kg", "moq", "qty_per_carton", "lead_time_days",
         "tine_count",
     }
@@ -130,7 +130,7 @@ def find_missing_fields(
     if fields is None:
         fields = [
             "product_name_en", "category", "material",
-            "length_cm", "weight_kg", "moq", "packaging_type",
+            "color", "weight_kg", "moq", "packaging_type",
             "hs_code",
             "loading_qty_20ft", "loading_qty_40ft", "loading_qty_40hq",
         ]

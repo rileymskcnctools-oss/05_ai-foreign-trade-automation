@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS products (
     sub_category        TEXT,                        -- Rakes
     material            TEXT,                        -- Carbon Steel + Wooden Handle
     handle_material     TEXT,                        -- Wooden Handle
-    length_cm           REAL,                        -- 35.0
+    color               TEXT,                        -- Red, Blue, Black
     weight_kg           REAL,                        -- 0.52
     head_width_cm       REAL,                        -- (nullable)
     tine_count          INTEGER,                     -- 14

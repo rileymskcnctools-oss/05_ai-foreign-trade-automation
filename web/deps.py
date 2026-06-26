@@ -18,4 +18,16 @@ def get_db() -> FTDatabase:
         _db_instance.conn.rollback()
     except Exception:
         pass
+    # 确保 WAL 模式和超时设置
+    try:
+        _db_instance.conn.execute("PRAGMA journal_mode=WAL")
+        _db_instance.conn.execute("PRAGMA busy_timeout=5000")
+    except Exception:
+        pass
     return _db_instance
+
+
+def get_fresh_db() -> FTDatabase:
+    """获取一个全新的数据库连接（用于删除等需要独立事务的操作）"""
+    db = FTDatabase()
+    return db

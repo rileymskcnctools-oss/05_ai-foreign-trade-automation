@@ -111,7 +111,8 @@ class PriceCalculator:
         total_weight = round(unit_weight * quantity, 2)
 
         # 体积计算（如果产品有尺寸）
-        length_m = (product.get("length_cm", 0) or 0) / 100
+        # length_cm removed; use default volume estimate
+        length_m = 0.5  # default estimate
         width_m = (product.get("head_width_cm", 0) or 0) / 100
         height_m = 0  # no height column on products table; use 0 as default
         unit_cbm = round(length_m * width_m * height_m, 6)
@@ -176,7 +177,7 @@ class PriceCalculator:
             }
 
         # 动态计算
-        length_m = (product.get("length_cm", 50) or 50) / 100
+        length_m = 0.5  # default estimate (length_cm removed)
         width_m = (product.get("head_width_cm", 30) or 30) / 100
         height_m = 0  # no height column on products table; use 0 as default
         unit_cbm = length_m * width_m * height_m

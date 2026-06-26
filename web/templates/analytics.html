@@ -24,8 +24,8 @@
             <p class="text-3xl font-bold text-gray-900">{{ product_overview.total_products }}</p>
         </div>
         <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
-            <p class="text-sm text-gray-500">平均长度</p>
-            <p class="text-3xl font-bold text-gray-900">{{ product_overview.avg_length_cm }} cm</p>
+            <p class="text-sm text-gray-500">颜色种类</p>
+            <p class="text-3xl font-bold text-gray-900">{{ product_overview.unique_colors }}</p>
         </div>
         <div class="bg-white rounded-xl border border-gray-200 p-5 card-hover">
             <p class="text-sm text-gray-500">SEO覆盖率</p>
@@ -38,8 +38,8 @@
             <canvas id="catDistChart" height="200"></canvas>
         </div>
         <div class="bg-white rounded-xl border border-gray-200 p-6">
-            <h3 class="font-semibold mb-4">长度区间分布</h3>
-            <canvas id="lengthChart" height="200"></canvas>
+            <h3 class="font-semibold mb-4">颜色分布</h3>
+            <canvas id="colorChart" height="200"></canvas>
         </div>
     </div>
 </div>
@@ -111,11 +111,11 @@ if (catDist && catDist.length) {
         options: { responsive:true, plugins:{legend:{display:false}} }
     });
 }
-const lenDist = {{ length_dist | tojson }};
-if (lenDist && lenDist.length) {
-    new Chart(document.getElementById('lengthChart'), {
+const colorDist = {{ color_dist | tojson }};
+if (colorDist && colorDist.length) {
+    new Chart(document.getElementById('colorChart'), {
         type: 'bar',
-        data: { labels: lenDist.map(l=>l.range), datasets: [{ label:'产品数', data: lenDist.map(l=>l.count), backgroundColor:'#10b981', borderRadius:6 }] },
+        data: { labels: colorDist.map(c=>c.color), datasets: [{ label:'产品数', data: colorDist.map(c=>c.cnt), backgroundColor:'#10b981', borderRadius:6 }] },
         options: { responsive:true, plugins:{legend:{display:false}} }
     });
 }

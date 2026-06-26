@@ -6,12 +6,19 @@
 - 产品英文名：${product_name_en}
 - 产品类别：${category} / ${sub_category}
 - 材质：${material}
-- 核心规格：${specifications}
+- 重量：${weight_kg}kg
+- 硬度：${hardness}
 - 表面处理：${surface_treatment}
+- 认证：${certification}
 - 使用场景：${use_scenario}
+- 目标市场：${target_markets}
+- 卖点角度：${selling_angle}
 
 【目标关键词】
 ${target_keywords}
+
+【竞品参考】
+${competitor_ref}
 
 【标题规则】
 1. 每个标题不超过 128 个字符
