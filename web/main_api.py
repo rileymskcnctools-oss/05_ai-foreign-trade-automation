@@ -109,13 +109,9 @@ app.add_api_route("/clients/api/{client_id}/activities", api_log_activity, metho
 app.add_api_route("/clients/api/{client_id}/analyses", api_get_client_analyses, methods=["GET"])
 app.add_api_route("/clients/api/{client_id}/analyze", api_run_client_analysis, methods=["POST"])
 
-# Market API
-from web.routes.market import (
-    api_generate_report, api_get_report, api_delete_report,
-)
-app.add_api_route("/market/api/generate-report", api_generate_report, methods=["POST"])
-app.add_api_route("/market/api/reports/{report_id}", api_get_report, methods=["GET"])
-app.add_api_route("/market/api/reports/{report_id}", api_delete_report, methods=["DELETE"])
+# Market API — 使用 router 整体挂载
+from web.routes.market import router as market_router
+app.include_router(market_router)
 
 # Outreach API
 from web.routes.outreach import (
@@ -129,16 +125,7 @@ app.add_api_route("/outreach/api/generate-linkedin", api_generate_linkedin, meth
 from web.routes.quotation import router as quotation_router
 app.include_router(quotation_router)
 
-# Reports list helper
-async def _report_list():
-    db = get_db()
-    from src.m4_market_research.report_generator import MarketResearchAgent
-    agent = MarketResearchAgent(db)
-    reports = agent.list_reports(limit=20)
-    return {"reports": reports}
-app.add_api_route("/market/api/reports", _report_list, methods=["GET"])
-
-# Sub-category distribution
+# Quotation CRUD handled by router above
 async def _sub_category_dist():
     db = get_db()
     rows = db.fetchall("SELECT sub_category, COUNT(*) as cnt FROM products WHERE status='active' GROUP BY sub_category ORDER BY cnt DESC")

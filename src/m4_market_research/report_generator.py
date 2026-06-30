@@ -17,90 +17,93 @@ from src.core.llm_client import get_llm
 # ============================================================
 # 系统提示词：定义AI市场研究专家的角色
 # ============================================================
-SYSTEM_PROMPT = """You are an expert market research analyst specializing in 
-manual farm tools and garden tools (shovels, hoes, rakes, pickaxes, garden tools).
-You have deep knowledge of:
-- Agricultural markets in Africa, South Asia, and Southeast Asia
-- International trade regulations and import requirements
-- Competitive landscape of Chinese vs Indian vs European tool manufacturers
-- Pricing strategies for developing markets
+SYSTEM_PROMPT = """你是一位资深的外贸市场研究分析师，专注于手动农具和园艺工具（锄头、铲子、耙子、十字镐、园艺工具等）领域。
+你深入了解以下领域：
+- 非洲、南亚、东南亚的农业市场
+- 国际贸易法规和进口要求
+- 中国 vs 印度 vs 欧洲工具制造商的竞争格局
+- 发展中国家的定价策略
 
-Always provide specific, actionable data. When uncertain, clearly state the 
-confidence level. Structure your analysis in markdown format."""
+请始终提供具体、可操作的数据。不确定时请明确说明置信度。
+请用中文输出报告，但专业术语可保留英文。使用 Markdown 格式。"""
 
 
 # ============================================================
 # 报告生成提示词模板
 # ============================================================
-REPORT_PROMPT = """Generate a comprehensive market research report for:
-- Target Country: {country}
-- Product Category: {product_category}
+REPORT_PROMPT = """请生成一份完整的市场研究报告（当前日期：{current_date}）：
+
+重要：请使用你所知的最新数据（2024-2026年），如果不确定具体年份，请注明"截至最新数据"。
+报告中的所有数据、统计、趋势都应尽可能反映2024年以后的情况。
+
+- 目标国家：{country}
+- 产品类别：{product_category}
 {extra_context}
 
-Please structure the report with these exact sections (in English):
+请按以下结构输出报告（用中文）：
 
-# {country} — {product_category} Market Report
+# {country} — {product_category} 市场研究报告
 
-## 1. Market Overview
-- Population, GDP, agricultural sector percentage
-- Main agricultural regions
-- Estimated market size for manual farm tools
+## 1. 市场概况
+- 人口、GDP、农业占GDP比例
+- 主要农业产区
+- 手动农具市场规模估算
 
-## 2. Agriculture Profile
-- Main crop types
-- Farming methods (mechanization level)
-- Small-scale vs large farm ratio
-- Seasonal demand patterns
+## 2. 农业特征
+- 主要农作物
+- 耕作方式（机械化程度）
+- 小农户 vs 大农场比例
+- 季节性需求规律
 
-## 3. Common Tool Types
-- Most commonly used tools in this market
-- Preference characteristics (weight, material, handle type)
-- Price sensitivity level
+## 3. 常用工具类型
+- 该市场最常用的农具
+- 偏好特征（重量、材质、手柄类型）
+- 价格敏感度
 
-## 4. Product Preferences
-- European vs Asian style preference
-- Heavy-duty vs lightweight preference
-- Wooden handle vs fiberglass vs steel handle
-- Packaging preferences
+## 4. 产品偏好
+- 欧式 vs 亚洲风格偏好
+- 重型 vs 轻型偏好
+- 木柄 vs 玻纤柄 vs 钢管柄
+- 包装偏好
 
-## 5. Import Situation
-- Major importing countries (China, India, Europe)
-- Tariff policies
-- Certification requirements
-- Major ports and logistics
+## 5. 进口情况
+- 主要进口来源国（中国、印度、欧洲）
+- 关税政策
+- 认证要求
+- 主要港口和物流
 
-## 6. Competitive Landscape
-- Major local brands
-- Chinese brand presence
-- Indian brand presence
-- Price range comparison
+## 6. 竞争格局
+- 主要本地品牌
+- 中国品牌渗透率
+- 印度品牌渗透率
+- 价格区间对比
 
-## 7. Market Entry Recommendations
-- Recommended product line
-- Pricing strategy
-- Distribution channel suggestions
-- Risk warnings
+## 7. 市场进入建议
+- 推荐产品线
+- 定价策略
+- 分销渠道建议
+- 风险提示
 
-Provide specific numbers, percentages, and examples wherever possible."""
+请尽量提供具体数字、百分比和实例。"""
 
 
 # ============================================================
 # 知识提取提示词模板
 # ============================================================
-KNOWLEDGE_PROMPT = """Extract key market knowledge points from this report about {country}.
+KNOWLEDGE_PROMPT = """从这份关于{country}的市场报告中提取关键知识点。
 
-Return a JSON array of knowledge entries. Each entry should have:
-- "category": one of "agriculture", "import", "competitor", "pricing", "distribution"
-- "knowledge": a specific, actionable insight (1-2 sentences)
+请返回一个JSON数组。每个条目包含：
+- "category": 以下之一 "agriculture", "import", "competitor", "pricing", "distribution"
+- "knowledge": 一条具体、可操作的知识点（用中文，1-2句话）
 - "source": "ai_generated"
 
-Example format:
+示例格式：
 [
-    {{"category": "agriculture", "knowledge": "Kenya's smallholder farms account for 75% of agricultural output, with avg farm size 0.2-3 hectares.", "source": "ai_generated"}},
-    {{"category": "pricing", "knowledge": "Chinese shovels are preferred in Kenya at $3-5 FOB vs $6-8 for Indian alternatives.", "source": "ai_generated"}}
+    {{"category": "agriculture", "knowledge": "肯尼亚75%的农业产出来自小农户，平均农场面积0.2-3公顷。", "source": "ai_generated"}},
+    {{"category": "pricing", "knowledge": "中国铲子在肯尼亚市场FOB价$3-5，印度产品$6-8，中国产品价格优势明显。", "source": "ai_generated"}}
 ]
 
-Return ONLY the JSON array, no other text."""
+只返回JSON数组，不要其他文字。"""
 
 
 class MarketResearchAgent:
@@ -121,6 +124,7 @@ class MarketResearchAgent:
         country: str,
         product_category: str = "Manual Farm Tools",
         extra_context: str = "",
+        use_web_research: bool = True,
     ) -> dict:
         """
         生成市场研究报告。
@@ -129,6 +133,7 @@ class MarketResearchAgent:
             country: 目标国家
             product_category: 产品类别（默认手动农具）
             extra_context: 额外上下文信息
+            use_web_research: 是否启用实时网络数据采集
             
         Returns:
             {
@@ -139,14 +144,29 @@ class MarketResearchAgent:
                 "summary": str (200字摘要),
                 "confidence": str (high/medium/low),
                 "knowledge_entries": list[dict],
-                "db_id": int (数据库记录ID)
+                "db_id": int (数据库记录ID),
+                "web_research": str (采集到的实时数据)
             }
         """
-        # 1. 构建提示词
+        # 0. 实时网络数据采集
+        web_context = ""
+        data_sources = ["ai_generated"]
+        if use_web_research:
+            try:
+                from src.m4_market_research.web_researcher import research_country_market
+                web_context = research_country_market(country, product_category)
+                if web_context:
+                    data_sources.append("web_search")
+            except Exception as e:
+                print(f"[WebResearch] 采集失败: {e}")
+
+        # 1. 构建提示词（注入实时数据 + 当前日期）
+        from datetime import date
         prompt = REPORT_PROMPT.format(
+            current_date=date.today().strftime("%Y年%m月%d日"),
             country=country,
             product_category=product_category,
-            extra_context=extra_context,
+            extra_context=f"{extra_context}\n\n{web_context}" if extra_context else web_context,
         )
 
         # 2. 调用LLM生成报告
@@ -177,7 +197,7 @@ class MarketResearchAgent:
             "summary": summary,
             "full_report": full_report,
             "report_file": None,
-            "data_sources": json.dumps(["ai_generated"]),
+            "data_sources": json.dumps(data_sources),
             "confidence": confidence,
             "created_at": datetime.now().isoformat(),
             "updated_at": datetime.now().isoformat(),
@@ -202,18 +222,19 @@ class MarketResearchAgent:
             "confidence": confidence,
             "knowledge_entries": knowledge_entries,
             "db_id": db_id,
+            "web_research": web_context[:500] if web_context else None,
+            "data_sources": data_sources,
         }
 
     def _generate_summary(self, report: str, country: str) -> str:
         """生成200字摘要"""
-        prompt = f"""Summarize this {country} market report in 2-3 sentences 
-(max 200 words). Focus on the most actionable insights for a Chinese farm 
-tools exporter.
+        prompt = f"""请用2-3句中文总结这份{country}市场报告（不超过200字）。
+重点关注对中国农具出口商最有价值的信息。
 
-Report:
+报告内容：
 {report[:3000]}
 
-Return ONLY the summary text, no headers or labels."""
+只返回摘要文本，不要标题或标签。"""
         
         return self.llm.chat(prompt=prompt, max_tokens=300, temperature=0.3)
 

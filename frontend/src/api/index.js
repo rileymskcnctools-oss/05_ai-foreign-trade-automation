@@ -67,10 +67,16 @@ export const quotationApi = {
 
 // ========== Market API ==========
 export const marketApi = {
-  listReports: () => api.get('/market/api/reports'),
+  listReports: (params) => api.get('/market/api/reports', { params }),
   generateReport: (data) => api.post('/market/api/generate-report', data),
   getReport: (id) => api.get(`/market/api/reports/${id}`),
   deleteReport: (id) => api.delete(`/market/api/reports/${id}`),
+  exportReport: (id) => api.get(`/market/api/reports/${id}/export`, { responseType: 'blob' }),
+  listKnowledge: (params) => api.get('/market/api/knowledge', { params }),
+  knowledgeStats: () => api.get('/market/api/knowledge/stats'),
+  compare: (countries) => api.get('/market/api/compare', { params: { countries } }),
+  availableCountries: () => api.get('/market/api/compare/available-countries'),
+  stats: () => api.get('/market/api/stats'),
 }
 
 // ========== Outreach API ==========
