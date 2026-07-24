@@ -317,16 +317,21 @@
       <div class="space-y-4">
         <div>
           <label class="block text-xs text-gray-500 mb-1">目标国家 *</label>
-          <input v-model="genForm.country" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="如: Ghana, Nigeria, Germany" />
-          <!-- 常用市场快捷选择 -->
-          <div class="flex flex-wrap gap-1 mt-2">
-            <button v-for="c in quickCountries" :key="c"
-              @click="genForm.country = c"
-              :class="['px-2 py-0.5 rounded text-xs border',
-                genForm.country === c ? 'bg-primary-600 text-white border-primary-600' : 'bg-white text-gray-500 border-gray-200 hover:border-primary-300']">
-              {{ c }}
-            </button>
+          <!-- 优先级图例 -->
+          <div class="flex gap-3 mb-2 text-xs">
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> 目标拓展</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> 当前市场</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-400"></span> 观望</span>
           </div>
+          <select v-model="genForm.country" class="w-full px-3 py-2 border rounded-lg text-sm">
+            <option value="" disabled>-- 选择国家 --</option>
+            <option v-for="c in allMarketCountries" :key="c.name" :value="c.name">
+              {{ c.priority === 'high' ? '🔥' : c.priority === 'medium' ? '⭐' : '💡' }} {{ c.name }} · {{ c.region }}
+            </option>
+          </select>
+          <p v-if="genForm.country" class="text-xs text-gray-400 mt-1">
+            {{ getCountryReason(genForm.country) }}
+          </p>
         </div>
         <div>
           <label class="block text-xs text-gray-500 mb-1">产品类别</label>
@@ -378,7 +383,157 @@ const generating = ref(false)
 const genForm = ref({ country: '', product_category: 'Manual Farm Tools', extra_context: '' })
 const stats = ref({ report_count: 0, knowledge_count: 0, country_count: 0 })
 const availableCountries = ref([])
-const quickCountries = ['Ghana', 'Nigeria', 'Kenya', 'Tanzania', 'South Africa', 'Germany', 'India', 'Myanmar', 'Philippines', 'Brazil']
+
+// ========== 全球市场优先级体系 ==========
+// 🎯 策略：当前西非+亚洲 → 拓展欧洲+南美 → 观望其他
+// 排序依据：进口规模、农业结构、中国农具出口数据、区域辐射力
+const marketPriorities = [
+  // ====== 🔥 目标拓展：欧洲 ======
+  { name: 'Germany', priority: 'high', region: '西欧', reason: 'EU最大·园艺工具进口第一·品质溢价高' },
+  { name: 'France', priority: 'high', region: '西欧', reason: 'EU第二大·园艺传统深厚·DIY零售发达' },
+  { name: 'Netherlands', priority: 'high', region: '西欧', reason: '欧洲贸易门户·鹿特丹港·转口全欧' },
+  { name: 'UK', priority: 'high', region: '西欧', reason: '园艺大国·DIY文化·脱欧后独立进口渠道' },
+  { name: 'Italy', priority: 'high', region: '南欧', reason: '农业+园艺双需求·中小企业多·品牌溢价' },
+  { name: 'Spain', priority: 'high', region: '南欧', reason: '农业大国·橄榄/柑橘·农具进口稳定' },
+  { name: 'Poland', priority: 'high', region: '东欧', reason: '中东欧最大·农业占比高·增长快' },
+  { name: 'Belgium', priority: 'high', region: '西欧', reason: 'EU总部·安特卫普港·分销枢纽' },
+  { name: 'Sweden', priority: 'high', region: '北欧', reason: '北欧最大·环保园艺·高品质溢价' },
+  { name: 'Austria', priority: 'high', region: '中欧', reason: '德语区·高购买力·花园文化浓厚' },
+  { name: 'Portugal', priority: 'high', region: '南欧', reason: '农业+园艺·性价比市场·西语区入口' },
+  { name: 'Czech Republic', priority: 'high', region: '中欧', reason: '中欧制造中心·园艺工具集散·增长快' },
+  { name: 'Romania', priority: 'high', region: '东欧', reason: '农业大国·EU补贴·农具需求旺盛' },
+  { name: 'Denmark', priority: 'high', region: '北欧', reason: '设计导向·园艺品牌溢价·北欧分销' },
+  { name: 'Ireland', priority: 'high', region: '西欧', reason: '英语区·高收入·花园文化·英国辐射' },
+  { name: 'Switzerland', priority: 'high', region: '中欧', reason: '全球最高购买力·花园设备精致化' },
+  { name: 'Norway', priority: 'high', region: '北欧', reason: '北欧高收入·夏季园艺旺季·非EU进口' },
+  { name: 'Finland', priority: 'high', region: '北欧', reason: '北欧·森林/园艺·季节性需求强' },
+  { name: 'Hungary', priority: 'high', region: '东欧', reason: '中欧农业国·EU成员·进口增长快' },
+  { name: 'Greece', priority: 'high', region: '南欧', reason: '农业+旅游·橄榄/葡萄·手工工具多' },
+  { name: 'Turkey', priority: 'high', region: '东南欧', reason: '农业大国·中东欧桥梁·本土竞争强但体量大' },
+  // ====== 🔥 目标拓展：南美 ======
+  { name: 'Brazil', priority: 'high', region: '南美', reason: '农业超级大国·拉美第一·农具进口海量' },
+  { name: 'Chile', priority: 'high', region: '南美', reason: '南美最稳·农业出口强国·自贸协定多' },
+  { name: 'Colombia', priority: 'high', region: '南美', reason: '咖啡/花卉/香蕉·农具进口增速快' },
+  { name: 'Argentina', priority: 'high', region: '南美', reason: '大豆玉米之国·手工农具+园艺双需' },
+  { name: 'Peru', priority: 'high', region: '南美', reason: '水果出口大国·小农户多·进口增速快' },
+  { name: 'Ecuador', priority: 'high', region: '南美', reason: '香蕉/可可·农业国·美金经济·进口便利' },
+  { name: 'Uruguay', priority: 'high', region: '南美', reason: '拉美瑞士·畜牧业强·园艺工具需求稳' },
+  { name: 'Mexico', priority: 'high', region: '中北美', reason: '北美农具装配基地·本身也是大市场·双语区' },
+  { name: 'Paraguay', priority: 'high', region: '南美', reason: '农业国·南美内陆·中国进口依赖高' },
+  { name: 'Bolivia', priority: 'high', region: '南美', reason: '高原农业·安第斯·手工工具核心市场' },
+  { name: 'Costa Rica', priority: 'high', region: '中北美', reason: '中美洲最稳·咖啡/菠萝·农具进口稳定' },
+  { name: 'Panama', priority: 'high', region: '中北美', reason: '拉美物流枢纽·科隆自贸区·转口全拉美' },
+
+  // ====== ⭐ 当前市场：西非 ======
+  { name: 'Ghana', priority: 'medium', region: '西非', reason: '当前核心·农具进口量大·已有报告+客户' },
+  { name: 'Nigeria', priority: 'medium', region: '西非', reason: '非洲最大·2亿人口·农具需求巨大' },
+  { name: 'Ivory Coast', priority: 'medium', region: '西非', reason: '西非法语中心·可可大国·经济增速快' },
+  { name: 'Senegal', priority: 'medium', region: '西非', reason: '法语枢纽·达喀尔港·政治最稳定' },
+  { name: 'Cameroon', priority: 'medium', region: '中非', reason: '中非核心·农业+基建·双语区' },
+  { name: 'Benin', priority: 'medium', region: '西非', reason: '科托努港·贸易中转·当前覆盖' },
+  { name: 'Togo', priority: 'medium', region: '西非', reason: '洛美港·西非中转·当前覆盖' },
+  { name: 'Mali', priority: 'medium', region: '西非', reason: '内陆农业国·棉花主产·农具需求稳' },
+  { name: 'Burkina Faso', priority: 'medium', region: '西非', reason: '棉花+谷物·内陆·农具刚需' },
+  { name: 'Guinea', priority: 'medium', region: '西非', reason: '矿产+农业·西非法语·进口增长' },
+  { name: 'Niger', priority: 'medium', region: '西非', reason: '农牧业·撒赫勒·国际援助采购多' },
+  { name: 'Sierra Leone', priority: 'medium', region: '西非', reason: '战后重建·农业恢复·棕榈/可可' },
+  { name: 'Liberia', priority: 'medium', region: '西非', reason: '战后重建·橡胶/棕榈·美式英语区' },
+  { name: 'Gambia', priority: 'medium', region: '西非', reason: '西非英语区·塞内加尔环绕·体量小' },
+  // ====== ⭐ 当前市场：亚洲 ======
+  { name: 'India', priority: 'medium', region: '南亚', reason: '当前市场·14亿人口·本土竞争强但体量巨大' },
+  { name: 'Philippines', priority: 'medium', region: '东南亚', reason: '当前·英语通用·农业人口多·进口稳定' },
+  { name: 'Myanmar', priority: 'medium', region: '东南亚', reason: '当前·农业国·中国陆路出口便利' },
+  { name: 'Vietnam', priority: 'medium', region: '东南亚', reason: '当前·农业国·增长快·咖啡/水稻工具' },
+  { name: 'Indonesia', priority: 'medium', region: '东南亚', reason: '东南亚最大·2.7亿人口·棕榈/橡胶工具' },
+  { name: 'Thailand', priority: 'medium', region: '东南亚', reason: '东盟中心·农业出口强国·品质要求高' },
+  { name: 'Bangladesh', priority: 'medium', region: '南亚', reason: '人口大国·农业为主·低价工具需求' },
+  { name: 'Pakistan', priority: 'medium', region: '南亚', reason: '农业国·旁遮普粮仓·南亚第二' },
+  { name: 'Malaysia', priority: 'medium', region: '东南亚', reason: '棕榈油大国·高收入东盟·园艺+农业' },
+  { name: 'Cambodia', priority: 'medium', region: '东南亚', reason: '农业国·战后重建·中国关系紧密' },
+  { name: 'Sri Lanka', priority: 'medium', region: '南亚', reason: '茶叶/椰子·南亚岛国·重建需求' },
+
+  // ====== 💡 观望：东非 ======
+  { name: 'Kenya', priority: 'low', region: '东非', reason: '东非门户·农业33%GDP·蒙巴萨港' },
+  { name: 'Tanzania', priority: 'low', region: '东非', reason: '农业大国·达累斯萨拉姆·后续跟进' },
+  { name: 'Uganda', priority: 'low', region: '东非', reason: '农业80%人口·东非内陆·肥沃' },
+  { name: 'Ethiopia', priority: 'low', region: '东非', reason: '1.2亿人口·增长快·外汇管制风险' },
+  { name: 'Rwanda', priority: 'low', region: '东非', reason: '营商环境非洲前列·体量小·示范市场' },
+  { name: 'South Sudan', priority: 'low', region: '东非', reason: '战后恢复·石油经济·农业潜力大' },
+  { name: 'Burundi', priority: 'low', region: '东非', reason: '小农经济体·东非共同体·咖啡/茶' },
+  // ====== 💡 观望：南部非洲 ======
+  { name: 'South Africa', priority: 'low', region: '南部非洲', reason: '区域老大·辐射SADC·高价市场·供应链成熟' },
+  { name: 'Zambia', priority: 'low', region: '南部非洲', reason: '铜矿经济·农业基础好·体量中等' },
+  { name: 'Mozambique', priority: 'low', region: '南部非洲', reason: '长海岸线·农业大国·港口便利' },
+  { name: 'Zimbabwe', priority: 'low', region: '南部非洲', reason: '农业传统强·烟草大国·经济回升中' },
+  { name: 'Malawi', priority: 'low', region: '南部非洲', reason: '烟草/茶叶·小农经济·进口稳' },
+  { name: 'Angola', priority: 'low', region: '南部非洲', reason: '石油大国·战后重建·购买力恢复中' },
+  { name: 'Namibia', priority: 'low', region: '南部非洲', reason: '南部非洲·矿产资源·南非辐射' },
+  { name: 'Botswana', priority: 'low', region: '南部非洲', reason: '钻石经济·高收入非洲·体量小' },
+  { name: 'Madagascar', priority: 'low', region: '南部非洲', reason: '岛国·香草/咖啡·农业为主' },
+  // ====== 💡 观望：中非 ======
+  { name: 'DR Congo', priority: 'low', region: '中非', reason: '非洲面积最大·矿产多·物流风险' },
+  { name: 'Congo', priority: 'low', region: '中非', reason: '石油经济·刚果盆地·法语区' },
+  { name: 'Gabon', priority: 'low', region: '中非', reason: '石油富国·中非·法语·体量小' },
+  // ====== 💡 观望：北非 ======
+  { name: 'Egypt', priority: 'low', region: '北非', reason: '北非最大·尼罗河农业·中东非洲桥梁' },
+  { name: 'Morocco', priority: 'low', region: '北非', reason: '磷酸盐农业·欧盟近岸·法语区' },
+  { name: 'Algeria', priority: 'low', region: '北非', reason: '油气富国·农业复兴计划·法语' },
+  { name: 'Tunisia', priority: 'low', region: '北非', reason: '橄榄/椰枣·地中海农业·法语' },
+  { name: 'Sudan', priority: 'low', region: '北非', reason: '尼罗河农业·战后恢复·阿拉伯语区' },
+  { name: 'Libya', priority: 'low', region: '北非', reason: '石油经济·战后重建·高风险高回报' },
+  // ====== 💡 观望：中东 ======
+  { name: 'Saudi Arabia', priority: 'low', region: '中东', reason: '海湾最大·沙漠农业·政府采购多' },
+  { name: 'UAE', priority: 'low', region: '中东', reason: '中东门户·迪拜转口·辐射海湾+非洲' },
+  { name: 'Iran', priority: 'low', region: '中东', reason: '农业大国·制裁消退·需求释放潜力大' },
+  { name: 'Iraq', priority: 'low', region: '中东', reason: '战后重建·农业复兴·两河流域' },
+  { name: 'Jordan', priority: 'low', region: '中东', reason: '中东稳定国·农业科技·叙利亚辐射' },
+  { name: 'Israel', priority: 'low', region: '中东', reason: '农业科技强国·滴灌工具·高端市场' },
+  // ====== 💡 观望：大洋洲 ======
+  { name: 'Australia', priority: 'low', region: '大洋洲', reason: '成熟园艺市场·南半球季节互补·高端' },
+  { name: 'New Zealand', priority: 'low', region: '大洋洲', reason: '农牧业强国·花园文化·南半球互补' },
+  { name: 'Papua New Guinea', priority: 'low', region: '大洋洲', reason: '农业国·热带作物·澳新辐射' },
+  // ====== 💡 观望：北美 ======
+  { name: 'USA', priority: 'low', region: '北美', reason: '全球最大园艺市场·高关税壁垒·需找切入点' },
+  { name: 'Canada', priority: 'low', region: '北美', reason: '园艺大国·北美高收入·冬季工具需求' },
+  // ====== 💡 观望：中亚 ======
+  { name: 'Kazakhstan', priority: 'low', region: '中亚', reason: '中亚最大·小麦之国·一带一路' },
+  { name: 'Uzbekistan', priority: 'low', region: '中亚', reason: '中亚农业国·棉花大国·改革开放中' },
+  // ====== 💡 观望：其他 ======
+  { name: 'South Korea', priority: 'low', region: '东亚', reason: '高收入·小农精致化·园艺工具品质高' },
+  { name: 'Japan', priority: 'low', region: '东亚', reason: '精密园艺·高门槛·品牌化机会' },
+  { name: 'Venezuela', priority: 'low', region: '南美', reason: '石油国·经济危机·长期观望' },
+  { name: 'Cuba', priority: 'low', region: '加勒比', reason: '甘蔗/烟草·开放缓慢·潜力待观察' },
+  { name: 'Dominican Republic', priority: 'low', region: '加勒比', reason: '加勒比最大·农业+旅游·美金经济' },
+]
+
+const priorityOrder = { high: 0, medium: 1, low: 2 }
+
+// 合并优先级国家 + 数据库国家，按优先级排序
+const allMarketCountries = computed(() => {
+  const hasReport = new Set(availableCountries.value.map(c => c.country))
+  const seen = new Set()
+  const result = []
+  // 先加优先级表中的国家
+  for (const c of marketPriorities) {
+    if (!seen.has(c.name)) {
+      seen.add(c.name)
+      result.push({ ...c, hasReport: hasReport.has(c.name) })
+    }
+  }
+  // 再加数据库有但不在优先级表中的国家
+  for (const c of availableCountries.value) {
+    if (!seen.has(c.country)) {
+      seen.add(c.country)
+      result.push({ name: c.country, priority: 'low', region: '其他', reason: '数据库已有数据', hasReport: true })
+    }
+  }
+  return result
+})
+
+const getCountryReason = (name) => {
+  const found = allMarketCountries.value.find(c => c.name === name)
+  return found ? `${found.reason}` : `将生成 ${name} 的市场报告`
+}
 
 // 知识库
 const knowledge = ref([])
