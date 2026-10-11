@@ -47,6 +47,14 @@ dev = [
 # 测试用例编写后即可直接 `pytest` 运行
 testpaths = ["tests"]
 pythonpath = ["."]
+addopts = "-ra --strict-markers"
+markers = [
+    "smoke: 冒烟测试",
+    "api: 接口自动化",
+    "ui: UI 自动化",
+    "unit: 单元测试",
+    "slow: 慢用例",
+]
 
 # 说明：本项目是应用而非库，不做打包安装；
 # 代码通过 PROJECT_ROOT 注入 sys.path 导入 src/ 与 web/。

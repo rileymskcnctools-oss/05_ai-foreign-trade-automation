@@ -127,8 +127,72 @@ CREATE TABLE IF NOT EXISTS quotations (
     email_body          TEXT,
     quotation_file      TEXT,                        -- file path
     status              TEXT DEFAULT 'draft',        -- draft / sent / negotiated / accepted / rejected / expired
+    -- ---- v4.0 报价模块扩展字段（原 data/quotation_upgrade.sql，已合并至此）----
+    contact_person      TEXT,                        -- 联系人（从客户自动带出）
+    country             TEXT,                        -- 客户国家（自动带出）
+    loading_port        TEXT,                        -- 装运港
+    destination_port    TEXT,                        -- 目的港
+    valid_until         TEXT,                        -- 报价有效期（日期）
+    sales_person        TEXT,                        -- 业务员
+    discount_pct        REAL DEFAULT 0,              -- 整单折扣(%)
+    shipping_cost       REAL DEFAULT 0,              -- 运费
+    insurance_cost      REAL DEFAULT 0,              -- 保险费
+    packing_cost        REAL DEFAULT 0,              -- 包装费
+    other_charges       REAL DEFAULT 0,              -- 其他费用
+    cost_total          REAL DEFAULT 0,              -- 成本合计
+    profit_amount       REAL DEFAULT 0,              -- 利润额
+    profit_margin       REAL DEFAULT 0,              -- 利润率(%)
+    warranty            TEXT,                        -- 质保条款
+    oem_odm             TEXT,                        -- OEM/ODM 说明
+    sample_policy       TEXT,                        -- 样品政策
+    packing_details     TEXT,                        -- 包装详情
+    remarks             TEXT,                        -- 备注
+    template_type       TEXT DEFAULT 'standard',     -- 模板类型
+    revision            INTEGER DEFAULT 1,           -- 版本号
+    parent_quotation_id INTEGER,                     -- 关联原始报价（用于修订版）
     created_at          TEXT DEFAULT (datetime('now')),
     updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- ============================================================
+-- Quotation Items (v4.0 报价产品明细)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS quotation_items (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    quotation_id        INTEGER NOT NULL,            -- 关联 quotations.id
+    product_code        TEXT NOT NULL,               -- 产品编码
+    product_name_en     TEXT,                        -- 英文名（快照）
+    sku                 TEXT,                        -- SKU
+    model               TEXT,                        -- 型号
+    material            TEXT,                        -- 材质
+    unit                TEXT DEFAULT 'PCS',          -- 单位
+    quantity            INTEGER DEFAULT 1,           -- 数量
+    unit_price          REAL DEFAULT 0,              -- 单价
+    discount_pct        REAL DEFAULT 0,              -- 行折扣(%)
+    amount              REAL DEFAULT 0,              -- 金额 = qty * price * (1 - discount%)
+    weight_kg           REAL,                        -- 单件重量
+    moq                 INTEGER,                     -- MOQ
+    packaging           TEXT,                        -- 包装方式
+    lead_time_days      INTEGER,                     -- 交期
+    ai_highlights       TEXT,                        -- AI 产品亮点
+    sort_order          INTEGER DEFAULT 0,           -- 排序
+    created_at          TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (quotation_id) REFERENCES quotations(id) ON DELETE CASCADE
+);
+
+-- ============================================================
+-- Quotation Versions (v4.0 报价版本历史)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS quotation_versions (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    quotation_id        INTEGER NOT NULL,            -- 关联 quotations.id
+    revision            INTEGER NOT NULL,            -- 版本号
+    snapshot_json       TEXT NOT NULL,               -- 完整快照（JSON）
+    change_summary      TEXT,                        -- 变更说明
+    created_at          TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY (quotation_id) REFERENCES quotations(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS orders (
@@ -280,6 +344,10 @@ CREATE INDEX IF NOT EXISTS idx_activities_client ON activities(client_id);
 CREATE INDEX IF NOT EXISTS idx_inquiries_client ON inquiries(client_id);
 CREATE INDEX IF NOT EXISTS idx_quotations_client ON quotations(client_id);
 CREATE INDEX IF NOT EXISTS idx_quotations_status ON quotations(status);
+CREATE INDEX IF NOT EXISTS idx_quotations_quotation_no ON quotations(quotation_no);
+CREATE INDEX IF NOT EXISTS idx_quotation_items_quotation_id ON quotation_items(quotation_id);
+CREATE INDEX IF NOT EXISTS idx_quotation_items_product_code ON quotation_items(product_code);
+CREATE INDEX IF NOT EXISTS idx_quotation_versions_quotation_id ON quotation_versions(quotation_id);
 CREATE INDEX IF NOT EXISTS idx_market_reports_country ON market_reports(country);
 CREATE INDEX IF NOT EXISTS idx_content_product ON content_records(product_code);
 CREATE INDEX IF NOT EXISTS idx_content_type ON content_records(content_type);

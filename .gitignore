@@ -50,6 +50,11 @@ assets/images/*.jpeg
 # Logs
 *.log
 
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
 # Archive
 archive/
 config/.env.bak
