@@ -149,6 +149,8 @@ python scripts/seed_db.py --products-only  # 只灌产品
 
 ## 文档
 
+- [项目说明与测试指南](docs/项目说明与测试指南.md) — **架构 / 数据模型 / 47 个 API / 测试指引（写测试先看这份）**
+- [测试用例模板](docs/测试用例模板.csv) — 用例表头与示例行
 - [系统使用指南](docs/USER_GUIDE.md) — 产品 / 客户 / 提示词管理
 - [版本演进路径](UPGRADE_PATH.md) — V0.1 → V4.0 升级对照
 - [API 文档](http://localhost:8020/docs) — 运行后自动可用
