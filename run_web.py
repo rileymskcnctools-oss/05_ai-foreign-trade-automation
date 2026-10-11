@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     subprocess.run([
         sys.executable, "-m", "uvicorn",
-        "web.main_api:app",
+        "api.app:app",
         "--host", "0.0.0.0", "--port", str(port),
         "--reload",
     ])

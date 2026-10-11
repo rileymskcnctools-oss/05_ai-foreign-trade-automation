@@ -1,23 +1,10 @@
 """开发信路由 — 复用 src/m6_outreach/"""
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
-import os
+from fastapi.responses import JSONResponse
 
-from web.deps import get_db
+from api.deps import get_db
 
 router = APIRouter(prefix="/outreach")
-templates = Jinja2Templates(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "templates"))
-
-
-@router.get("", response_class=HTMLResponse)
-async def outreach_page(request: Request):
-    """开发信页面"""
-    db = get_db()
-    clients = db.fetchall("SELECT id, company_name, country FROM clients ORDER BY company_name")
-    return templates.TemplateResponse(request, "outreach.html", {
-        "request": request, "page": "outreach", "clients": clients,
-    })
 
 
 @router.post("/api/generate-email")

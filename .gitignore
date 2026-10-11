@@ -55,6 +55,9 @@ assets/images/*.jpeg
 .coverage
 htmlcov/
 
+# Hermes 工作目录（本地记录，不入库）
+.hermes/
+
 # Archive
 archive/
 config/.env.bak

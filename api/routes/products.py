@@ -2,65 +2,13 @@
 产品管理路由 — 复用 src/m1_product_db/
 """
 from fastapi import APIRouter, Request, Query
-from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
-from fastapi.templating import Jinja2Templates
-import os
+from fastapi.responses import JSONResponse, StreamingResponse
 import csv
 import io
 
-from web.deps import get_db
+from api.deps import get_db
 
 router = APIRouter(prefix="/products")
-templates = Jinja2Templates(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "templates"))
-
-
-@router.get("", response_class=HTMLResponse)
-async def products_page(
-    request: Request,
-    q: str = Query("", description="搜索关键词"),
-    category: str = Query("", description="分类筛选"),
-    page: int = Query(1, ge=1),
-):
-    """产品管理页面"""
-    db = get_db()
-    from src.m1_product_db.search import get_categories, search, filter_products
-
-    categories = get_categories(db)
-    if q:
-        products = search(q, db=db, limit=50)
-    elif category:
-        products = filter_products(category=category, db=db, limit=50)
-    else:
-        products = db.product_list(limit=50, offset=(page - 1) * 50)
-
-    return templates.TemplateResponse(request, "products.html", {
-        "request": request, "page": "products", "products": products,
-        "categories": categories, "query": q, "selected_category": category, "current_page": page,
-    })
-
-
-@router.get("/partials/table", response_class=HTMLResponse)
-async def products_table_partial(
-    request: Request,
-    q: str = Query("", description="搜索关键词"),
-    category: str = Query("", description="分类筛选"),
-    page: int = Query(1, ge=1),
-):
-    """HTMX: 返回产品表格局部 HTML (不包含 base.html)"""
-    db = get_db()
-    from src.m1_product_db.search import get_categories, search, filter_products
-
-    categories = get_categories(db)
-    if q:
-        products = search(q, db=db, limit=50)
-    elif category:
-        products = filter_products(category=category, db=db, limit=50)
-    else:
-        products = db.product_list(limit=50, offset=(page - 1) * 50)
-
-    return templates.TemplateResponse(request, "components/product_table.html", {
-        "request": request, "products": products, "categories": categories,
-    })
 
 
 # === 固定路径 API (必须在通配符 /api/{product_code} 之前) ===

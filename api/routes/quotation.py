@@ -11,7 +11,7 @@ from typing import Optional
 from fastapi import APIRouter, Query, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 
-from web.deps import get_db, get_fresh_db
+from api.deps import get_db, get_fresh_db
 
 router = APIRouter(prefix="/quotation")
 

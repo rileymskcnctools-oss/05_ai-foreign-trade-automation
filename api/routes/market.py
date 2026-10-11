@@ -8,7 +8,7 @@ import re
 from datetime import datetime
 from typing import Optional
 
-from web.deps import get_db
+from api.deps import get_db
 
 router = APIRouter(prefix="/market")
 

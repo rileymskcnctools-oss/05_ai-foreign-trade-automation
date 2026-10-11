@@ -2,16 +2,7 @@
 
 外贸 AI 工作台：手工农具外贸业务全流程自动化。
 
-## 版本
-
-| 版本 | 技术栈 | 状态 | 入口 |
-|------|--------|------|------|
-| V0.1 | CSV + Python 脚本 | 归档 | — |
-| V2.0 | SQLite + Streamlit | 归档（可用） | `streamlit run v2_streamlit/app.py` |
-| V3.0 | SQLite + FastAPI + HTMX | 归档（保留） | `python -m uvicorn web.main:app` |
-| **V4.0** | **SQLite + FastAPI + Vue 3** | **当前活跃** | `python run_web.py` |
-
-详细演进路径见 [UPGRADE_PATH.md](UPGRADE_PATH.md)。
+当前版本 **V4.0**（Vue 3 + FastAPI + SQLite）。早期实现（Streamlit / HTMX）已归档移除，仓库只保留 V4。
 
 ## 快速开始
 
@@ -28,7 +19,7 @@ npm install
 npm run build
 cd ..
 
-# 4. 启动（V4.0）
+# 4. 启动
 python run_web.py
 ```
 
@@ -68,30 +59,29 @@ cd frontend && npm run dev       # Vite 开发服务器，默认 http://localhos
 | 报价助手 | `QuotationView.vue` | `/quotation/api` | 多产品报价单 + 成本利润 + 版本修订 |
 | 数据分析 | `AnalyticsView.vue` | `/analytics/api` | 产品 / 客户 / 市场 / 漏斗四维度 |
 
-V4.0 共 47 个 API 路径，完整清单见运行时 `/docs`。
+共 47 个 API 路径，完整清单见运行时 `/docs`。
 
 ## 项目结构
 
 ```
-├── src/              业务逻辑层（各版本共用）
-│   ├── core/         数据库 + 配置 + LLM 客户端
-│   ├── m1~m9/        9 个功能模块
-│   └── utils/        提示词模板引擎
-├── web/              V4 API 服务
-│   ├── main_api.py   V4 入口（纯 API，供 Vue 调用）
-│   ├── main.py       V3 入口（HTMX 版，保留）
+├── api/              后端 API 层（FastAPI）
+│   ├── app.py        应用入口（含 CORS 与静态资源挂载）
+│   ├── deps.py       依赖注入（数据库单例）
 │   └── routes/       7 个路由模块
+├── src/              业务逻辑层
+│   ├── core/         数据库 + 配置 + LLM 客户端
+│   ├── m1~m9/        9 个业务模块
+│   └── utils/        提示词模板引擎
 ├── frontend/         Vue 3 前端（Vite + Pinia + Tailwind + Chart.js）
 │   └── src/views/    7 个页面视图
 ├── tests/            自动化测试（api / ui / unit / data）
 ├── prompts/          AI 提示词模板
 ├── config/           配置（settings.yaml + .env）
 ├── data/             SQLite 数据库 + schema.sql + seed/ 种子数据
-├── scripts/          工具脚本（见下）
+├── scripts/          工具脚本
 ├── docs/             文档
-├── reports_deai/     市场报告与 PDF 转换
-├── v2_streamlit/     V2 归档
-└── run_web.py        V4 一键启动
+├── reports_deai/     市场报告产物与 PDF 转换
+└── run_web.py        一键启动
 ```
 
 ## 数据库与数据复现
@@ -126,8 +116,7 @@ python scripts/seed_db.py --products-only  # 只灌产品
 | `scripts/seed_db.py` | 数据库初始化 / 种子数据（推荐入口） |
 | `scripts/ft_cli.py` | 命令行工具 |
 | `scripts/verify_setup.py` | 环境自检 |
-| `scripts/inject_test_data.py` | 早期业务演示数据脚本（功能已并入 seed_db.py） |
-| `scripts/migrate_length_to_color.py` | 历史迁移（products: length_cm → color） |
+| `scripts/check_carton.py` | 装柜量校验 |
 
 ## 测试
 
@@ -151,6 +140,5 @@ python scripts/seed_db.py --products-only  # 只灌产品
 
 - [项目说明与测试指南](docs/项目说明与测试指南.md) — **架构 / 数据模型 / 47 个 API / 测试指引（写测试先看这份）**
 - [测试用例模板](docs/测试用例模板.csv) — 用例表头与示例行
-- [系统使用指南](docs/USER_GUIDE.md) — 产品 / 客户 / 提示词管理
-- [版本演进路径](UPGRADE_PATH.md) — V0.1 → V4.0 升级对照
+- [PDF 与 CSV 数据核对](docs/PDF_VS_CSV_VERIFY.md) — 215 条产品数据的来源比对
 - [API 文档](http://localhost:8020/docs) — 运行后自动可用

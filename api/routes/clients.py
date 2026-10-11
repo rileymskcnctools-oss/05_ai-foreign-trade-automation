@@ -2,38 +2,11 @@
 客户CRM路由 — 复用 src/m8_crm/
 """
 from fastapi import APIRouter, Request, Query
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
-import os
+from fastapi.responses import JSONResponse
 
-from web.deps import get_db
+from api.deps import get_db
 
 router = APIRouter(prefix="/clients")
-templates = Jinja2Templates(directory=os.path.join(os.path.dirname(os.path.dirname(__file__)), "templates"))
-
-
-@router.get("", response_class=HTMLResponse)
-async def clients_page(
-    request: Request,
-    status: str = Query("", description="状态筛选"),
-    grade: str = Query("", description="评级筛选"),
-    country: str = Query("", description="国家筛选"),
-):
-    """客户列表页面"""
-    db = get_db()
-    from src.m8_crm.client_manager import ClientManager
-    mgr = ClientManager(db)
-    clients = mgr.list_all(
-        status=status if status else None,
-        grade=grade if grade else None,
-        country=country if country else None,
-        limit=50,
-    )
-    pipeline = mgr.pipeline_stats()
-    return templates.TemplateResponse(request, "clients.html", {
-        "request": request, "page": "clients", "clients": clients,
-        "pipeline": pipeline, "filters": {"status": status, "grade": grade, "country": country},
-    })
 
 
 @router.post("/api/create")

@@ -1,6 +1,5 @@
 """
-FT Workspace v4.0 — 纯 API 服务器 (供 Vue 前端调用)
-与 web/main.py (HTMX版) 并存，互不影响
+FT Workspace v4.0 — API 服务器（供 Vue 前端调用）
 """
 import os
 import sys
@@ -18,7 +17,7 @@ except ImportError:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from web.deps import get_db
+from api.deps import get_db
 
 
 @asynccontextmanager
@@ -50,9 +49,8 @@ app.add_middleware(
 # ============================================================
 
 # Dashboard API
-from web.routes.dashboard import (
+from api.routes.dashboard import (
     dashboard_stats, dashboard_home,
-    partial_recent_quotations, partial_reminders,
 )
 app.add_api_route("/api/dashboard/stats", dashboard_stats, methods=["GET"])
 app.add_api_route("/api/dashboard/home", dashboard_home, methods=["GET"])
@@ -60,7 +58,7 @@ app.add_api_route("/dashboard/api/dashboard/stats", dashboard_stats, methods=["G
 app.add_api_route("/dashboard/api/dashboard/home", dashboard_home, methods=["GET"])
 
 # Products API — 注册所有固定路径 + 通配符
-from web.routes.products import (
+from api.routes.products import (
     api_search, api_categories, api_export_csv,
     api_get_product, api_update_product, api_create_product, api_delete_product,
     api_generate_content,
@@ -75,7 +73,7 @@ app.add_api_route("/products/api/{product_code}", api_delete_product, methods=["
 app.add_api_route("/products/api/{product_code}/generate/{content_type}", api_generate_content, methods=["GET"])
 
 # Clients API
-from web.routes.clients import (
+from api.routes.clients import (
     api_create_client, api_get_client, api_update_client, api_delete_client,
     api_client_activities, api_log_activity,
     api_reminder_summary, api_export_clients_csv,
@@ -110,11 +108,11 @@ app.add_api_route("/clients/api/{client_id}/analyses", api_get_client_analyses, 
 app.add_api_route("/clients/api/{client_id}/analyze", api_run_client_analysis, methods=["POST"])
 
 # Market API — 使用 router 整体挂载
-from web.routes.market import router as market_router
+from api.routes.market import router as market_router
 app.include_router(market_router)
 
 # Outreach API
-from web.routes.outreach import (
+from api.routes.outreach import (
     api_generate_email, api_generate_whatsapp, api_generate_linkedin,
 )
 app.add_api_route("/outreach/api/generate-email", api_generate_email, methods=["POST"])
@@ -122,7 +120,7 @@ app.add_api_route("/outreach/api/generate-whatsapp", api_generate_whatsapp, meth
 app.add_api_route("/outreach/api/generate-linkedin", api_generate_linkedin, methods=["POST"])
 
 # Quotation API (new router-based)
-from web.routes.quotation import router as quotation_router
+from api.routes.quotation import router as quotation_router
 app.include_router(quotation_router)
 
 # Quotation CRUD handled by router above
@@ -134,7 +132,7 @@ app.add_api_route("/api/dashboard/sub-categories", _sub_category_dist, methods=[
 # Quotation CRUD handled by router above
 
 # Analytics API
-from web.routes.analytics import api_product_analytics, api_client_analytics
+from api.routes.analytics import api_product_analytics, api_client_analytics
 app.add_api_route("/analytics/api/products", api_product_analytics, methods=["GET"])
 app.add_api_route("/analytics/api/clients", api_client_analytics, methods=["GET"])
 
