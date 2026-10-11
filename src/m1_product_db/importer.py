@@ -27,7 +27,8 @@ def normalize_col(name: str) -> str:
     Normalize column name to match database field names.
     Handles variations: spaces, underscores, case, Chinese aliases.
     """
-    name = name.strip().lower()
+    # 去掉 UTF-8 BOM（Excel 另存的 CSV 常带 \ufeff），避免首列列名匹配失败
+    name = name.lstrip("\ufeff").strip().lower()
 
     # Chinese alias mapping
     cn_aliases = {

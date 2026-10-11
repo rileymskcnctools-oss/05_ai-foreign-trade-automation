@@ -179,7 +179,7 @@ def seed_products(db: FTDatabase) -> dict:
     """导入产品主数据。import_csv 使用 INSERT OR REPLACE，天然幂等。"""
     if not PRODUCTS_CSV.exists():
         raise FileNotFoundError(f"找不到产品种子数据: {PRODUCTS_CSV}")
-    return import_csv(str(PRODUCTS_CSV), encoding="utf-8", db=db)
+    return import_csv(str(PRODUCTS_CSV), encoding="utf-8-sig", db=db)
 
 
 def seed_business(conn: sqlite3.Connection) -> None:
