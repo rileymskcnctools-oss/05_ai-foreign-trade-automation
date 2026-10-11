@@ -126,6 +126,7 @@ python scripts/seed_db.py --products-only  # 只灌产品
 ```
 
 测试目录分工见 `tests/__init__.py`；共享 fixture 写在 `tests/conftest.py`。
+当前测试进度与下一步计划见 [tests/PROGRESS.md](tests/PROGRESS.md)。
 
 ## 技术栈
 
