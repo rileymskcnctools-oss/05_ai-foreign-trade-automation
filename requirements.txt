@@ -1,0 +1,38 @@
+# FT Workspace — 运行时依赖
+# 此文件由 pyproject.toml 同步而来，便于 `pip install -r requirements.txt`。
+# 精确版本锁定见 uv.lock（推荐 `uv sync`）。
+
+# Web 框架
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27
+jinja2>=3.1
+
+# 数据处理
+pandas>=2.0
+openpyxl>=3.1
+
+# 配置
+pyyaml>=6.0
+python-dotenv>=1.0
+
+# LLM 提供商
+openai>=1.0
+anthropic>=0.30
+google-generativeai>=0.7
+
+# 网络采集
+requests>=2.31
+beautifulsoup4>=4.12
+lxml>=5.0
+
+# 浏览器自动化（首次使用需执行: playwright install chromium）
+playwright>=1.40
+
+# 文档导出
+fpdf2>=2.7
+python-docx>=1.1
+
+# ---- 可选：V2.0 归档界面 ----
+# streamlit>=1.30
+
+# ---- 前端(Vue 3)依赖不在此处，见 frontend/package.json ----
